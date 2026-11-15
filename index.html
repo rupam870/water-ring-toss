@@ -738,7 +738,6 @@ const tank = $('tank'), gcv = $('game'), g = gcv.getContext('2d');
 let S = 1, DPR = 1, T = 0;
 let rings = [], bubbles = [], motes = [], foam = [];
 const jets = [{ held: false, sq: 0, power: 0, suck: 0 }, { held: false, sq: 0, power: 0, suck: 0 }];
-let churn = 0; // lingering turbulence: the water keeps swirling for a few seconds after you press
 let started = false, startTime = 0, elapsed = 0, won = false, winTimer = -1, lastScore = -1;
 
 function shade(hex, k){
@@ -762,7 +761,7 @@ function resetGame(){
   $('win').classList.remove('show');
   $('hint').classList.remove('gone');
   updateHUD();
-  sparks = []; pops = []; combo = 0; churn = 0; foam = [];
+  sparks = []; pops = []; combo = 0; foam = []; fu.fill(0); fv.fill(0); shake.x = shake.y = 0;
   if (typeof kid !== 'undefined') kid.reset();
   sfx.reset();
 }
@@ -781,10 +780,16 @@ function resize(){
 /* ---------- tilt (drag / arrow keys / phone sensor) ---------- */
 const MAX_TILT = 0.42;
 let tilt = 0, tiltV = 0, tiltTarget = 0;
+// ---------- gravity as the toy feels it: tilt + any shaking of the phone ----------
+const G_NET = 300;            // gravity minus buoyancy for a plastic ring (px/s²)
+const K_SHAKE = 300 / 9.81;   // phone acceleration (m/s²) → px/s² in the toy
+let shake = { x: 0, y: 0 };   // smoothed phone acceleration in screen axes (x right, y down), m/s²
+let gEx = 0, gEy = G_NET, gTheta = 0;
+
 // the air bubble keeps its size and slides to the high side, so the water line stays level
 let surfC = SURF, surfK = 0;
 function solveSurface(){
-  surfK = Math.tan(tilt);
+  surfK = Math.tan(clamp(gTheta, -1.3, 1.3));
   const A0 = SURF * LW;
   let lo = 0, hi = SURF + LW * Math.abs(surfK) + 10;
   for (let it = 0; it < 22; it++){
@@ -796,100 +801,220 @@ function solveSurface(){
   surfC = (lo + hi) / 2;
 }
 const surfY = x => Math.max(0, surfC - (x - 150) * surfK);
-/* jet force at a point: [ax, ay, turbulence] */
-function jetForce(x, y, j){
-  const p = jets[j].power;
-  if (p < 0.005) return [0, 0, 0];
-  const dx = x - JX[j];
-  const spread = 52 + (FLOOR - y) * 0.2;            // plume widens as it rises
-  const f = Math.exp(-dx * dx / (2 * spread * spread));
-  const h = Math.max(0, y - SURF) / (FLOOR - SURF);
-  const hf = 0.25 + 0.75 * h * h;                   // strongest near the nozzle
-  return [ (dx / spread) * 320 * p * f * hf, -JET * p * f * hf, p * f * hf ];
+
+/* =====================================================================
+   THE WATER: a small incompressible fluid grid ("stable fluids").
+   Jets push real water, which has to come back down somewhere; releasing a
+   button sucks water back into the nozzle; swirls linger and drift; rings
+   leave wakes; turning the toy makes the water lag behind.
+   ===================================================================== */
+const CS = 10, NX = 30, NY = 52, NC = NX * NY;
+const fu = new Float32Array(NC), fv = new Float32Array(NC), fu0 = new Float32Array(NC), fv0 = new Float32Array(NC);
+const fp = new Float32Array(NC), fD = new Float32Array(NC), fsrc = new Float32Array(NC), fw = new Float32Array(NC);
+const ftype = new Uint8Array(NC);      // 0 water, 1 solid (walls, floor, rods), 2 air
+let VIN = 690, VSUCK = 700, JETH = 8, VTHR = 20, JETF = 2200, SRC = 0, VORT = 3, F_DAMP = 0.3, REACT = 0.22, AIRLIFT = 10;
+let waterEnergy = 0, churn = 0, prevTiltV = 0;
+
+function markCells(){
+  for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++){
+    const k = i + j * NX, x = (i + 0.5) * CS, y = (j + 0.5) * CS;
+    let t = 0;
+    if (y > FLOOR) t = 1;
+    else if (y < surfY(x)) t = 2;
+    else for (const P of PEGS) if (i === Math.floor(P.x / CS) && y > P.top) t = 1;
+    ftype[k] = t;
+    if (t){ fu[k] = 0; fv[k] = 0; }
+  }
 }
+function sampleF(f, x, y){
+  let gx = clamp(x / CS - 0.5, 0, NX - 1.001), gy = clamp(y / CS - 0.5, 0, NY - 1.001);
+  const i = gx | 0, j = gy | 0, sx = gx - i, sy = gy - j, k = i + j * NX;
+  return (f[k] * (1 - sx) + f[k + 1] * sx) * (1 - sy) + (f[k + NX] * (1 - sx) + f[k + NX + 1] * sx) * sy;
+}
+function pushWater(x, y, ax, ay, dt){       // add acceleration to the water around a point
+  let gx = clamp(x / CS - 0.5, 0, NX - 1.001), gy = clamp(y / CS - 0.5, 0, NY - 1.001);
+  const i = gx | 0, j = gy | 0, sx = gx - i, sy = gy - j, k = i + j * NX;
+  const w = [(1 - sx) * (1 - sy), sx * (1 - sy), (1 - sx) * sy, sx * sy], ks = [k, k + 1, k + NX, k + NX + 1];
+  for (let n = 0; n < 4; n++) if (!ftype[ks[n]]){ fu[ks[n]] += ax * w[n] * dt; fv[ks[n]] += ay * w[n] * dt; }
+}
+function fluidStep(dt){
+  markCells();
+  fsrc.fill(0);
+  // the pumps: a squeeze shoots water up out of the nozzle; letting go draws it back in
+  for (let jn = 0; jn < 2; jn++){
+    const p = jets[jn].power, s = jets[jn].suck, ni = Math.floor(JX[jn] / CS), nj = Math.floor((FLOOR - 4) / CS);
+    for (let dj = 0; dj < JETH; dj++) for (let di = -1; di <= 1; di++){
+      const i = ni + di, j = nj - dj; if (i < 0 || i >= NX) continue;
+      const k = i + j * NX; if (ftype[k]) continue;
+      const w = (di === 0 ? 1 : 0.45) * (1 - dj / (JETH + 2));
+      fv[k] -= JETF * p * w * dt;
+    }
+    // the nozzle itself: water really flows in through it (and back out when the bellows refills)
+    const vin = VIN * p - VSUCK * s;
+    for (let di = -1; di <= 1; di++){
+      const k = ni + di + nj * NX; if (ftype[k]) continue;
+      const w = di === 0 ? 1 : 0.5;
+      fsrc[k] += 0.5 * vin * w;
+      if (vin > 0) fv[k] = Math.min(fv[k], -vin * w);
+    }
+  }
+  // turning the toy: the water's inertia makes it lag behind (Euler force)
+  const alpha = (tiltV - prevTiltV) / dt; prevTiltV = tiltV;
+  if (Math.abs(alpha) > 0.01) for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++){
+    const k = i + j * NX; if (ftype[k]) continue;
+    fu[k] += alpha * ((j + 0.5) * CS - 260) * dt;
+    fv[k] -= alpha * ((i + 0.5) * CS - 150) * dt;
+  }
+  // shaking sloshes the free surface, which stirs the water underneath it
+  if (Math.abs(shake.x) + Math.abs(shake.y) > 0.6) for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++){
+    const k = i + j * NX; if (ftype[k]) continue;
+    const depth = (j + 0.5) * CS - surfY((i + 0.5) * CS);
+    if (depth > 60) continue;
+    const w = 1 - depth / 60;
+    fu[k] -= K_SHAKE * shake.x * 0.7 * w * dt;
+    fv[k] -= K_SHAKE * shake.y * 0.35 * w * dt;
+  }
+  // vorticity confinement: keeps the swirls alive for a few seconds like real water
+  for (let j = 1; j < NY - 1; j++) for (let i = 1; i < NX - 1; i++){
+    const k = i + j * NX;
+    fw[k] = ftype[k] ? 0 : 0.5 * ((fv[k + 1] - fv[k - 1]) - (fu[k + NX] - fu[k - NX]));
+  }
+  for (let j = 2; j < NY - 2; j++) for (let i = 2; i < NX - 2; i++){
+    const k = i + j * NX; if (ftype[k]) continue;
+    const nx = 0.5 * (Math.abs(fw[k + 1]) - Math.abs(fw[k - 1])), ny = 0.5 * (Math.abs(fw[k + NX]) - Math.abs(fw[k - NX]));
+    const l = Math.hypot(nx, ny) + 1e-5;
+    if (Math.abs(fw[k]) < VTHR) continue;
+    fu[k] += VORT * dt * (ny / l) * fw[k];
+    fv[k] -= VORT * dt * (nx / l) * fw[k];
+  }
+  // carry the flow along with itself (semi-Lagrangian advection)
+  fu0.set(fu); fv0.set(fv);
+  for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++){
+    const k = i + j * NX; if (ftype[k]) continue;
+    const x = (i + 0.5) * CS - fu0[k] * dt, y = (j + 0.5) * CS - fv0[k] * dt;
+    fu[k] = sampleF(fu0, x, y); fv[k] = sampleF(fv0, x, y);
+  }
+  // make it incompressible: water pushed up one side must come down somewhere else
+  const nb = (k, d) => { const t = ftype[k + d]; return t; };
+  for (let j = 1; j < NY - 1; j++) for (let i = 1; i < NX - 1; i++){
+    const k = i + j * NX; if (ftype[k]) { fD[k] = 0; continue; }
+    const uR = ftype[k + 1] === 1 ? 0 : (ftype[k + 1] === 2 ? fu[k] : fu[k + 1]);
+    const uL = ftype[k - 1] === 1 ? 0 : (ftype[k - 1] === 2 ? fu[k] : fu[k - 1]);
+    const vD = ftype[k + NX] === 1 ? 0 : (ftype[k + NX] === 2 ? fv[k] : fv[k + NX]);
+    const vU = ftype[k - NX] === 1 ? 0 : (ftype[k - NX] === 2 ? fv[k] : fv[k - NX]);
+    fD[k] = 0.5 * (uR - uL + vD - vU) - fsrc[k];
+  }
+  fp.fill(0);
+  for (let it = 0; it < 26; it++){
+    for (let j = 1; j < NY - 1; j++) for (let i = 1; i < NX - 1; i++){
+      const k = i + j * NX; if (ftype[k]) continue;
+      let sum = 0;
+      for (const d of [1, -1, NX, -NX]){ const t = nb(k, d); sum += t === 1 ? fp[k] : t === 2 ? 0 : fp[k + d]; }
+      fp[k] = (sum - fD[k]) * 0.25;
+    }
+  }
+  let e = 0, cnt = 0;
+  const dmp = Math.exp(-F_DAMP * dt);
+  for (let j = 1; j < NY - 1; j++) for (let i = 1; i < NX - 1; i++){
+    const k = i + j * NX; if (ftype[k]) continue;
+    const pv = d => { const t = ftype[k + d]; return t === 1 ? fp[k] : t === 2 ? 0 : fp[k + d]; };
+    fu[k] = (fu[k] - 0.5 * (pv(1) - pv(-1))) * dmp;
+    fv[k] = (fv[k] - 0.5 * (pv(NX) - pv(-NX))) * dmp;
+    e += fu[k] * fu[k] + fv[k] * fv[k]; cnt++;
+  }
+  waterEnergy = Math.sqrt(e / Math.max(1, cnt));
+  churn = Math.min(1.6, waterEnergy / 90);
+}
+// how fast the water is spinning at a point (clockwise on screen = positive)
+function waterSpin(x, y, h){
+  return 0.5 * ((sampleF(fv, x + h, y) - sampleF(fv, x - h, y)) - (sampleF(fu, x, y + h) - sampleF(fu, x, y - h))) / (2 * h);
+}
+
+/* ---------- how a ring moves through water ---------- */
+// Drag depends on the ring's angle: falling flat meets lots of water, edge-on slices through.
+// That is what makes real rings glide, swoop and flutter as they sink.
+const CN1 = 1.0, CN2 = 0.008, CT1 = 0.3, CT2 = 0.0025;
+const INV_M = 1 / 1.8;        // added mass: you also have to shove the water around the ring
+const KB = 0.0016;            // broadside torque: a falling plate turns to face its motion
+const MU_S = 0.38, MU_K = 0.18; // static / sliding friction on the floor
 const ringRY = r => R * (0.3 + 0.7 * Math.abs(Math.sin(r.tilt)));
-// slow swirling eddies left behind by earlier presses
-function churnFlow(x, y){
-  if (churn < 0.01) return [0, 0];
-  const a = Math.sin(y * 0.031 + T * 1.7) + Math.sin(x * 0.027 - T * 1.3 + y * 0.01);
-  const b = Math.cos(x * 0.029 + T * 1.5) + Math.sin(y * 0.022 - T * 1.9 + x * 0.012);
-  const c = Math.min(1.6, churn);
-  return [a * c * 105, b * c * 85];
-}
-// when a pump fires, water rushes along the floor toward its nozzle to refill it
-function floorPull(x, y, j){
-  const p = jets[j].suck + jets[j].power * 0.25;
-  if (p < 0.01) return 0;
-  const near = Math.exp(-(FLOOR - y) / 55);
-  const dx = JX[j] - x, dist = Math.abs(dx);
-  return Math.sign(dx) * 900 * p * near * Math.min(1, dist / 40) * (0.55 + 0.45 * Math.exp(-dist / 160));
+function ringDrag(r, vrx, vry){
+  const ct = Math.abs(Math.cos(r.tilt));
+  const nx = -Math.sin(r.rot) * ct, ny = Math.cos(r.rot) * ct;
+  const vn = vrx * nx + vry * ny, pnx = vn * nx, pny = vn * ny;
+  const tx = vrx - pnx, ty = vry - pny, vt = Math.hypot(tx, ty);
+  const cn = CN1 + CN2 * Math.abs(vn), cT = CT1 + CT2 * vt;
+  return [-(cn * pnx + cT * tx), -(cn * pny + cT * ty)];
 }
 
 function step(dt){
+  if (performance.now() - lastMotion > 250){ shake.x *= Math.exp(-8 * dt); shake.y *= Math.exp(-8 * dt); }
   // the toy follows your hand with a little spring
   tiltV += ((tiltTarget - tilt) * 70 - tiltV * 13) * dt;
-  const tmax = sensorOn ? 1.05 : 0.6;   // a real phone can be tipped further than a drag
+  const tmax = sensorOn ? 1.05 : 0.6;
   tilt = clamp(tilt + tiltV * dt, -tmax, tmax);
+  // effective gravity in the toy: real gravity, tipped by the tilt, plus any shaking
+  gEx = G_NET * Math.sin(tilt) - K_SHAKE * shake.x;
+  gEy = G_NET * Math.cos(tilt) - K_SHAKE * shake.y;
+  gTheta = Math.atan2(gEx, Math.max(30, gEy));
   solveSurface();
-  const gx = G * Math.sin(tilt), gy = G * Math.cos(tilt);
-  const SLOSH = 0.65;                                // water lags behind when the toy turns
 
   for (const j of jets){
     // the button squeezes a rubber bellows: fast at first, then it runs out of water to push.
-    // A quick tap is a gentle puff, a full press is a big push. Letting go refills it (and sucks water back in).
     const prev = j.sq;
     if (j.held) j.sq = Math.min(1, prev + (7 * (1 - prev) + 1.2) * dt);
     else j.sq = Math.max(0, prev - 1.7 * dt);
     const d = (j.sq - prev) / dt;
     j.power += (Math.min(3, Math.max(0, d) * 0.7) - j.power) * Math.min(1, dt * 25);
     j.suck += (Math.max(0, -d) * 0.45 - j.suck) * Math.min(1, dt * 12);
-    churn += j.power * dt * 0.9;
   }
-  churn *= Math.exp(-dt / 2.8);
-  const total = jets[0].power + jets[1].power;
+
+  fluidStep(dt);
 
   for (const r of rings){
     const prevY = r.y;
-    let ax = gx, ay = gy, jy = 0, turb = 0;
-    for (let j = 0; j < 2; j++){
-      const f = jetForce(r.x, r.y, j);
-      ax += f[0]; jy += f[1]; turb += f[2];
-      // recirculation: water pushed up the plume spills sideways along the top
-      ax += Math.sign(150 - JX[j]) * 90 * jets[j].power * Math.exp(-(r.y - SURF) / 110);
-      if (r.peg < 0) ax += floorPull(r.x, r.y, j);
-    }
-    ax += tiltV * (r.y - 300) * SLOSH;
-    ay += -tiltV * (r.x - 150) * SLOSH;
-    // smooth, slow tumbling in the current (no per-frame jitter)
-    const swirl = Math.sin(T * 1.3 + r.seed) + 0.6 * Math.sin(T * 2.1 + r.seed * 1.7);
-    r.tv += swirl * 3.2 * turb * dt;
-    r.rv += Math.sin(T * 0.9 + r.seed * 2.3) * 1.2 * turb * dt;
+    const uw = sampleF(fu, r.x, r.y), vw = sampleF(fv, r.x, r.y);
+    const spin = waterSpin(r.x, r.y, R);
 
     if (r.peg < 0){
-      const cf = churnFlow(r.x, r.y);
-      ax += cf[0] + Math.sin(T * 0.8 + r.seed) * 6 + Math.sin(T * 2.7 + r.seed * 3.1) * 70 * turb;
-      ay += cf[1];
-      r.tv += Math.sin(T * 1.9 + r.seed * 1.3) * Math.min(1.6, churn) * 2.2 * dt;
-      r.vx += ax * dt; r.vy += (ay + jy) * dt;
-      const d = Math.exp(-DRAG * dt); r.vx *= d; r.vy *= d;
+      const vrx = r.vx - uw, vry = r.vy - vw;
+      const [dx_, dy_] = ringDrag(r, vrx, vry);
+      let ax = (gEx + dx_) * INV_M, ay = (gEy + dy_) * INV_M;
+      pushWater(r.x, r.y, -dx_ * REACT, -dy_ * REACT, dt);   // the ring drags water along: a wake
+
+      // resting on the floor: it won't budge until the push beats static friction
+      const ry0 = ringRY(r), onFloorNow = r.y >= FLOOR - ry0 - 0.8;
+      if (onFloorNow){
+        const N = Math.max(0, ay);
+        if (Math.abs(r.vx) < 5 && Math.abs(ax) < MU_S * N){ ax = 0; r.vx *= 0.3; }
+        else ax -= Math.sign(r.vx || ax) * MU_K * N;
+      }
+      r.vx += ax * dt; r.vy += ay * dt;
       r.x += r.vx * dt; r.y += r.vy * dt;
 
-      const onFloor = r.y >= FLOOR - ringRY(r) - 0.6 || Math.hypot(r.vx, r.vy) < 14;
-      r.tv += -Math.sin(2 * r.tilt) * (onFloor ? 16 : 2.4) * dt;   // settle flat, fully flat on the floor
-      if (onFloor && Math.abs(Math.sin(r.tilt)) > 0.25) r.tv -= Math.sign(r.tilt || 1) * 4 * dt; // never balance on edge
-      r.tv *= Math.exp(-(onFloor ? 7 : 2.6) * dt);
+      // in-plane angle: turns broadside to its motion (flutter) and gets spun by swirling water
+      const sr = Math.sin(r.rot), cr = Math.cos(r.rot), ct = Math.abs(Math.cos(r.tilt));
+      const vt = vrx * cr + vry * sr, vnp = -vrx * sr + vry * cr;
+      r.rv += (-KB * vnp * vt * ct + (spin - r.rv) * 0.8) * INV_M * dt;
+      r.rv *= Math.exp(-0.35 * dt);
+      r.rot = clamp(r.rot + r.rv * dt, -1.25, 1.25);
+      // tip toward/away from you: tumbles in swirls, settles flat when calm
+      const calm = Math.hypot(r.vx, r.vy) < 14;
+      r.tv += Math.sin(T * 1.9 + r.seed * 1.3) * Math.min(3, Math.abs(spin)) * 1.4 * dt;
+      r.tv += -Math.sin(2 * r.tilt) * (onFloorNow || calm ? 16 : 2.4) * dt;
+      if (onFloorNow && Math.abs(Math.sin(r.tilt)) > 0.25) r.tv -= Math.sign(r.tilt || 1) * 4 * dt;
+      r.tv *= Math.exp(-(onFloorNow ? 7 : 2.6) * dt);
       r.tv = clamp(r.tv, -2.2, 2.2);
       r.tilt += r.tv * dt;
       r.tilt -= Math.PI * Math.round(r.tilt / Math.PI);
-      r.rv += -r.rot * 2.4 * dt; r.rv *= Math.exp(-2 * dt); r.rv = clamp(r.rv, -0.8, 0.8);
-      r.rot = clamp(r.rot + r.rv * dt, -0.5, 0.5);
+      if (onFloorNow){ r.rot += (0 - r.rot) * Math.min(1, 8 * dt); r.rv *= 0.6; }   // lying on the floor
 
       const ry = ringRY(r);
       if (r.x < R + 3){ r.x = R + 3; r.vx = Math.abs(r.vx) * 0.3; }
       if (r.x > LW - R - 3){ r.x = LW - R - 3; r.vx = -Math.abs(r.vx) * 0.3; }
       const sy = surfY(r.x);
-      if (r.y < sy + ry + 3){ r.y = sy + ry + 3; if (r.vy < -70){ sfx.tap(); r.tv += rnd(-1.5, 1.5); } if (r.vy < 0) r.vy *= -0.25; }
-      if (r.y > FLOOR - ry){ r.y = FLOOR - ry; if (r.vy > 0) r.vy *= -0.12; r.vx *= Math.exp(-2.5 * dt); }
+      if (r.y < sy + ry + 3){ r.y = sy + ry + 3; if (r.vy < -70){ sfx.tap(); r.tv += rnd(-1.5, 1.5); r.rv += rnd(-2, 2); } if (r.vy < 0) r.vy *= -0.25; }
+      if (r.y > FLOOR - ry){ r.y = FLOOR - ry; if (r.vy > 0) r.vy *= -0.12; }
 
       for (let k = 0; k < PEGS.length; k++){
         const P = PEGS[k], dx = r.x - P.x, adx = Math.abs(dx), s = dx >= 0 ? 1 : -1;
@@ -899,10 +1024,10 @@ function step(dt){
             r.x += s * Math.min(2, R + 2.5 - adx);
             r.vx = s * Math.max(Math.abs(r.vx), 18);
             if (r.vy > 0){ if (r.vy > 25){ sfx.tap(); if (r.vy > 30) kid.nearMiss(P); } r.vy *= 0.6; }
-            r.tv += s * 0.6;
+            r.tv += s * 0.6; r.rv += s * 1.2;
           }
-        } else if (prevY < P.top && adx < R * 0.72 && Math.abs(Math.sin(r.tilt)) < 0.8){
-          // threaded!
+        } else if (prevY < P.top && adx < R * 0.72 && Math.abs(Math.sin(r.tilt)) < 0.8 && Math.abs(Math.sin(r.rot)) < 0.75){
+          // threaded! (it has to arrive flat enough, in both directions, to fit over the tip)
           r.peg = k; r.ox = dx; r.y = P.top + 1; r.vx = 0; r.vy = Math.max(r.vy, 20);
           sfx.catchRing(); break;
         }
@@ -910,8 +1035,9 @@ function step(dt){
       }
     } else {
       const P = PEGS[r.peg];
-      r.vy += (gy + jy * 0.7 + ay - gy + churnFlow(r.x, r.y)[1] * 0.45) * dt;   // a storm can lift rings off a peg
-      r.vy *= Math.exp(-DRAG * 1.2 * dt);
+      const vr = r.vy - vw;
+      const ay = (gEy - (CN1 + CN2 * Math.abs(vr)) * vr) * INV_M;   // a strong upflow can lift it off
+      r.vy += ay * dt;
       r.y += r.vy * dt;
       r.ox *= Math.exp(-4 * dt);
       r.x = P.x + r.ox + Math.sin(T * 2 + r.seed) * 0.5;
@@ -961,45 +1087,35 @@ function step(dt){
     }
   }
 
-  // bubbles (they rise against gravity, whichever way the toy is tilted)
-  const sinT = Math.sin(tilt), cosT = Math.cos(tilt);
+  // bubbles: ride the water, rise against (effective) gravity, and drag water up with them
+  const gl_ = Math.hypot(gEx, gEy) || 1, upx = -gEx / gl_, upy = -gEy / gl_;
   for (let j = 0; j < 2; j++){
     const p = jets[j].power;
     let n = p * 110 * dt;
     while (n > 0){
-      if (Math.random() < n) bubbles.push({ x: JX[j] + rnd(-9, 9), y: FLOOR - rnd(0, 6), r: Math.random() < 0.25 ? rnd(1.8, 3.6) : rnd(0.6, 1.7),
-        vy: -rnd(60, 160) * (0.5 + p), vx: rnd(-25, 25), ph: rnd(0, 6.28), w: rnd(4, 12) });
+      if (Math.random() < n) bubbles.push({ x: JX[j] + rnd(-9, 9), y: FLOOR - rnd(0, 6), r: Math.random() < 0.25 ? rnd(1.8, 3.6) : rnd(0.6, 1.7), ph: rnd(0, 6.28), w: rnd(4, 12) });
       n -= 1;
     }
     if (p > 0.35 && Math.random() < dt * 16 * p) sfx.bubble(j);
   }
-  if (Math.random() < dt * 1.2) bubbles.push({ x: rnd(20, 280), y: FLOOR - 2, r: rnd(0.5, 1.4), vy: -rnd(20, 40), vx: 0, ph: rnd(0, 6.28), w: rnd(2, 6) });
+  if (Math.random() < dt * 1.2) bubbles.push({ x: rnd(20, 280), y: FLOOR - 2, r: rnd(0.5, 1.4), ph: rnd(0, 6.28), w: rnd(2, 6) });
   for (const b of bubbles){
-    const f0 = jetForce(b.x, b.y, 0), f1 = jetForce(b.x, b.y, 1);
-    const term = 45 + b.r * 32, k = Math.min(1, 3.2 * dt);   // bigger bubbles rise faster
-    b.vx += ((f0[0] + f1[0]) * 0.4 + tiltV * (b.y - 300) * SLOSH * 0.5) * dt;
-    b.vy += ((f0[1] + f1[1]) * 0.05) * dt;
-    const bc = churnFlow(b.x, b.y); b.vx += bc[0] * 0.6 * dt; b.vy += bc[1] * 0.3 * dt;
-    b.vx += (-sinT * term - b.vx) * k;                         // straight up in the real world,
-    b.vy += (-cosT * term - b.vy) * k;                         // whichever way the toy is held
-    b.x += (b.vx + Math.sin(T * 7 + b.ph) * b.w) * dt;
-    b.y += b.vy * dt;
+    const term = 45 + b.r * 32;
+    b.x += (sampleF(fu, b.x, b.y) + upx * term + Math.sin(T * 7 + b.ph) * b.w) * dt;
+    b.y += (sampleF(fv, b.x, b.y) + upy * term) * dt;
+    pushWater(b.x, b.y, upx * AIRLIFT * b.r, upy * AIRLIFT * b.r, dt);
   }
   for (const b of bubbles) if (b.y <= surfY(b.x) + 1 && foam.length < 70 && Math.random() < 0.5) foam.push({ x: b.x, r: b.r * 0.9, life: rnd(0.6, 2.4), vx: rnd(-6, 6) });
   bubbles = bubbles.filter(b => b.y > surfY(b.x) + 1 && b.x > 2 && b.x < LW - 2 && b.y < FLOOR + 4);
-  for (const f of foam){ f.x += f.vx * dt; f.life -= dt; }
+  for (const f of foam){ f.x += (f.vx + sampleF(fu, f.x, surfY(f.x) + 6) * 0.5) * dt; f.life -= dt; }
   foam = foam.filter(f => f.life > 0 && f.x > 2 && f.x < LW - 2);
 
-  // drifting specks
+  // drifting specks just ride the water (and settle very slowly)
   for (const m of motes){
-    const f0 = jetForce(m.x, m.y, 0), f1 = jetForce(m.x, m.y, 1);
-    m.vx += ((f0[0] + f1[0]) * 0.5 + (floorPull(m.x, m.y, 0) + floorPull(m.x, m.y, 1)) * 0.6 + Math.sin(T * 0.3 + m.y * 0.05) * 3 + 6 * sinT + tiltV * (m.y - 300) * SLOSH) * dt;
-    const mc = churnFlow(m.x, m.y); m.vx += mc[0] * 0.5 * dt;
-    m.vy += (mc[1] * 0.5 + (f0[1] + f1[1]) * 0.4 + 6 * cosT - tiltV * (m.x - 150) * SLOSH) * dt;
-    const d = Math.exp(-2.4 * dt); m.vx *= d; m.vy *= d;
-    m.x += m.vx * dt; m.y += m.vy * dt;
+    m.x += (sampleF(fu, m.x, m.y) + gEx * 0.02) * dt;
+    m.y += (sampleF(fv, m.x, m.y) + gEy * 0.02) * dt;
     if (m.y > FLOOR) { m.y = surfY(m.x) + 4; m.x = rnd(0, LW); }
-    if (m.y < surfY(m.x)) { m.y = surfY(m.x) + 2; m.vy = Math.abs(m.vy); }
+    if (m.y < surfY(m.x)) m.y = surfY(m.x) + 2;
     if (m.x < 0) m.x += LW; if (m.x > LW) m.x -= LW;
   }
 }
@@ -1423,15 +1539,29 @@ function onOri(e){
   sensorTilt = clamp(a, -1.05, 1.05) * Math.min(1, m / 0.3);
   if (!drag) tiltTarget = sensorTilt;
 }
+// Shaking: the phone's own movement (gravity removed) throws the rings around, like jiggling the real toy
+let lastMotion = 0;
+function onMotion(e){
+  const a = e.acceleration;
+  if (!sensorOn || !a || a.x == null || a.y == null) return;
+  lastMotion = performance.now();
+  let ax = a.x, ay = -a.y;                                         // screen axes: x right, y down
+  const ang = ((screen.orientation && screen.orientation.angle) || window.orientation || 0) * Math.PI / 180;
+  if (ang){ const c = Math.cos(ang), s = Math.sin(ang); [ax, ay] = [ax * c + ay * s, -ax * s + ay * c]; }
+  shake.x += (clamp(ax, -25, 25) - shake.x) * 0.4;
+  shake.y += (clamp(ay, -25, 25) - shake.y) * 0.4;
+}
 async function enableSensor(silent){
   try {
-    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function'){
-      const res = await DeviceOrientationEvent.requestPermission();
-      if (res !== 'granted') throw new Error('denied');
-    }
+    const reqs = [];   // ask for both in the same tap: iPhone shows one "motion & orientation" prompt
+    if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') reqs.push(DeviceMotionEvent.requestPermission());
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') reqs.push(DeviceOrientationEvent.requestPermission());
+    const res = await Promise.all(reqs);
+    if (res.some(r => r !== 'granted')) throw new Error('denied');
   } catch(_){ if (!silent) toast("Motion access wasn't allowed. Drag the toy to tilt instead."); return; }
   gotSensor = false;
   addEventListener('deviceorientation', onOri);
+  addEventListener('devicemotion', onMotion);
   setSensor(true);
   setTimeout(() => {
     if (sensorOn && !gotSensor){ setSensor(false); if (!silent) toast('No tilt sensor reached this page. Drag the toy or use ← → to tilt.'); }
@@ -1442,7 +1572,7 @@ function setSensor(on){
   $('tiltBtn').setAttribute('aria-pressed', on);
   $('tiltBtn').textContent = on ? 'Phone tilt: on' : 'Use phone tilt';
   if (on) $('tiltBtn').classList.remove('nudge');
-  if (!on){ removeEventListener('deviceorientation', onOri); tiltTarget = restTilt(); }
+  if (!on){ removeEventListener('deviceorientation', onOri); removeEventListener('devicemotion', onMotion); shake.x = shake.y = 0; tiltTarget = restTilt(); }
 }
 $('tiltBtn').addEventListener('click', async () => {
   A.init();
@@ -1490,7 +1620,7 @@ function frame(now){
   updateHUD();
   const vt = sensorOn ? 0 : tilt, fit = 1 / (1 + 0.45 * Math.abs(Math.sin(vt))); // shrink a little while tilted so it stays on screen
   rig.style.transform = `rotate(${vt}rad) translateY(${(-bump * 5).toFixed(2)}px) scale(${(fit * (1 + bump * 0.02)).toFixed(4)})`;
-  A.setWater(jets[0].power, jets[1].power, Math.min(0.6, Math.abs(tiltV) * 0.2));
+  A.setWater(jets[0].power, jets[1].power, Math.min(0.7, waterEnergy / 260));
   kid.update(dt);
   btns[0].style.setProperty('--sq', jets[0].sq.toFixed(3)); btns[1].style.setProperty('--sq', jets[1].sq.toFixed(3));
   drawSky(T, dt);
@@ -1498,7 +1628,7 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 
-window.__rt = { get rings(){ return rings; }, PEGS, setTilt: v => { tiltTarget = v; }, tilt: () => tilt };
+window.__rt = { get rings(){ return rings; }, PEGS, setTilt: v => { tiltTarget = v; }, tilt: () => tilt, energy: () => waterEnergy, set: o => { if ('VORT' in o) VORT = o.VORT; if ('VIN' in o) VIN = o.VIN; if ('VSUCK' in o) VSUCK = o.VSUCK; if ('JETH' in o) JETH = o.JETH; if ('VTHR' in o) VTHR = o.VTHR; if ('AIRLIFT' in o) AIRLIFT = o.AIRLIFT; if ('REACT' in o) REACT = o.REACT; if ('JETF' in o) JETF = o.JETF; if ('SRC' in o) SRC = o.SRC; }, fl: () => { let mn = 0, mx = 0, at = 0; for (let k = 0; k < fv.length; k++){ if (fv[k] < mn){ mn = fv[k]; at = k; } } return { minV: Math.round(mn), at: [at % NX, Math.floor(at / NX)], jet: jets.map(j => +j.power.toFixed(2)) }; }, step: (n, dt) => { const t0 = performance.now(); for (let i = 0; i < n; i++) step(dt); return (performance.now() - t0) / n; } };
 resetGame();
 resize();
 requestAnimationFrame(frame);
