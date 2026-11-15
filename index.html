@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Water Ring Toss — under the stars</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden;background:#03061a;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+  body{font-family:Fredoka,system-ui,sans-serif;color:#fff}
+  #sky{position:fixed;inset:0;display:block}
+  .stage{position:relative;height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+    --kh:clamp(74px,11svh,118px);--cw:min(92vw, calc((100svh - 84px - var(--kh)) / 2.05), 430px)}
+
+  /* ---------- the toy ---------- */
+  .console{
+    width:var(--cw);container-type:inline-size;position:relative;z-index:1;
+    padding:4cqw 4cqw 3cqw;
+    border-radius:10cqw 10cqw 16cqw 16cqw;
+    background:
+      radial-gradient(120% 60% at 20% 0%, rgba(255,255,255,.35), transparent 55%),
+      linear-gradient(165deg,#ffbe5c 0%,#f7931e 38%,#e2700c 75%,#c45a06 100%);
+    box-shadow:
+      inset 0 2px 0 rgba(255,255,255,.55),
+      inset 0 -1.2cqw 2cqw rgba(120,40,0,.45),
+      inset 1.2cqw 0 2cqw rgba(255,220,160,.35),
+      inset -1.2cqw 0 2cqw rgba(140,50,0,.35),
+      0 3cqw 6cqw rgba(0,0,0,.55),
+      0 0 18cqw rgba(120,160,255,.10);
+    will-change:transform;cursor:grab;
+  }
+  .console::after{ /* moonlight wash */
+    content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:linear-gradient(200deg,rgba(150,180,255,.18),transparent 40%,rgba(10,20,60,.25));
+    mix-blend-mode:multiply;
+  }
+  .top{display:flex;align-items:center;justify-content:space-between;height:12cqw;margin-bottom:2.4cqw;padding:0 1cqw}
+  .pill{
+    font:600 3.6cqw Fredoka,sans-serif;letter-spacing:.06em;color:#7a3500;
+    padding:1.6cqw 3.4cqw;border:none;border-radius:99px;cursor:pointer;
+    background:linear-gradient(#ffe39a,#ffc34d);
+    box-shadow:inset 0 1px 0 #fff6d8,0 .8cqw 0 #b85a05,0 1.2cqw 1.6cqw rgba(0,0,0,.25);
+  }
+  .pill:active{transform:translateY(.6cqw);box-shadow:inset 0 1px 0 #fff6d8,0 .2cqw 0 #b85a05}
+  .lcd{
+    transition:filter .2s;
+    font-family:VT323,monospace;display:flex;gap:3cqw;align-items:baseline;
+    padding:.6cqw 3cqw;border-radius:2cqw;
+    background:linear-gradient(#2c3b2a,#1c271b);color:#b6ff9e;
+    box-shadow:inset 0 .6cqw 1.2cqw rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.4);
+    text-shadow:0 0 1.6cqw rgba(160,255,130,.6);
+  }
+  #score{font-size:8cqw;line-height:1}
+  #timer{font-size:5cqw;opacity:.8}
+  .brand{font:700 3.2cqw/1 Fredoka,sans-serif;color:#fff3dc;text-align:right;letter-spacing:.08em;text-shadow:0 .4cqw 0 rgba(150,60,0,.5)}
+
+  .tank{
+    position:relative;width:86cqw;aspect-ratio:300/520;margin:0 auto;
+    border-radius:4.5cqw;overflow:hidden;
+    box-shadow:0 0 0 1.4cqw #c96208,0 0 0 2cqw #ffb24a,inset 0 0 0 1px rgba(255,255,255,.2);
+    background:#0a3550;
+  }
+  .tank canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .glass{position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+    background:
+      linear-gradient(112deg,transparent 8%,rgba(255,255,255,.13) 10%,rgba(255,255,255,.04) 17%,transparent 19%),
+      linear-gradient(112deg,transparent 22%,rgba(255,255,255,.06) 23%,transparent 26%),
+      linear-gradient(250deg,transparent 80%,rgba(255,255,255,.08) 86%,transparent 90%);
+    box-shadow:inset 0 0 4cqw rgba(0,10,30,.55),inset 0 1.4cqw 2cqw rgba(0,0,0,.35);
+  }
+  .hint{position:absolute;left:50%;bottom:22%;transform:translateX(-50%);white-space:nowrap;
+    font:500 3.6cqw Fredoka,sans-serif;color:#e8fbff;padding:1.4cqw 3cqw;border-radius:99px;
+    background:rgba(0,30,50,.35);backdrop-filter:blur(2px);transition:opacity .8s;pointer-events:none}
+  .hint.gone{opacity:0}
+  .win{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3cqw;
+    background:radial-gradient(circle at 50% 45%,rgba(0,40,70,.55),rgba(0,15,35,.8));text-align:center;
+    opacity:0;pointer-events:none;transition:opacity .6s}
+  .win.show{opacity:1;pointer-events:auto}
+  .win h2{font:700 8cqw/1.05 Fredoka,sans-serif;color:#fff6cf;text-shadow:0 0 4cqw rgba(255,220,120,.6)}
+  .win p{font:500 4.2cqw Fredoka,sans-serif;color:#cfefff}
+
+  .bottom{position:relative;display:flex;align-items:center;justify-content:space-between;height:30cqw;padding:0 3cqw;margin-top:2cqw}
+  .pump{
+    position:relative;width:24cqw;height:24cqw;border-radius:50%;border:none;cursor:pointer;
+    background:radial-gradient(circle at 50% 50%,#9a4a05 58%,#6f3300 70%,transparent 71%);
+  }
+  .pump::before{ /* dome */
+    content:"";position:absolute;inset:2.4cqw;border-radius:50%;
+    background:radial-gradient(circle at 36% 30%,#fffbe0 0 8%,#fff06a 20%,#ffd400 52%,#d9a000 85%,#a87600 100%);
+    box-shadow:0 1.6cqw 0 #a06a00,0 2.4cqw 2.4cqw rgba(0,0,0,.4);
+    transition:transform .06s, box-shadow .06s;
+  }
+  .pump::before{transform:translateY(calc(var(--sq,0) * 1.5cqw)) scale(calc(1 - var(--sq,0) * .04))}
+  .pump.down::before{box-shadow:0 .3cqw 0 #a06a00,0 .6cqw 1cqw rgba(0,0,0,.4)}
+  .pump span{position:absolute;inset:0;display:grid;place-items:center;font:700 5cqw Fredoka,sans-serif;color:rgba(130,85,0,.55);pointer-events:none;transition:transform .06s}
+  .pump span{transform:translateY(calc(var(--sq,0) * 1.5cqw))}
+  .grille{width:22cqw;height:12cqw;border-radius:3cqw;
+    background:radial-gradient(circle,#7a3600 0 34%,transparent 40%) 0 0/3cqw 3cqw, linear-gradient(#e2780f,#d26a08);
+    box-shadow:inset 0 .6cqw 1cqw rgba(0,0,0,.35),0 1px 0 rgba(255,255,255,.35)}
+  .console.grabbing{cursor:grabbing}
+  .stage{cursor:grab}
+  .controls{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 12px;padding:0 12px;max-width:640px}
+  .chip{font:500 13px Fredoka,sans-serif;color:#e8eeff;background:rgba(120,140,220,.16);border:1px solid rgba(180,195,255,.28);
+    padding:6px 12px;border-radius:99px;cursor:pointer;backdrop-filter:blur(4px)}
+  .chip:hover{background:rgba(140,160,240,.26)}
+  .chip.nudge{background:rgba(255,200,90,.3);border-color:rgba(255,215,130,.7);animation:nudge 1.6s ease-in-out infinite}
+  @keyframes nudge{50%{box-shadow:0 0 0 6px rgba(255,210,120,.15)}}
+  .chip[aria-pressed="true"]{background:rgba(255,200,90,.25);border-color:rgba(255,210,120,.55)}
+  .caption{font:500 13px Fredoka,sans-serif;color:rgba(210,225,255,.55);letter-spacing:.02em;text-align:center}
+  .toast{position:fixed;left:50%;bottom:18px;transform:translate(-50%,20px);opacity:0;transition:.35s;pointer-events:none;
+    font:500 14px Fredoka,sans-serif;color:#fff;background:rgba(10,18,50,.85);border:1px solid rgba(180,195,255,.3);padding:9px 16px;border-radius:12px;max-width:90vw;text-align:center}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  /* ---------- little brother (leaning over the top of the toy) ---------- */
+  .rig{display:flex;flex-direction:column;align-items:center;gap:12px;will-change:transform}
+  .buddy{width:var(--cw);height:var(--kh);display:flex;align-items:center;justify-content:center;gap:6px;
+    position:relative;z-index:2;pointer-events:none;margin-bottom:calc(-12px - var(--kh) * 0.1)}
+  .kid{height:var(--kh);width:calc(var(--kh) * 1.43);flex:none;margin-left:22%;
+    filter:drop-shadow(0 6px 10px rgba(0,0,0,.35)) drop-shadow(0 0 22px rgba(255,160,70,.18))}
+  .kid svg{display:block;width:100%;height:100%;overflow:visible}
+  .kid svg *{transform-box:view-box}
+  .kid #kidAll{transform-origin:100px 140px;animation:breathe 3.4s ease-in-out infinite}
+  @keyframes breathe{50%{transform:translateY(1.5px)}}
+  .kid.hop #kidAll{animation:hop .5s cubic-bezier(.3,.7,.4,1)}
+  .kid.party #kidAll{animation:hop .55s cubic-bezier(.3,.7,.4,1) infinite}
+  @keyframes hop{35%{transform:translateY(-14px) rotate(-3deg)}70%{transform:translateY(0)}85%{transform:translateY(-3px)}}
+  .kid #headLook,.kid #head{transform-origin:100px 128px}
+  .kid.laugh #head{animation:giggle .16s ease-in-out infinite alternate}
+  @keyframes giggle{from{transform:rotate(-3deg)}to{transform:rotate(3deg) translateY(1.5px)}}
+  .kid.sleepy #head{transform:rotate(7deg) translateY(3px);transition:transform 1.2s}
+  /* cheering: mittens drum on the edge of the toy */
+  .kid.cheer #handL{animation:drum .17s ease-in-out infinite alternate}
+  .kid.cheer #handR{animation:drum .17s ease-in-out infinite alternate-reverse}
+  .kid.laugh #handL,.kid.laugh #handR{animation:drum .3s ease-in-out infinite alternate}
+  @keyframes drum{from{transform:translateY(0)}to{transform:translateY(-9px)}}
+  .kid #lids ellipse{transform-box:fill-box;transform-origin:50% 0;transform:scaleY(0);transition:transform .07s}
+  .kid.blink #lids ellipse{transform:scaleY(1)}
+  .kid.sleepy #lids ellipse{transform:scaleY(.55)}
+  .kid #brows{transition:transform .2s}
+  .kid.wow #brows{transform:translateY(-6px)}
+  .kid.sleepy #brows{transform:translateY(2px)}
+  .kid .eyeArc,.kid .m{display:none}
+  .kid .m-neutral{display:inline}
+  .kid.happy .m-neutral,.kid.cheer .m-neutral,.kid.laugh .m-neutral,.kid.wow .m-neutral,.kid.sleepy .m-neutral{display:none}
+  .kid.happy .m-happy,.kid.cheer .m-happy{display:inline}
+  .kid.laugh .m-laugh{display:inline}
+  .kid.wow .m-wow{display:inline}
+  .kid.sleepy .m-sleepy{display:inline}
+  .kid.upset .m-neutral,.kid.impatient .m-neutral,.kid.lean .m-neutral{display:none}
+  .kid.upset .m-sad,.kid.impatient .m-sad{display:inline}
+  .kid.lean .m-wow{display:inline}
+  .kid #browL{transform-origin:79px 74px;transition:transform .2s}
+  .kid #browR{transform-origin:121px 74px;transition:transform .2s}
+  .kid.upset #browL{transform:rotate(-16deg)}
+  .kid.upset #browR{transform:rotate(16deg)}
+  .kid.impatient #browL{transform:rotate(12deg) translateY(1px)}
+  .kid.impatient #browR{transform:rotate(-12deg) translateY(1px)}
+  .kid.upset #head{animation:sulk 1s ease-out}
+  @keyframes sulk{30%{transform:rotate(-6deg) translateY(4px)}100%{transform:none}}
+  .kid #head{transition:transform .35s ease}
+  .kid.lean #head{transform:translateY(7px) scale(1.07)}
+  .kid.impatient #handL,.kid.impatient #handR{animation:drum .42s ease-in-out infinite alternate}
+  .kid.impatient #handR{animation-delay:.21s}
+  .kid.cheer .eyeArc,.kid.laugh .eyeArc{display:inline}
+  .kid.cheer .eyeOpen,.kid.laugh .eyeOpen{display:none}
+  .bubble{position:absolute;right:calc(50% - 11% + var(--kh) * 0.6);top:50%;margin-top:-1.3em;max-width:50%;padding:8px 13px;border-radius:15px;background:#fffdf3;color:#2b1d45;
+    font:600 15px/1.25 Fredoka,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.35);opacity:0;transform:translateX(8px) scale(.7);white-space:normal;
+    transform-origin:100% 50%;transition:opacity .18s,transform .28s cubic-bezier(.3,1.6,.5,1)}
+  .bubble::after{content:"";position:absolute;right:-8px;top:50%;margin-top:-8px;border:8px solid transparent;border-left-color:#fffdf3;border-right:0}
+  .bubble.show{opacity:1;transform:none}
+  .lcd.pop{animation:lcdPop .55s ease-out}
+  @keyframes lcdPop{25%{transform:scale(1.16);filter:brightness(1.7)}100%{transform:none}}
+  @media (max-width:600px){.caption{display:none}.bubble{font-size:13px;padding:6px 10px}}
+  .caption b{color:rgba(240,245,255,.85);font-weight:600}
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas>
+<main class="stage">
+  <div class="rig" id="rig">
+  <div class="buddy" aria-hidden="true">
+    <div class="bubble" id="bubble"></div>
+    <div class="kid" id="kid">
+      <svg viewBox="0 0 200 140">
+        <defs>
+          <radialGradient id="kSkin" cx=".42" cy=".38" r=".72">
+            <stop offset="0" stop-color="#f4c7a1"/><stop offset=".7" stop-color="#e0a67d"/><stop offset="1" stop-color="#cb8c63"/>
+          </radialGradient>
+          <linearGradient id="kGlow" x1="0" y1="0" x2="0" y2="1">
+            <stop offset=".55" stop-color="#ffa64d" stop-opacity="0"/><stop offset="1" stop-color="#ffa64d" stop-opacity=".5"/>
+          </linearGradient>
+          <radialGradient id="kCheek"><stop offset="0" stop-color="#ff7474" stop-opacity=".6"/><stop offset="1" stop-color="#ff7474" stop-opacity="0"/></radialGradient>
+          <linearGradient id="kHat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6fe0d0"/><stop offset="1" stop-color="#2aa293"/></linearGradient>
+          <linearGradient id="kCoat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8070"/><stop offset="1" stop-color="#d4433b"/></linearGradient>
+          <radialGradient id="kMit" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#ffd76a"/><stop offset="1" stop-color="#e6a21c"/></radialGradient>
+        </defs>
+        <g id="kidAll">
+          <path d="M34 146 C 38 118, 68 110, 100 110 C 132 110, 162 118, 166 146 Z" fill="url(#kCoat)"/>
+          <path d="M82 113 Q100 123 118 113" stroke="#b5352e" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <g id="headLook"><g id="head">
+            <circle cx="50" cy="86" r="9" fill="#d99a70"/><circle cx="150" cy="86" r="9" fill="#cf8f66"/>
+            <circle cx="100" cy="80" r="50" fill="url(#kSkin)"/>
+            <circle cx="100" cy="80" r="50" fill="url(#kGlow)"/>
+            <path d="M60 58 C 66 70, 76 68, 81 60 C 86 69, 96 69, 100 60 C 105 69, 115 69, 120 60 C 125 68, 134 70, 140 58 L 140 52 L 60 52 Z" fill="#2b1d1a"/>
+            <path d="M50 62 C 48 16, 152 16, 150 62 Z" fill="url(#kHat)"/>
+            <rect x="45" y="51" width="110" height="17" rx="8.5" fill="#259487"/>
+            <g stroke="#1d7a6f" stroke-width="2.2" stroke-linecap="round">
+              <path d="M57 55v9M66 55v9M75 55v9M84 55v9M93 55v9M102 55v9M111 55v9M120 55v9M129 55v9M138 55v9M146 56v7"/>
+            </g>
+            <path d="M70 34 C 82 26, 100 24, 116 28" stroke="#a6f2e7" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/>
+            <circle cx="100" cy="17" r="12" fill="#fff3da"/><circle cx="96" cy="13" r="4.5" fill="#fff"/>
+            <g id="brows" stroke="#2b1d1a" stroke-width="3" stroke-linecap="round" fill="none">
+              <path id="browL" d="M71 75 Q79 71.5 87 74.5"/><path id="browR" d="M113 74.5 Q121 71.5 129 75"/>
+            </g>
+            <g class="eyeOpen">
+              <g id="pupL"><ellipse cx="80" cy="89" rx="7.6" ry="9.6" fill="#2b1d1a"/><circle cx="82.6" cy="85.4" r="3.1" fill="#fff"/><circle cx="77.6" cy="93" r="1.4" fill="#fff" opacity=".8"/></g>
+              <g id="pupR"><ellipse cx="120" cy="89" rx="7.6" ry="9.6" fill="#2b1d1a"/><circle cx="122.6" cy="85.4" r="3.1" fill="#fff"/><circle cx="117.6" cy="93" r="1.4" fill="#fff" opacity=".8"/></g>
+              <g id="lids"><ellipse cx="80" cy="88" rx="10" ry="12" fill="#e6ae86"/><ellipse cx="120" cy="88" rx="10" ry="12" fill="#e6ae86"/></g>
+            </g>
+            <g class="eyeArc" stroke="#2b1d1a" stroke-width="3.6" fill="none" stroke-linecap="round">
+              <path d="M72 91 Q80 82 88 91"/><path d="M112 91 Q120 82 128 91"/>
+            </g>
+            <ellipse cx="65" cy="102" rx="12" ry="8" fill="url(#kCheek)"/><ellipse cx="135" cy="102" rx="12" ry="8" fill="url(#kCheek)"/>
+            <ellipse cx="100" cy="99" rx="3.2" ry="2.2" fill="#c47e5a"/>
+            <path class="m m-neutral" d="M93 107 Q100 112.5 107 107" stroke="#5a2a1a" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+            <g class="m m-happy"><path d="M90 105 Q100 122 110 105 Z" fill="#6b2318"/><path d="M94 113.5 Q100 118.5 106 113.5 Q100 110.5 94 113.5 Z" fill="#ff8f8f"/></g>
+            <g class="m m-laugh"><path d="M86 103 Q100 128 114 103 Q100 107 86 103 Z" fill="#6b2318"/><path d="M93 116 Q100 123 107 116 Q100 112 93 116 Z" fill="#ff8f8f"/><path d="M90 104.5 Q100 108 110 104.5" stroke="#fff" stroke-width="3" fill="none"/></g>
+            <ellipse class="m m-wow" cx="100" cy="110" rx="5" ry="6.5" fill="#6b2318"/>
+            <path class="m m-sleepy" d="M95 109 L105 109" stroke="#5a2a1a" stroke-width="2.8" stroke-linecap="round"/>
+            <path class="m m-sad" d="M92 112 Q100 104.5 108 112" stroke="#5a2a1a" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+          </g></g>
+          <g id="handL"><ellipse cx="54" cy="132" rx="14" ry="11" fill="url(#kMit)"/><path d="M45 128 q4 -6 9 -2" stroke="#d18f12" stroke-width="2" fill="none" stroke-linecap="round"/></g>
+          <g id="handR"><g id="handRIn"><ellipse cx="146" cy="132" rx="14" ry="11" fill="url(#kMit)"/><path d="M146 126 q5 -6 9 -1" stroke="#d18f12" stroke-width="2" fill="none" stroke-linecap="round"/></g></g>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="console">
+    <header class="top">
+      <button class="pill" id="reset">RESET</button>
+      <div class="lcd"><span id="score">00/12</span><span id="timer">0:00</span></div>
+      <div class="brand">AQUA<br>RINGS</div>
+    </header>
+    <div class="tank" id="tank">
+      <canvas id="water"></canvas>
+      <canvas id="game"></canvas>
+      <div class="glass"></div>
+      <div class="hint" id="hint">Tap for a puff · hold for a big push</div>
+      <div class="win" id="win">
+        <h2>All rings in!</h2>
+        <p id="winTime"></p>
+        <button class="pill" id="again">PLAY AGAIN</button>
+      </div>
+    </div>
+    <footer class="bottom">
+      <button class="pump" id="btnL" aria-label="Left pump"><span>A</span></button>
+      <div class="grille" aria-hidden="true"></div>
+      <button class="pump" id="btnR" aria-label="Right pump"><span>L</span></button>
+    </footer>
+  </div>
+  </div>
+  <div class="controls">
+    <button class="chip" id="soundBtn" aria-pressed="true">Sound: on</button>
+    <button class="chip" id="tiltBtn" aria-pressed="false">Use phone tilt</button>
+    <span class="caption">Pump: <b>A</b> / <b>L</b> (tap = puff, hold = push) · Tilt: drag the toy or <b>←</b> <b>→</b> · <b>R</b> reset</span>
+  </div>
+  <div class="toast" id="toast"></div>
+</main>
+
+<script>
+(() => {
+const $ = id => document.getElementById(id);
+const rnd = (a, b) => a + Math.random() * (b - a);
+
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+/* =====================================================================
+   SOUND  (soft, bedtime-friendly; all synthesised with Web Audio)
+   ===================================================================== */
+const A = (() => {
+  let ctx = null, out = null, verbIn = null, muted = false, nb = null, bb = null;
+  let churnG = null, churnF = null, fizzG = null, churnP = null;
+  const last = {};
+  const ok = (k, gap) => {
+    if (!ctx || muted) return false;
+    const t = ctx.currentTime;
+    if (k){ if (last[k] && t - last[k] < gap) return false; last[k] = t; }
+    return true;
+  };
+  function init(){
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    if (!ctx){
+      ctx = new AC();
+      const sr = ctx.sampleRate;
+      // master: gentle lowpass + compressor so nothing is ever sharp
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 6500;
+      const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 3;
+      out = ctx.createGain(); out.gain.value = muted ? 0 : 0.85;
+      out.connect(lp); lp.connect(comp); comp.connect(ctx.destination);
+      // small, soft room reverb
+      const len = Math.floor(sr * 2.6), ir = ctx.createBuffer(2, len, sr);
+      for (let c = 0; c < 2; c++){ const d = ir.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3.2); }
+      const conv = ctx.createConvolver(); conv.buffer = ir;
+      const damp = ctx.createBiquadFilter(); damp.type = 'lowpass'; damp.frequency.value = 3200;
+      const wet = ctx.createGain(); wet.gain.value = 0.32;
+      verbIn = ctx.createGain(); verbIn.connect(conv); conv.connect(damp); damp.connect(wet); wet.connect(out);
+      // white + brown noise
+      nb = ctx.createBuffer(1, sr * 2, sr);
+      const d = nb.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      bb = ctx.createBuffer(1, sr * 3, sr);
+      const e = bb.getChannelData(0); let l = 0;
+      for (let i = 0; i < e.length; i++){ l = (l + 0.02 * (Math.random() * 2 - 1)) / 1.02; e[i] = l * 3.5; }
+      startWater();
+      ambience();
+    }
+    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+  }
+  // a voice's output: dry to master, plus a reverb send; optional pan
+  function bus(send = 0.35, panV = 0){
+    const g = ctx.createGain();
+    let node = g;
+    if (ctx.createStereoPanner){ const p = ctx.createStereoPanner(); p.pan.value = clamp(panV, -1, 1); g.connect(p); node = p; }
+    node.connect(out);
+    const s = ctx.createGain(); s.gain.value = send; node.connect(s); s.connect(verbIn);
+    return g;
+  }
+  function env(param, t, a, peak, d){
+    param.setValueAtTime(0.0001, t);
+    param.exponentialRampToValueAtTime(Math.max(peak, 0.0002), t + a);
+    param.exponentialRampToValueAtTime(0.0001, t + a + d);
+  }
+  function tone(type, f0, f1, t, a, peak, d, dest){
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.setValueAtTime(f0, t);
+    if (f1 !== f0) o.frequency.exponentialRampToValueAtTime(f1, t + a + d);
+    env(g.gain, t, a, peak, d); o.connect(g); g.connect(dest);
+    o.start(t); o.stop(t + a + d + 0.05);
+  }
+  function noise(buf, t, type, f0, f1, q, a, peak, d, dest){
+    const s = ctx.createBufferSource(); s.buffer = buf; s.loop = true;
+    const f = ctx.createBiquadFilter(); f.type = type; f.Q.value = q;
+    f.frequency.setValueAtTime(f0, t);
+    if (f1 !== f0) f.frequency.exponentialRampToValueAtTime(f1, t + a + d);
+    const g = ctx.createGain(); env(g.gain, t, a, peak, d);
+    s.connect(f); f.connect(g); g.connect(dest);
+    s.start(t, Math.random()); s.stop(t + a + d + 0.05);
+  }
+  // one underwater bubble: a quick, soft upward "bloop"
+  function bubbleAt(t, f, peak, dest){ tone('sine', f, f * 1.55, t, 0.004, peak, 0.075, dest); }
+
+  // continuous water churn that follows the pumps
+  function startWater(){
+    const s = ctx.createBufferSource(); s.buffer = bb; s.loop = true;
+    churnF = ctx.createBiquadFilter(); churnF.type = 'lowpass'; churnF.frequency.value = 220; churnF.Q.value = 0.6;
+    churnG = ctx.createGain(); churnG.gain.value = 0;
+    churnP = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+    s.connect(churnF); churnF.connect(churnG);
+    const dest = bus(0.45);
+    if (churnP){ churnG.connect(churnP); churnP.connect(dest); } else churnG.connect(dest);
+    s.start();
+    const f = ctx.createBufferSource(); f.buffer = nb; f.loop = true;
+    const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1300; bp.Q.value = 0.7;
+    fizzG = ctx.createGain(); fizzG.gain.value = 0;
+    f.connect(bp); bp.connect(fizzG); fizzG.connect(churnP || dest); f.start();
+  }
+  function setWater(p0, p1, slosh){
+    if (!ctx || !churnG) return;
+    const t = ctx.currentTime, p = Math.min(1.6, p0 + p1 + slosh);
+    churnG.gain.setTargetAtTime(Math.min(0.32, p * 0.2), t, 0.09);
+    churnF.frequency.setTargetAtTime(200 + p * 520, t, 0.1);
+    fizzG.gain.setTargetAtTime(Math.min(0.025, p * 0.016), t, 0.12);
+    if (churnP) churnP.pan.setTargetAtTime(clamp((p1 - p0) * 0.6, -0.6, 0.6), t, 0.1);
+  }
+
+  function pump(side){
+    if (!ok()) return;
+    const t = ctx.currentTime, pn = side ? 0.45 : -0.45;
+    const b = bus(0.3, pn);
+    tone('sine', 115, 68, t, 0.008, 0.16, 0.13, b);                         // soft rubbery "thup"
+    noise(nb, t, 'lowpass', 420, 180, 0.5, 0.004, 0.05, 0.05, b);            // the press, muffled
+    noise(bb, t + 0.02, 'lowpass', 300, 900, 0.7, 0.07, 0.22, 0.6, bus(0.5, pn)); // water swell
+    const w = bus(0.55, pn);
+    for (let i = 0; i < 7; i++) bubbleAt(t + 0.05 + i * rnd(0.05, 0.1), rnd(230, 520), rnd(0.02, 0.05), w);
+  }
+  function bloop(side){
+    if (!ok('bl', 0.05)) return;
+    bubbleAt(ctx.currentTime, rnd(260, 640), rnd(0.012, 0.035), bus(0.55, (side ? 0.45 : -0.45) + rnd(-0.2, 0.2)));
+  }
+  // kalimba-like pluck when a ring drops over the tip
+  function clack(){
+    if (!ok('cl', 0.05)) return;
+    const t = ctx.currentTime, b = bus(0.5), f = [392, 440, 523.25][Math.floor(Math.random() * 3)];
+    tone('sine', f, f, t, 0.003, 0.12, 0.7, b);
+    tone('sine', f * 2.01, f * 2.01, t, 0.002, 0.03, 0.2, b);
+  }
+  function tick(){ if (!ok('tk', 0.09)) return; tone('sine', 820, 640, ctx.currentTime, 0.002, 0.035, 0.05, bus(0.3)); }
+  function stack(){ if (!ok('st', 0.06)) return; tone('sine', 520, 500, ctx.currentTime, 0.003, 0.045, 0.12, bus(0.35)); }
+  function clink(){ if (!ok('ck', 0.1)) return; const f = rnd(1200, 1500); tone('sine', f, f, ctx.currentTime, 0.002, 0.02, 0.12, bus(0.5)); }
+  function slip(){ if (!ok('sl', 0.25)) return; tone('sine', 620, 310, ctx.currentTime, 0.01, 0.05, 0.35, bus(0.5)); }
+  // music-box bell, climbing a pentatonic scale as the score goes up
+  const SCALE = [392, 440, 523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1174.66, 1318.51, 1567.98, 1760];
+  function bell(f, t, peak, dest){
+    tone('sine', f, f, t, 0.004, peak, 1.6, dest);
+    tone('sine', f * 2.76, f * 2.76, t, 0.003, peak * 0.22, 0.5, dest);
+    tone('sine', f * 5.4, f * 5.4, t, 0.002, peak * 0.06, 0.18, dest);
+  }
+  function ding(n, combo){
+    if (!ok()) return;
+    const t = ctx.currentTime, b = bus(0.65), f = SCALE[clamp(n - 1, 0, SCALE.length - 1)];
+    bell(f, t, 0.13, b);
+    bell(f * 1.5, t + 0.12, 0.07, b);                                       // gentle fifth answers
+    if (combo > 1) bell(f * 2, t + 0.24, 0.06, b);
+  }
+  function win(){
+    if (!ok()) return;
+    const t = ctx.currentTime, b = bus(0.7);
+    [523.25, 659.25, 783.99, 1046.5, 783.99, 1046.5, 1318.51].forEach((f, i) => bell(f, t + i * 0.17, 0.1, b));
+  }
+  function reset(){ if (!ok()) return; noise(bb, ctx.currentTime, 'lowpass', 700, 150, 0.6, 0.05, 0.16, 1.1, bus(0.5)); }
+  // little brother: soft, quiet voice-ish sounds
+  function kid(kind){
+    if (!ok('kid', 0.4)) return;
+    const t = ctx.currentTime, b = bus(0.4, 0.7);
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1500; lp.connect(b);
+    if (kind === 'yay'){ tone('triangle', 480, 720, t, 0.03, 0.05, 0.22, lp); tone('triangle', 640, 900, t + 0.2, 0.03, 0.05, 0.28, lp); }
+    else if (kind === 'laugh'){ for (let i = 0; i < 4; i++) tone('triangle', 620 - i * 35, 560 - i * 35, t + i * 0.12, 0.01, 0.04, 0.07, lp); }
+    else if (kind === 'ooh'){ tone('triangle', 420, 330, t, 0.06, 0.045, 0.45, lp); }
+    else if (kind === 'aww'){ tone('triangle', 560, 330, t, 0.05, 0.05, 0.6, lp); }
+  }
+  function ambience(){
+    // very soft breeze
+    const s = ctx.createBufferSource(); s.buffer = nb; s.loop = true;
+    const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 340;
+    const g = ctx.createGain(); g.gain.value = 0.02;
+    const lfo = ctx.createOscillator(); lfo.frequency.value = 0.06;
+    const lg = ctx.createGain(); lg.gain.value = 150;
+    lfo.connect(lg); lg.connect(f.frequency);
+    s.connect(f); f.connect(g); g.connect(out); s.start(); lfo.start();
+    // distant crickets
+    const chirp = () => {
+      if (ctx && !muted && ctx.state === 'running'){
+        const t = ctx.currentTime + 0.05, b = bus(0.6, rnd(-0.9, 0.9)), f0 = rnd(3600, 4100), n = Math.random() < 0.6 ? 3 : 2;
+        for (let i = 0; i < n; i++) tone('sine', f0, f0, t + i * 0.06, 0.008, 0.006, 0.035, b);
+      }
+      setTimeout(chirp, rnd(500, 2200));
+    };
+    chirp();
+  }
+  function setMuted(m){ muted = m; if (out) out.gain.setTargetAtTime(m ? 0 : 0.85, ctx.currentTime, 0.08); }
+  return { init, pump, bloop, clack, tick, stack, clink, slip, ding, win, reset, kid, setWater, setMuted, get muted(){ return muted; } };
+})();
+
+const sfx = {
+  press: s => A.pump(s), bubble: s => A.bloop(s), catchRing: () => A.clack(), tap: () => A.tick(),
+  stack: () => A.stack(), clink: () => A.clink(), slipOff: () => A.slip(), score: (n, c) => A.ding(n, c),
+  win: () => A.win(), reset: () => A.reset(),
+};
+
+/* =====================================================================
+   NIGHT SKY + TREES  (you're lying on your back, looking up)
+   ===================================================================== */
+const sky = $('sky'), sc = sky.getContext('2d');
+let SW, SH, SD, skyBase, stars = [], trees = [], flies = [], shoot = null, nextShoot = 4;
+
+function sidePts(h, w, tiers){
+  const pts = [], tw = w * 0.05;
+  pts.push([tw, 6], [tw, -h * 0.07]);
+  for (let i = 0; i <= tiers; i++){
+    const t = i / tiers, y = -h * (0.07 + 0.88 * t);
+    const hw = w * 0.5 * Math.pow(1 - t, 0.9) + w * 0.03;
+    pts.push([hw * rnd(0.8, 1.12), y + h * rnd(0.004, 0.02)]);   // drooping branch tip
+    pts.push([hw * rnd(0.35, 0.5), y - h * 0.88 / tiers * rnd(0.45, 0.7)]); // notch
+  }
+  return pts;
+}
+function makeTree(h, w){
+  const tiers = Math.round(rnd(10, 15));
+  const L = sidePts(h, w, tiers).map(([x, y]) => [-x, y]);
+  const R = sidePts(h, w, tiers).reverse();
+  return [...L, [rnd(-2, 2), -h * 1.0], ...R];
+}
+
+function buildSky(){
+  SD = Math.min(2, devicePixelRatio || 1); SW = innerWidth; SH = innerHeight;
+  sky.width = SW * SD; sky.height = SH * SD;
+  sky.style.width = SW + 'px'; sky.style.height = SH + 'px';
+  skyBase = document.createElement('canvas');
+  skyBase.width = sky.width; skyBase.height = sky.height;
+  const b = skyBase.getContext('2d'); b.scale(SD, SD);
+
+  let g = b.createLinearGradient(0, 0, 0, SH);
+  g.addColorStop(0, '#02041a'); g.addColorStop(0.5, '#070f36'); g.addColorStop(1, '#122650');
+  b.fillStyle = g; b.fillRect(0, 0, SW, SH);
+
+  // Milky Way band
+  const Ld = Math.hypot(SW, SH);
+  b.save(); b.translate(SW * 0.5, SH * 0.42); b.rotate(-0.6);
+  for (let i = 0; i < 70; i++){
+    const x = rnd(-Ld / 2, Ld / 2), y = rnd(-1, 1) * Math.min(SH, 700) * 0.07, r = rnd(40, 150);
+    const col = Math.random() < 0.55 ? '170,185,255' : '255,215,235';
+    const rg = b.createRadialGradient(x, y, 0, x, y, r);
+    rg.addColorStop(0, `rgba(${col},${rnd(0.02, 0.055)})`); rg.addColorStop(1, `rgba(${col},0)`);
+    b.fillStyle = rg; b.beginPath(); b.arc(x, y, r, 0, 7); b.fill();
+  }
+  for (let i = 0; i < 1800; i++){
+    const x = rnd(-Ld / 2, Ld / 2);
+    const y = (Math.random() + Math.random() + Math.random() - 1.5) * Math.min(SH, 700) * 0.11;
+    b.fillStyle = `rgba(255,255,255,${rnd(0.06, 0.4)})`;
+    const s = rnd(0.4, 1.1); b.fillRect(x, y, s, s);
+  }
+  for (let i = 0; i < 30; i++){ // dust lanes
+    const x = rnd(-Ld / 2, Ld / 2), y = rnd(-0.5, 0.5) * 30, r = rnd(20, 70);
+    const rg = b.createRadialGradient(x, y, 0, x, y, r);
+    rg.addColorStop(0, 'rgba(3,5,24,.35)'); rg.addColorStop(1, 'rgba(3,5,24,0)');
+    b.fillStyle = rg; b.beginPath(); b.arc(x, y, r, 0, 7); b.fill();
+  }
+  b.restore();
+
+  const n = Math.round(SW * SH / 1800);
+  for (let i = 0; i < n; i++){
+    b.fillStyle = `rgba(255,255,255,${rnd(0.12, 0.5)})`;
+    const s = rnd(0.5, 1.2); b.fillRect(rnd(0, SW), rnd(0, SH), s, s);
+  }
+  g = b.createLinearGradient(0, SH * 0.6, 0, SH);
+  g.addColorStop(0, 'rgba(50,80,140,0)'); g.addColorStop(1, 'rgba(60,95,150,.28)');
+  b.fillStyle = g; b.fillRect(0, 0, SW, SH);
+
+  stars = [];
+  const m = Math.round(SW * SH / 7000) + 50;
+  for (let i = 0; i < m; i++){
+    const big = Math.random() < 0.12;
+    stars.push({ x: rnd(0, SW), y: rnd(0, SH * 0.9), r: big ? rnd(1.1, 1.9) : rnd(0.5, 1.1),
+      ph: rnd(0, 6.28), sp: rnd(0.6, 2.4), big,
+      tint: Math.random() < 0.18 ? '255,222,190' : Math.random() < 0.3 ? '200,215,255' : '255,255,255' });
+  }
+
+  trees = [];
+  for (const side of [-1, 1]) for (const layer of [0, 1]){
+    const count = layer ? 6 : 7;
+    for (let i = 0; i < count; i++){
+      const h = SH * rnd(layer ? 0.6 : 0.48, layer ? 1.02 : 0.82);
+      const inward = Math.min(rnd(-0.08, 0.2) * SW, rnd(-40, layer ? 170 : 240));
+      trees.push({ layer, side,
+        x: side < 0 ? inward : SW - inward,
+        y: SH + rnd(0, SH * 0.06),
+        lean: -side * rnd(layer ? 0.06 : 0.12, layer ? 0.32 : 0.42),
+        pts: makeTree(h, h * rnd(0.26, 0.38)),
+        ph: rnd(0, 6.28) });
+    }
+  }
+  trees.sort((a, b) => a.layer - b.layer);
+
+  flies = [];
+  for (let i = 0; i < 18; i++){
+    const side = i % 2 ? 1 : -1;
+    flies.push({ x: side < 0 ? rnd(0, SW * 0.22) : rnd(SW * 0.78, SW), y: rnd(SH * 0.45, SH * 0.98),
+      vx: rnd(-8, 8), vy: rnd(-6, 6), ph: rnd(0, 6.28), sp: rnd(0.6, 1.4) });
+  }
+}
+
+function drawSky(t, dt){
+  sc.setTransform(1, 0, 0, 1, 0, 0);
+  sc.drawImage(skyBase, 0, 0);
+  sc.setTransform(SD, 0, 0, SD, 0, 0);
+
+  for (const s of stars){
+    const tw = 0.55 + 0.45 * Math.sin(t * s.sp + s.ph) * Math.sin(t * s.sp * 0.37 + s.ph * 2);
+    sc.fillStyle = `rgba(${s.tint},${0.35 + 0.65 * tw})`;
+    sc.beginPath(); sc.arc(s.x, s.y, s.r * (0.8 + 0.3 * tw), 0, 7); sc.fill();
+    if (s.big){
+      const rg = sc.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 6);
+      rg.addColorStop(0, `rgba(${s.tint},${0.18 * tw})`); rg.addColorStop(1, `rgba(${s.tint},0)`);
+      sc.fillStyle = rg; sc.beginPath(); sc.arc(s.x, s.y, s.r * 6, 0, 7); sc.fill();
+    }
+  }
+
+  // shooting star
+  nextShoot -= dt;
+  if (!shoot && nextShoot <= 0){
+    const dir = Math.random() < 0.5 ? -1 : 1;
+    shoot = { x: rnd(SW * 0.2, SW * 0.8), y: rnd(SH * 0.03, SH * 0.3),
+      a: Math.PI / 2 - dir * rnd(0.9, 1.25), v: rnd(700, 1100), life: 0, max: rnd(0.6, 0.95) };
+    nextShoot = rnd(6, 14);
+  }
+  if (shoot){
+    shoot.life += dt;
+    const k = shoot.life / shoot.max;
+    const hx = shoot.x + Math.cos(shoot.a) * shoot.v * shoot.life;
+    const hy = shoot.y + Math.sin(shoot.a) * shoot.v * shoot.life;
+    const len = 140 * Math.sin(Math.min(1, k) * Math.PI) + 10;
+    const tx = hx - Math.cos(shoot.a) * len, ty = hy - Math.sin(shoot.a) * len;
+    const lg = sc.createLinearGradient(hx, hy, tx, ty);
+    lg.addColorStop(0, `rgba(255,255,255,${0.9 * (1 - k)})`); lg.addColorStop(1, 'rgba(255,255,255,0)');
+    sc.strokeStyle = lg; sc.lineWidth = 1.6; sc.lineCap = 'round';
+    sc.beginPath(); sc.moveTo(hx, hy); sc.lineTo(tx, ty); sc.stroke();
+    if (k >= 1) shoot = null;
+  }
+
+  // trees, gently swaying
+  for (const tr of trees){
+    sc.save();
+    sc.translate(tr.x, tr.y);
+    sc.rotate(tr.lean + Math.sin(t * 0.45 + tr.ph) * 0.008 + Math.sin(t * 1.1 + tr.ph) * 0.003);
+    sc.fillStyle = tr.layer ? '#01040a' : '#0b1830';
+    sc.beginPath();
+    tr.pts.forEach(([x, y], i) => i ? sc.lineTo(x, y) : sc.moveTo(x, y));
+    sc.closePath(); sc.fill();
+    sc.restore();
+  }
+
+  drawConfetti(dt);
+
+  // fireflies
+  for (const f of flies){
+    f.vx += rnd(-20, 20) * dt; f.vy += rnd(-20, 20) * dt;
+    f.vx *= 0.98; f.vy *= 0.98;
+    f.x += f.vx * dt; f.y += f.vy * dt;
+    if (f.y > SH) f.vy -= 30 * dt; if (f.y < SH * 0.4) f.vy += 30 * dt;
+    const a = Math.pow(Math.max(0, Math.sin(t * f.sp + f.ph)), 3);
+    if (a < 0.02) continue;
+    const rg = sc.createRadialGradient(f.x, f.y, 0, f.x, f.y, 9);
+    rg.addColorStop(0, `rgba(220,255,140,${0.9 * a})`); rg.addColorStop(0.25, `rgba(190,255,90,${0.35 * a})`);
+    rg.addColorStop(1, 'rgba(190,255,90,0)');
+    sc.fillStyle = rg; sc.beginPath(); sc.arc(f.x, f.y, 9, 0, 7); sc.fill();
+  }
+}
+
+/* =====================================================================
+   WATER  (WebGL shader: depth colour, caustics, light shafts, churn)
+   ===================================================================== */
+const wcv = $('water');
+const gl = wcv.getContext('webgl', { antialias: false, premultipliedAlpha: false });
+let glOK = !!gl, uRes, uT, uJet, uTiltU, uSurfU;
+
+const FRAG = `
+precision highp float;
+uniform vec2 uRes; uniform float uT; uniform vec2 uJet; uniform float uTilt; uniform float uSurf;
+float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f);
+  return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y); }
+float fbm(vec2 p){ float v = 0.0, a = 0.5; for (int i = 0; i < 4; i++){ v += a*noise(p); p *= 2.03; a *= 0.5; } return v; }
+float caustic(vec2 uv, float t){
+  vec2 p = mod(uv*6.2831853, 6.2831853) - 250.0;
+  vec2 i = p; float c = 1.0; float inten = 0.005;
+  for (int n = 0; n < 5; n++){
+    float tt = t * (1.0 - (3.5 / float(n+1)));
+    i = p + vec2(cos(tt - i.x) + sin(tt + i.y), sin(tt - i.y) + cos(tt + i.x));
+    c += 1.0 / length(vec2(p.x / (sin(i.x + tt) / inten), p.y / (cos(i.y + tt) / inten)));
+  }
+  c /= 5.0; c = 1.17 - pow(c, 1.4);
+  return pow(abs(c), 8.0);
+}
+void main(){
+  vec2 uv = gl_FragCoord.xy / uRes;
+  float asp = uRes.x / uRes.y;
+  float j1 = uJet.x, j2 = uJet.y;
+  float surf = 1.0 - (uSurf - (uv.x*300.0 - 150.0)*uTilt)/520.0 + 0.004*sin(uv.x*14.0 + uT*1.7) + 0.003*sin(uv.x*31.0 - uT*2.3)
+             + 0.016*j1*exp(-pow((uv.x-0.17)/0.12, 2.0))*(0.7+0.3*sin(uT*9.0))
+             + 0.016*j2*exp(-pow((uv.x-0.83)/0.12, 2.0))*(0.7+0.3*sin(uT*9.0+1.0));
+  surf = min(surf, 1.03);
+  vec3 col;
+  if (uv.y > surf){
+    // air pocket at the top of the tank
+    col = mix(vec3(0.13,0.22,0.27), vec3(0.07,0.12,0.16), (uv.y - surf) / (1.0 - surf));
+    col += vec3(0.7,0.95,1.0) * smoothstep(0.012, 0.0, uv.y - surf) * 0.55;
+    col += vec3(0.5,0.8,0.9) * 0.08 * smoothstep(0.06, 0.0, uv.y - surf);
+  } else {
+    float d = uv.y / surf;
+    vec3 deep = vec3(0.01, 0.09, 0.20), mid = vec3(0.02, 0.33, 0.52), top = vec3(0.17, 0.63, 0.78);
+    col = mix(deep, mid, smoothstep(0.0, 0.62, d));
+    col = mix(col, top, smoothstep(0.55, 1.0, d));
+    // wobbling caustic net
+    vec2 warp = 0.06 * vec2(fbm(uv*3.0 + uT*0.15), fbm(uv*3.0 - uT*0.17 + 4.0));
+    float jetWarp = (j1*exp(-pow((uv.x-0.17)/0.2,2.0)) + j2*exp(-pow((uv.x-0.83)/0.2,2.0)));
+    warp += 0.05 * jetWarp * vec2(sin(uv.y*30.0 - uT*8.0), cos(uv.x*25.0 + uT*7.0));
+    vec2 cuv = vec2(uv.x*asp, uv.y) * 1.25 + warp;
+    float c = caustic(cuv, uT*0.42 + 23.0);
+    float c2 = caustic(cuv*1.9 + 0.3, uT*0.31 + 7.0);
+    col += vec3(0.55, 0.88, 0.92) * (c*0.5 + c2*0.18) * (0.2 + 0.8*d);
+    // god rays from the surface
+    float rx = uv.x + (1.0 - uv.y)*0.16;
+    float r = pow(0.5 + 0.5*sin(rx*21.0 + sin(rx*6.0 + uT*0.35)*2.0 + uT*0.22), 6.0)
+            * pow(0.5 + 0.5*sin(rx*8.0 - uT*0.29), 2.0);
+    col += vec3(0.55, 0.88, 1.0) * r * 0.13 * smoothstep(0.15, 1.0, d);
+    // churn above the jets
+    float n1 = fbm(vec2(uv.x*9.0, uv.y*5.0 - uT*3.5));
+    float m1 = exp(-pow((uv.x-0.17)/(0.06 + 0.12*uv.y), 2.0)) * smoothstep(0.85, 0.0, uv.y);
+    float m2 = exp(-pow((uv.x-0.83)/(0.06 + 0.12*uv.y), 2.0)) * smoothstep(0.85, 0.0, uv.y);
+    col += vec3(0.7, 0.95, 1.0) * (j1*m1 + j2*m2) * n1 * 0.3;
+    // bright underside of the surface
+    col += vec3(0.5, 0.85, 0.95) * smoothstep(surf - 0.035, surf, uv.y) * 0.22;
+    // sandy-dark floor + pump nozzles
+    col *= mix(0.5, 1.0, smoothstep(0.0, 0.07, uv.y));
+    float noz = smoothstep(0.035, 0.02, length(vec2((uv.x-0.17)*asp, uv.y*1.3 - 0.0)))
+              + smoothstep(0.035, 0.02, length(vec2((uv.x-0.83)*asp, uv.y*1.3 - 0.0)));
+    col = mix(col, vec3(0.03,0.05,0.07), clamp(noz,0.0,1.0)*0.8);
+  }
+  // side falloff (tank walls)
+  col *= 0.72 + 0.28 * smoothstep(0.0, 0.16, uv.x) * smoothstep(1.0, 0.84, uv.x);
+  col += (hash(gl_FragCoord.xy + uT) - 0.5) * 0.012; // tiny grain, kills banding
+  gl_FragColor = vec4(col, 1.0);
+}`;
+const VERT = `attribute vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }`;
+
+if (glOK){
+  try {
+    const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, VERT));
+    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error('link');
+    gl.useProgram(prog);
+    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, 'p');
+    gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    uRes = gl.getUniformLocation(prog, 'uRes'); uT = gl.getUniformLocation(prog, 'uT'); uJet = gl.getUniformLocation(prog, 'uJet'); uTiltU = gl.getUniformLocation(prog, 'uTilt'); uSurfU = gl.getUniformLocation(prog, 'uSurf');
+  } catch (e){ console.warn('WebGL water off:', e); glOK = false; }
+}
+
+/* =====================================================================
+   GAME  (logical tank is 300 × 520)
+   ===================================================================== */
+const LW = 300, LH = 520, SURF = 34, FLOOR = 506, R = 19, N = 12;
+const G = 175, DRAG = 1.7, JET = 1500;
+const JX = [51, 249];
+const PEGS = [
+  { x: 96,  top: 205, color: '#ff5a4e' },
+  { x: 206, top: 290, color: '#7ee36b' },
+];
+const COLORS = ['#ff4d6d', '#ffd23f', '#3ddc97', '#4cc9f0', '#b388ff', '#ff8c42'];
+
+const tank = $('tank'), gcv = $('game'), g = gcv.getContext('2d');
+let S = 1, DPR = 1, T = 0;
+let rings = [], bubbles = [], motes = [], foam = [];
+const jets = [{ held: false, sq: 0, power: 0, suck: 0 }, { held: false, sq: 0, power: 0, suck: 0 }];
+let churn = 0; // lingering turbulence: the water keeps swirling for a few seconds after you press
+let started = false, startTime = 0, elapsed = 0, won = false, winTimer = -1, lastScore = -1;
+
+function shade(hex, k){
+  const n = parseInt(hex.slice(1), 16);
+  const f = c => Math.max(0, Math.min(255, Math.round(c * k)));
+  return `rgb(${f(n >> 16)},${f((n >> 8) & 255)},${f(n & 255)})`;
+}
+
+function resetGame(){
+  rings = [];
+  for (let i = 0; i < N; i++){
+    const c = COLORS[i % COLORS.length];
+    rings.push({ x: rnd(30, 270), y: rnd(420, 490), vx: 0, vy: 0,
+      tilt: rnd(-0.5, 0.5), tv: 0, rot: rnd(-0.2, 0.2), rv: 0,
+      peg: -1, ox: 0, z: Math.random() < 0.5 ? -1 : 1, c, dark: shade(c, 0.62), seed: rnd(0, 100) });
+  }
+  bubbles = [];
+  motes = [];
+  for (let i = 0; i < 70; i++) motes.push({ x: rnd(0, LW), y: rnd(SURF, FLOOR), vx: 0, vy: 0, a: rnd(0.08, 0.3), s: rnd(0.5, 1.3) });
+  started = false; elapsed = 0; won = false; winTimer = -1; lastScore = -1;
+  $('win').classList.remove('show');
+  $('hint').classList.remove('gone');
+  updateHUD();
+  sparks = []; pops = []; combo = 0; churn = 0; foam = [];
+  if (typeof kid !== 'undefined') kid.reset();
+  sfx.reset();
+}
+
+function resize(){
+  buildSky();
+  const r = tank.getBoundingClientRect();
+  DPR = Math.min(2, devicePixelRatio || 1);
+  S = r.width / LW;
+  gcv.width = Math.round(r.width * DPR); gcv.height = Math.round(r.height * DPR);
+  const wd = Math.min(1.5, DPR);
+  wcv.width = Math.round(r.width * wd); wcv.height = Math.round(r.height * wd);
+  if (glOK) gl.viewport(0, 0, wcv.width, wcv.height);
+}
+
+/* ---------- tilt (drag / arrow keys / phone sensor) ---------- */
+const MAX_TILT = 0.42;
+let tilt = 0, tiltV = 0, tiltTarget = 0;
+// the air bubble keeps its size and slides to the high side, so the water line stays level
+let surfC = SURF, surfK = 0;
+function solveSurface(){
+  surfK = Math.tan(tilt);
+  const A0 = SURF * LW;
+  let lo = 0, hi = SURF + LW * Math.abs(surfK) + 10;
+  for (let it = 0; it < 22; it++){
+    const c = (lo + hi) / 2;
+    let area = 0;
+    for (let i = 0; i < 40; i++){ const x = (i + 0.5) * LW / 40; area += Math.max(0, c - (x - 150) * surfK) * LW / 40; }
+    if (area < A0) lo = c; else hi = c;
+  }
+  surfC = (lo + hi) / 2;
+}
+const surfY = x => Math.max(0, surfC - (x - 150) * surfK);
+/* jet force at a point: [ax, ay, turbulence] */
+function jetForce(x, y, j){
+  const p = jets[j].power;
+  if (p < 0.005) return [0, 0, 0];
+  const dx = x - JX[j];
+  const spread = 52 + (FLOOR - y) * 0.2;            // plume widens as it rises
+  const f = Math.exp(-dx * dx / (2 * spread * spread));
+  const h = Math.max(0, y - SURF) / (FLOOR - SURF);
+  const hf = 0.25 + 0.75 * h * h;                   // strongest near the nozzle
+  return [ (dx / spread) * 320 * p * f * hf, -JET * p * f * hf, p * f * hf ];
+}
+const ringRY = r => R * (0.3 + 0.7 * Math.abs(Math.sin(r.tilt)));
+// slow swirling eddies left behind by earlier presses
+function churnFlow(x, y){
+  if (churn < 0.01) return [0, 0];
+  const a = Math.sin(y * 0.031 + T * 1.7) + Math.sin(x * 0.027 - T * 1.3 + y * 0.01);
+  const b = Math.cos(x * 0.029 + T * 1.5) + Math.sin(y * 0.022 - T * 1.9 + x * 0.012);
+  const c = Math.min(1.6, churn);
+  return [a * c * 105, b * c * 85];
+}
+// when a pump fires, water rushes along the floor toward its nozzle to refill it
+function floorPull(x, y, j){
+  const p = jets[j].suck + jets[j].power * 0.25;
+  if (p < 0.01) return 0;
+  const near = Math.exp(-(FLOOR - y) / 55);
+  const dx = JX[j] - x, dist = Math.abs(dx);
+  return Math.sign(dx) * 900 * p * near * Math.min(1, dist / 40) * (0.55 + 0.45 * Math.exp(-dist / 160));
+}
+
+function step(dt){
+  // the toy follows your hand with a little spring
+  tiltV += ((tiltTarget - tilt) * 70 - tiltV * 13) * dt;
+  const tmax = sensorOn ? 1.05 : 0.6;   // a real phone can be tipped further than a drag
+  tilt = clamp(tilt + tiltV * dt, -tmax, tmax);
+  solveSurface();
+  const gx = G * Math.sin(tilt), gy = G * Math.cos(tilt);
+  const SLOSH = 0.65;                                // water lags behind when the toy turns
+
+  for (const j of jets){
+    // the button squeezes a rubber bellows: fast at first, then it runs out of water to push.
+    // A quick tap is a gentle puff, a full press is a big push. Letting go refills it (and sucks water back in).
+    const prev = j.sq;
+    if (j.held) j.sq = Math.min(1, prev + (7 * (1 - prev) + 1.2) * dt);
+    else j.sq = Math.max(0, prev - 1.7 * dt);
+    const d = (j.sq - prev) / dt;
+    j.power += (Math.min(3, Math.max(0, d) * 0.7) - j.power) * Math.min(1, dt * 25);
+    j.suck += (Math.max(0, -d) * 0.45 - j.suck) * Math.min(1, dt * 12);
+    churn += j.power * dt * 0.9;
+  }
+  churn *= Math.exp(-dt / 2.8);
+  const total = jets[0].power + jets[1].power;
+
+  for (const r of rings){
+    const prevY = r.y;
+    let ax = gx, ay = gy, jy = 0, turb = 0;
+    for (let j = 0; j < 2; j++){
+      const f = jetForce(r.x, r.y, j);
+      ax += f[0]; jy += f[1]; turb += f[2];
+      // recirculation: water pushed up the plume spills sideways along the top
+      ax += Math.sign(150 - JX[j]) * 90 * jets[j].power * Math.exp(-(r.y - SURF) / 110);
+      if (r.peg < 0) ax += floorPull(r.x, r.y, j);
+    }
+    ax += tiltV * (r.y - 300) * SLOSH;
+    ay += -tiltV * (r.x - 150) * SLOSH;
+    // smooth, slow tumbling in the current (no per-frame jitter)
+    const swirl = Math.sin(T * 1.3 + r.seed) + 0.6 * Math.sin(T * 2.1 + r.seed * 1.7);
+    r.tv += swirl * 3.2 * turb * dt;
+    r.rv += Math.sin(T * 0.9 + r.seed * 2.3) * 1.2 * turb * dt;
+
+    if (r.peg < 0){
+      const cf = churnFlow(r.x, r.y);
+      ax += cf[0] + Math.sin(T * 0.8 + r.seed) * 6 + Math.sin(T * 2.7 + r.seed * 3.1) * 70 * turb;
+      ay += cf[1];
+      r.tv += Math.sin(T * 1.9 + r.seed * 1.3) * Math.min(1.6, churn) * 2.2 * dt;
+      r.vx += ax * dt; r.vy += (ay + jy) * dt;
+      const d = Math.exp(-DRAG * dt); r.vx *= d; r.vy *= d;
+      r.x += r.vx * dt; r.y += r.vy * dt;
+
+      const onFloor = r.y >= FLOOR - ringRY(r) - 0.6 || Math.hypot(r.vx, r.vy) < 14;
+      r.tv += -Math.sin(2 * r.tilt) * (onFloor ? 16 : 2.4) * dt;   // settle flat, fully flat on the floor
+      if (onFloor && Math.abs(Math.sin(r.tilt)) > 0.25) r.tv -= Math.sign(r.tilt || 1) * 4 * dt; // never balance on edge
+      r.tv *= Math.exp(-(onFloor ? 7 : 2.6) * dt);
+      r.tv = clamp(r.tv, -2.2, 2.2);
+      r.tilt += r.tv * dt;
+      r.tilt -= Math.PI * Math.round(r.tilt / Math.PI);
+      r.rv += -r.rot * 2.4 * dt; r.rv *= Math.exp(-2 * dt); r.rv = clamp(r.rv, -0.8, 0.8);
+      r.rot = clamp(r.rot + r.rv * dt, -0.5, 0.5);
+
+      const ry = ringRY(r);
+      if (r.x < R + 3){ r.x = R + 3; r.vx = Math.abs(r.vx) * 0.3; }
+      if (r.x > LW - R - 3){ r.x = LW - R - 3; r.vx = -Math.abs(r.vx) * 0.3; }
+      const sy = surfY(r.x);
+      if (r.y < sy + ry + 3){ r.y = sy + ry + 3; if (r.vy < -70){ sfx.tap(); r.tv += rnd(-1.5, 1.5); } if (r.vy < 0) r.vy *= -0.25; }
+      if (r.y > FLOOR - ry){ r.y = FLOOR - ry; if (r.vy > 0) r.vy *= -0.12; r.vx *= Math.exp(-2.5 * dt); }
+
+      for (let k = 0; k < PEGS.length; k++){
+        const P = PEGS[k], dx = r.x - P.x, adx = Math.abs(dx), s = dx >= 0 ? 1 : -1;
+        if (r.y < P.top){
+          // only the solid rim can strike the tip; the hole passes over it
+          if (adx > R * 0.72 && adx < R + 2.5 && r.y + ry * 0.5 > P.top){
+            r.x += s * Math.min(2, R + 2.5 - adx);
+            r.vx = s * Math.max(Math.abs(r.vx), 18);
+            if (r.vy > 0){ if (r.vy > 25){ sfx.tap(); if (r.vy > 30) kid.nearMiss(P); } r.vy *= 0.6; }
+            r.tv += s * 0.6;
+          }
+        } else if (prevY < P.top && adx < R * 0.72 && Math.abs(Math.sin(r.tilt)) < 0.8){
+          // threaded!
+          r.peg = k; r.ox = dx; r.y = P.top + 1; r.vx = 0; r.vy = Math.max(r.vy, 20);
+          sfx.catchRing(); break;
+        }
+        // below the tip, free rings drift past the rod in front of or behind it (the tank has depth)
+      }
+    } else {
+      const P = PEGS[r.peg];
+      r.vy += (gy + jy * 0.7 + ay - gy + churnFlow(r.x, r.y)[1] * 0.45) * dt;   // a storm can lift rings off a peg
+      r.vy *= Math.exp(-DRAG * 1.2 * dt);
+      r.y += r.vy * dt;
+      r.ox *= Math.exp(-4 * dt);
+      r.x = P.x + r.ox + Math.sin(T * 2 + r.seed) * 0.5;
+      r.tilt -= Math.PI * Math.round(r.tilt / Math.PI);
+      const target = 0.12 * (r.tilt < 0 ? -1 : 1);
+      r.tilt += (target - r.tilt) * Math.min(1, 5 * dt); r.tv = 0;
+      r.rot += (0 - r.rot) * Math.min(1, 5 * dt); r.rv = 0;
+      if (r.y < P.top - 3){                         // pushed back off the tip
+        r.peg = -1; r.z = Math.random() < 0.5 ? -1 : 1; r.vx = rnd(-30, 30); r.vy = Math.min(r.vy, -10);
+        sfx.slipOff(); kid.slip(r.counted); r.counted = false;
+      }
+    }
+  }
+
+  // a ring that has settled on a peg counts — celebrate it once
+  for (const r of rings){
+    if (r.peg >= 0 && !r.counted && r.y > PEGS[r.peg].top + 12){ r.counted = true; onCatch(r); }
+  }
+  stepRewards(dt);
+
+  // stack captured rings on each peg
+  for (let k = 0; k < PEGS.length; k++){
+    const stack = rings.filter(r => r.peg === k).sort((a, b) => b.y - a.y);
+    stack.forEach((r, i) => {
+      const rest = FLOOR - 5 - i * 6.2;
+      if (r.y > rest){ if (r.vy > 40) sfx.stack(); r.y = rest; if (r.vy > 0) r.vy = 0; }
+    });
+  }
+
+  // free rings bump into each other
+  for (let i = 0; i < rings.length; i++){
+    const a = rings[i]; if (a.peg >= 0) continue;
+    for (let j = i + 1; j < rings.length; j++){
+      const b = rings[j]; if (b.peg >= 0) continue;
+      const dx = b.x - a.x, dy = (b.y - a.y) * 1.6;
+      const min = 2 * R * 0.8, d2 = dx * dx + dy * dy;
+      if (d2 < min * min && d2 > 1e-4){
+        const d = Math.sqrt(d2), push = (min - d) / 2, nx = dx / d, ny = dy / d;
+        a.x -= nx * push; b.x += nx * push;
+        a.y -= ny * push / 1.6; b.y += ny * push / 1.6;
+        const dv = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
+        if (dv < 0){
+          if (dv < -50) sfx.clink();
+          a.vx += nx * dv * 0.5; a.vy += ny * dv * 0.5; b.vx -= nx * dv * 0.5; b.vy -= ny * dv * 0.5;
+        }
+      }
+    }
+  }
+
+  // bubbles (they rise against gravity, whichever way the toy is tilted)
+  const sinT = Math.sin(tilt), cosT = Math.cos(tilt);
+  for (let j = 0; j < 2; j++){
+    const p = jets[j].power;
+    let n = p * 110 * dt;
+    while (n > 0){
+      if (Math.random() < n) bubbles.push({ x: JX[j] + rnd(-9, 9), y: FLOOR - rnd(0, 6), r: Math.random() < 0.25 ? rnd(1.8, 3.6) : rnd(0.6, 1.7),
+        vy: -rnd(60, 160) * (0.5 + p), vx: rnd(-25, 25), ph: rnd(0, 6.28), w: rnd(4, 12) });
+      n -= 1;
+    }
+    if (p > 0.35 && Math.random() < dt * 16 * p) sfx.bubble(j);
+  }
+  if (Math.random() < dt * 1.2) bubbles.push({ x: rnd(20, 280), y: FLOOR - 2, r: rnd(0.5, 1.4), vy: -rnd(20, 40), vx: 0, ph: rnd(0, 6.28), w: rnd(2, 6) });
+  for (const b of bubbles){
+    const f0 = jetForce(b.x, b.y, 0), f1 = jetForce(b.x, b.y, 1);
+    const term = 45 + b.r * 32, k = Math.min(1, 3.2 * dt);   // bigger bubbles rise faster
+    b.vx += ((f0[0] + f1[0]) * 0.4 + tiltV * (b.y - 300) * SLOSH * 0.5) * dt;
+    b.vy += ((f0[1] + f1[1]) * 0.05) * dt;
+    const bc = churnFlow(b.x, b.y); b.vx += bc[0] * 0.6 * dt; b.vy += bc[1] * 0.3 * dt;
+    b.vx += (-sinT * term - b.vx) * k;                         // straight up in the real world,
+    b.vy += (-cosT * term - b.vy) * k;                         // whichever way the toy is held
+    b.x += (b.vx + Math.sin(T * 7 + b.ph) * b.w) * dt;
+    b.y += b.vy * dt;
+  }
+  for (const b of bubbles) if (b.y <= surfY(b.x) + 1 && foam.length < 70 && Math.random() < 0.5) foam.push({ x: b.x, r: b.r * 0.9, life: rnd(0.6, 2.4), vx: rnd(-6, 6) });
+  bubbles = bubbles.filter(b => b.y > surfY(b.x) + 1 && b.x > 2 && b.x < LW - 2 && b.y < FLOOR + 4);
+  for (const f of foam){ f.x += f.vx * dt; f.life -= dt; }
+  foam = foam.filter(f => f.life > 0 && f.x > 2 && f.x < LW - 2);
+
+  // drifting specks
+  for (const m of motes){
+    const f0 = jetForce(m.x, m.y, 0), f1 = jetForce(m.x, m.y, 1);
+    m.vx += ((f0[0] + f1[0]) * 0.5 + (floorPull(m.x, m.y, 0) + floorPull(m.x, m.y, 1)) * 0.6 + Math.sin(T * 0.3 + m.y * 0.05) * 3 + 6 * sinT + tiltV * (m.y - 300) * SLOSH) * dt;
+    const mc = churnFlow(m.x, m.y); m.vx += mc[0] * 0.5 * dt;
+    m.vy += (mc[1] * 0.5 + (f0[1] + f1[1]) * 0.4 + 6 * cosT - tiltV * (m.x - 150) * SLOSH) * dt;
+    const d = Math.exp(-2.4 * dt); m.vx *= d; m.vy *= d;
+    m.x += m.vx * dt; m.y += m.vy * dt;
+    if (m.y > FLOOR) { m.y = surfY(m.x) + 4; m.x = rnd(0, LW); }
+    if (m.y < surfY(m.x)) { m.y = surfY(m.x) + 2; m.vy = Math.abs(m.vy); }
+    if (m.x < 0) m.x += LW; if (m.x > LW) m.x -= LW;
+  }
+}
+
+function score(){ return rings.filter(r => r.peg >= 0 && r.y > PEGS[r.peg].top + 12).length; }
+
+function updateHUD(){
+  const s = score();
+  if (s !== lastScore){ $('score').textContent = String(s).padStart(2, '0') + '/' + N; lastScore = s; }
+  const sec = Math.floor(elapsed);
+  $('timer').textContent = Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
+}
+
+/* ---------- drawing ---------- */
+function ringPath(r, ry, a0, a1, dx = 0, dy = 0){
+  g.beginPath(); g.ellipse(r.x + dx, r.y + dy, R, ry, r.rot, a0, a1);
+}
+function drawRing(r, part){
+  const ry = ringRY(r);
+  if (r.glow > 0.02 && part !== 'back'){
+    g.save(); g.shadowColor = r.c; g.shadowBlur = 18 * r.glow; g.lineWidth = 5.4; g.strokeStyle = r.c;
+    ringPath(r, ry, 0, Math.PI * 2); g.stroke(); g.restore();
+  }
+  const depth = (r.y - SURF) / (FLOOR - SURF);
+  const PI = Math.PI;
+  g.lineCap = 'round';
+  g.lineWidth = 5.4;
+  if (part !== 'front'){ // far half, darker
+    ringPath(r, ry, PI, 2 * PI); g.strokeStyle = r.dark; g.stroke();
+    g.strokeStyle = `rgba(6,55,95,${0.12 + 0.25 * depth})`; g.stroke();
+  }
+  if (part !== 'back'){ // near half, lit
+    ringPath(r, ry, 0, PI); g.strokeStyle = r.c; g.stroke();
+    g.strokeStyle = `rgba(6,55,95,${0.06 + 0.22 * depth})`; g.stroke();
+    g.lineWidth = 1.2; g.strokeStyle = 'rgba(255,255,255,.6)';
+    g.beginPath(); g.ellipse(r.x, r.y - 1.1, R - 1.1, Math.max(0.6, ry - 1.1), r.rot, PI * 0.18, PI * 0.62); g.stroke();
+    g.lineWidth = 1; g.strokeStyle = 'rgba(255,255,255,.25)';
+    g.beginPath(); g.ellipse(r.x, r.y - 0.8, R - 0.6, Math.max(0.6, ry - 0.6), r.rot, PI * 1.15, PI * 1.45); g.stroke();
+  }
+}
+function drawPeg(P){
+  const w = 5, h = FLOOR - P.top;
+  const lg = g.createLinearGradient(P.x - w / 2, 0, P.x + w / 2, 0);
+  lg.addColorStop(0, shade(P.color, 0.45)); lg.addColorStop(0.35, shade(P.color, 1.15));
+  lg.addColorStop(0.55, P.color); lg.addColorStop(1, shade(P.color, 0.4));
+  g.fillStyle = lg; g.fillRect(P.x - w / 2, P.top, w, h);
+  g.fillStyle = shade(P.color, 1.2);
+  g.beginPath(); g.arc(P.x, P.top, w / 2 + 0.6, 0, 7); g.fill();
+  g.fillStyle = 'rgba(255,255,255,.7)'; g.beginPath(); g.arc(P.x - 0.8, P.top - 0.8, 1, 0, 7); g.fill();
+  // depth tint
+  const tg = g.createLinearGradient(0, P.top, 0, FLOOR);
+  tg.addColorStop(0, 'rgba(6,55,95,.12)'); tg.addColorStop(1, 'rgba(6,40,80,.42)');
+  g.fillStyle = tg; g.fillRect(P.x - w / 2 - 0.6, P.top, w + 1.2, h);
+  // mount
+  g.fillStyle = '#0b2232'; g.beginPath(); g.ellipse(P.x, FLOOR + 1, 10, 3.2, 0, 0, 7); g.fill();
+}
+
+function draw(){
+  g.setTransform(S * DPR, 0, 0, S * DPR, 0, 0);
+  g.clearRect(0, 0, LW, LH);
+  if (!glOK){
+    const bg = g.createLinearGradient(0, 0, 0, LH);
+    bg.addColorStop(0, '#2a9fc0'); bg.addColorStop(1, '#03243f');
+    g.fillStyle = bg; g.fillRect(0, 0, LW, LH);
+  }
+
+  for (const m of motes){ g.fillStyle = `rgba(210,240,255,${m.a})`; g.fillRect(m.x, m.y, m.s, m.s); }
+
+  // soft shadows on the back wall
+  g.lineWidth = 6; g.strokeStyle = 'rgba(0,22,40,.2)';
+  for (const r of rings){ ringPath(r, ringRY(r), 0, 2 * Math.PI, 6, 10); g.stroke(); }
+  g.fillStyle = 'rgba(0,22,40,.2)';
+  for (const P of PEGS) g.fillRect(P.x + 4, P.top + 10, 4, FLOOR - P.top - 10);
+
+  const caught = rings.filter(r => r.peg >= 0), free = rings.filter(r => r.peg < 0);
+  for (const r of free) if (r.z < 0) drawRing(r, 'all');
+  for (const r of caught) drawRing(r, 'back');
+  for (const P of PEGS) drawPeg(P);
+  for (const r of caught) drawRing(r, 'front');
+  for (const r of free) if (r.z >= 0) drawRing(r, 'all');
+
+  for (const f of foam){
+    const y = surfY(f.x) + f.r + 0.5;
+    g.beginPath(); g.arc(f.x, y, f.r, 0, 7);
+    g.lineWidth = 0.6; g.strokeStyle = `rgba(230,250,255,${Math.min(0.7, f.life * 0.5)})`; g.stroke();
+  }
+  for (const b of bubbles){
+    g.beginPath(); g.arc(b.x, b.y, b.r, 0, 7);
+    g.fillStyle = 'rgba(255,255,255,.10)'; g.fill();
+    g.lineWidth = 0.6; g.strokeStyle = 'rgba(225,250,255,.65)'; g.stroke();
+    if (b.r > 1.2){ g.fillStyle = 'rgba(255,255,255,.85)'; g.beginPath(); g.arc(b.x - b.r * 0.35, b.y - b.r * 0.35, b.r * 0.28, 0, 7); g.fill(); }
+  }
+
+  drawRewards();
+
+  if (glOK){
+    gl.uniform2f(uRes, wcv.width, wcv.height);
+    gl.uniform1f(uT, T);
+    gl.uniform2f(uJet, Math.min(1, jets[0].power), Math.min(1, jets[1].power));
+    gl.uniform1f(uTiltU, surfK); gl.uniform1f(uSurfU, surfC);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  }
+}
+
+/* =====================================================================
+   REWARDS + LITTLE BROTHER
+   ===================================================================== */
+let sparks = [], pops = [], flash = 0, bump = 0, combo = 0, lastCatch = -99, confetti = [];
+const PRAISE = ['+1', 'Nice!', '+1', 'Yes!', 'Sweet!', '+1'];
+function burst(x, y, color, n, speed = 70){
+  for (let i = 0; i < n; i++){
+    const a = rnd(0, Math.PI * 2), v = rnd(0.3, 1) * speed;
+    sparks.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, decay: rnd(0.9, 1.6), size: rnd(1.4, 3.4), color, star: Math.random() < 0.55 });
+  }
+}
+function onCatch(r){
+  const P = PEGS[r.peg], s = score();
+  combo = (T - lastCatch < 3.5) ? combo + 1 : 1; lastCatch = T;
+  r.glow = 1; P.glow = 1; flash = 1; bump = 1;
+  burst(r.x, r.y, r.c, 24); burst(P.x, P.top, '#fff4c2', 14, 50);
+  const text = combo === 2 ? 'DOUBLE!' : combo === 3 ? 'TRIPLE!!' : combo > 3 ? 'COMBO ×' + combo : PRAISE[Math.floor(Math.random() * PRAISE.length)];
+  pops.push({ x: P.x, y: P.top - 16, text, life: 1, big: combo > 1 });
+  sfx.score(s, combo);
+  const lcd = document.querySelector('.lcd'); lcd.classList.remove('pop'); void lcd.offsetWidth; lcd.classList.add('pop');
+  try { navigator.vibrate && navigator.vibrate([18, 40, 22]); } catch(_){}
+  kid.onCatch(s, combo, P);
+}
+function stepRewards(dt){
+  for (const p of sparks){ p.vx *= Math.exp(-3 * dt); p.vy *= Math.exp(-3 * dt); p.vy -= 18 * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.life -= p.decay * dt; }
+  sparks = sparks.filter(p => p.life > 0);
+  for (const p of pops){ p.y -= 22 * dt; p.life -= 0.75 * dt; }
+  pops = pops.filter(p => p.life > 0);
+  for (const r of rings) if (r.glow) r.glow = Math.max(0, r.glow - dt * 0.8);
+  for (const P of PEGS) if (P.glow) P.glow = Math.max(0, P.glow - dt * 1.2);
+  flash = Math.max(0, flash - dt * 2.5);
+  bump = Math.max(0, bump - dt * 3);
+}
+function star4(x, y, s){
+  g.beginPath(); g.moveTo(x, y - s); g.quadraticCurveTo(x, y, x + s, y); g.quadraticCurveTo(x, y, x, y + s);
+  g.quadraticCurveTo(x, y, x - s, y); g.quadraticCurveTo(x, y, x, y - s); g.fill();
+}
+function drawRewards(){
+  g.save();
+  g.globalCompositeOperation = 'lighter';
+  if (flash > 0){ g.fillStyle = `rgba(160,230,255,${flash * 0.09})`; g.fillRect(0, 0, LW, LH); }
+  for (const P of PEGS) if (P.glow > 0){
+    const rg = g.createRadialGradient(P.x, P.top, 0, P.x, P.top, 40);
+    rg.addColorStop(0, `rgba(255,240,180,${0.55 * P.glow})`); rg.addColorStop(1, 'rgba(255,240,180,0)');
+    g.fillStyle = rg; g.beginPath(); g.arc(P.x, P.top, 40, 0, 7); g.fill();
+  }
+  for (const p of sparks){
+    g.globalAlpha = Math.min(1, p.life * 1.4); g.fillStyle = p.color;
+    if (p.star) star4(p.x, p.y, p.size * 1.6); else { g.beginPath(); g.arc(p.x, p.y, p.size * 0.6, 0, 7); g.fill(); }
+  }
+  g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
+  for (const p of pops){
+    const k = 1 - p.life, sc = (k < 0.15 ? k / 0.15 * 1.15 : 1.15 - Math.min(0.15, (k - 0.15))) * (p.big ? 1.3 : 1);
+    g.save(); g.translate(p.x, p.y); g.scale(sc, sc);
+    g.globalAlpha = Math.min(1, p.life * 2);
+    g.font = '700 17px Fredoka, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.lineWidth = 4; g.strokeStyle = 'rgba(0,40,70,.7)'; g.strokeText(p.text, 0, 0);
+    g.fillStyle = p.big ? '#ffe36b' : '#ffffff'; g.fillText(p.text, 0, 0);
+    g.restore();
+  }
+  g.restore();
+}
+function launchConfetti(){
+  const cols = ['#ff4d6d', '#ffd23f', '#3ddc97', '#4cc9f0', '#b388ff', '#ff8c42', '#ffffff'];
+  for (let i = 0; i < 170; i++) confetti.push({ x: rnd(0, SW), y: rnd(-SH * 0.4, -10), vx: rnd(-30, 30), vy: rnd(60, 160),
+    r: rnd(0, 6.28), vr: rnd(-6, 6), w: rnd(5, 9), h: rnd(3, 6), c: cols[Math.floor(Math.random() * cols.length)], life: rnd(4, 7) });
+}
+function drawConfetti(dt){
+  if (!confetti.length) return;
+  for (const c of confetti){
+    c.vx += Math.sin(T * 2 + c.r) * 20 * dt; c.x += c.vx * dt; c.y += c.vy * dt; c.r += c.vr * dt; c.life -= dt;
+    sc.save(); sc.translate(c.x, c.y); sc.rotate(c.r); sc.scale(1, Math.cos(c.r * 1.7));
+    sc.globalAlpha = Math.min(1, c.life); sc.fillStyle = c.c; sc.fillRect(-c.w / 2, -c.h / 2, c.w, c.h); sc.restore();
+  }
+  confetti = confetti.filter(c => c.life > 0 && c.y < SH + 20);
+}
+
+const kid = (() => {
+  // He's the sibling sitting next to you: thrilled when rings go in, gutted when they fall out,
+  // leaning in when one is about to land, teasing when it gets boring, and always angling for his turn.
+  const el = $('kid'), svg = el.querySelector('svg'), bub = $('bubble');
+  const pupL = $('pupL'), pupR = $('pupR'), look = $('headLook');
+  const MOODS = ['happy', 'laugh', 'wow', 'cheer', 'sleepy', 'upset', 'impatient', 'lean'];
+  let moodT = 0, bubbleT = 0, lastSay = -99, nextBlink = 2, lastLine = '';
+  let lastAction = 0, lastProgress = 0, idleSaid = false, tauntT = -99, presses = [], lastMash = -99;
+  let roundOn = false, roundStart = 0, turnStage = 0, nervousSaid = false, winT = -1;
+  let antic = null, anticP = null, anticT = -99, lastNear = -99, lastLost = -99, lastStuck = -99;
+  let px = 0, py = 0, hd = 0, focus = null, focusT = 0;
+  const pick = arr => { let s; do { s = arr[Math.floor(Math.random() * arr.length)]; } while (arr.length > 1 && s === lastLine); return s; };
+  function mood(m, dur){ MOODS.forEach(x => el.classList.remove(x)); if (m) el.classList.add(m); moodT = dur || 0; }
+  function say(text, force){
+    if (!force && T - lastSay < 1.6) return false;
+    lastSay = T; lastLine = text;
+    bub.textContent = text; bub.classList.remove('show'); void bub.offsetWidth; bub.classList.add('show');
+    bubbleT = 2.2 + text.length * 0.035;
+    return true;
+  }
+  function hop(){ el.classList.remove('hop'); void el.offsetWidth; el.classList.add('hop'); }
+  const L = {
+    catch: ['Yesss!!', 'Woohoo!', 'Nice one!', 'Ek aur! Ek aur!', 'Did you see that?!', 'Arre wah!', 'Bullseye!', 'GOAL! I mean… RING!'],
+    lost: ['NOOO! It was IN!', 'Whyyy 😭', 'Arre, it fell off!', "Don't press so hard!", 'Nooo, not that one!'],
+    near: ['Arre! So close!', 'Almost!!', 'It hit the top 😩', 'Ufff, next time!'],
+    antic: ['Ooh ooh ooh…', 'Go go go…', "It's coming… it's coming…", 'Yes yes yes…'],
+    miss: ['Awww 😩', 'Nooo, so close!', 'Ugh! Missed!'],
+    mash: ['Slowly! Slowly!', "Not so hard, you'll break it!", 'Gently! Gently!'],
+    taunt: ['Even I can do it faster 😛', 'Slow coach!', "Should I try? I'm better.", 'The rings are winning 😂', 'Rings are this way, hello!', 'Baby game and still stuck? 😜'],
+    idle: ['Are you sleeping? 😴', 'Hellooo?', "If you're not playing, give it to me!"],
+    stuck: ['Tilt it! Tilt it!', 'Turn it sideways, na!'],
+    reset: ['Again?! Okay fine…', 'This time all twelve!', 'Then my turn, promise?'],
+  };
+  // waiting for his turn gets louder the longer you play
+  const TURN = [[45, 'Can I play after this?'], [95, 'Meri baari kab aayegi?'], [150, 'Okay one more minute, then MY turn!'], [215, 'Mummyyy! Not giving me a turn!'], [290, "I'm telling Mummy 😤"]];
+
+  return {
+    action(){ lastAction = T; idleSaid = false; if (el.classList.contains('sleepy')) mood(null); },
+    press(){
+      this.action();
+      if (!roundOn){ roundOn = true; roundStart = T; lastProgress = T; }
+      presses.push(T); presses = presses.filter(t => T - t < 2.2);
+      if (presses.length >= 7 && T - lastMash > 14){ lastMash = T; say(pick(L.mash)); mood('wow', 1.4); }
+    },
+    onCatch(s, c, P){
+      lastProgress = T; antic = null; focus = P; focusT = 1.6;
+      let line;
+      if (s === 1) line = 'First one!! 🎉';
+      else if (s === N - 2) line = 'Just two more!';
+      else if (s === Math.floor(N / 2)) line = 'Halfway there!';
+      else if (c >= 2) line = c === 2 ? 'Two in a row?! Pro!' : 'Unstoppable!!';
+      else line = pick(L.catch);
+      if (s < N) say(line, true);
+      mood('cheer', 1.6); hop(); A.kid('yay');
+    },
+    // a ring that was already in got knocked back out
+    lost(){
+      if (T - lastLost < 2.5) return;
+      lastLost = T; say(pick(L.lost), true); mood('upset', 2.2); A.kid('aww');
+    },
+    slip(counted){ if (counted) this.lost(); else if (T - lastNear > 3){ lastNear = T; say(pick(L.near)); mood('upset', 1.2); A.kid('aww'); } },
+    nearMiss(P){
+      if (T - lastNear < 3.5 || T - lastCatch < 1.5) return;
+      lastNear = T; lastProgress = T; focus = P; focusT = 1;
+      say(pick(L.near)); mood('upset', 1.3); A.kid('aww');
+    },
+    win(){
+      winT = 0; mood('cheer', 99); el.classList.add('party'); A.kid('yay');
+      say('YOU DID IT!!! 🎉', true);
+    },
+    reset(){
+      el.classList.remove('party'); winT = -1; mood('happy', 1.5); this.action();
+      roundOn = false; turnStage = 0; nervousSaid = false; antic = null;
+      if (T > 1) say(pick(L.reset), true);
+    },
+    update(dt){
+      if (moodT > 0){ moodT -= dt; if (moodT <= 0) mood(null); }
+      if (bubbleT > 0){ bubbleT -= dt; if (bubbleT <= 0) bub.classList.remove('show'); }
+      if (winT >= 0){
+        winT += dt;
+        if (winT > 2.8 && winT - dt <= 2.8){ say('NOW MY TURN! Give give give! 🙌', true); el.classList.remove('party'); mood('impatient', 99); }
+      }
+      nextBlink -= dt;
+      if (nextBlink <= 0){ el.classList.add('blink'); setTimeout(() => el.classList.remove('blink'), 130); nextBlink = rnd(2.2, 5.5); }
+
+      if (!won){
+        // leaning in: a ring is dropping straight onto a peg
+        if (!antic){
+          for (const r of rings){
+            if (r.peg >= 0 || r.vy < 12 || Math.abs(Math.sin(r.tilt)) > 0.8) continue;
+            for (const P of PEGS){
+              const h = P.top - r.y;
+              if (h > 8 && h < 85 && Math.abs(r.x - P.x) < R * 0.65 && T - anticT > 5){
+                antic = r; anticP = P; anticT = T; focus = P; focusT = 1.8;
+                say(pick(L.antic), true); mood('lean', 2.5); A.kid('ooh');
+              }
+            }
+          }
+        } else if (antic.peg >= 0){ antic = null; }                                        // it went in: onCatch takes over
+        else if (antic.y > anticP.top + 10 || T - anticT > 3){                              // it missed
+          if (antic.y > anticP.top + 10){ say(pick(L.miss), true); mood('upset', 1.4); A.kid('aww'); }
+          antic = null;
+        }
+        // last ring: he goes quiet and nervous
+        if (!nervousSaid && score() === N - 1 && T - lastSay > 2.5){ nervousSaid = true; say('Last one… shhh… focus 🤫', true); mood('lean', 3); }
+        // you're pressing away but nothing's happening: he gets bored and teases
+        if (roundOn && T - lastProgress > 25 && T - lastAction < 6 && T - tauntT > 18){
+          tauntT = T;
+          const corner = rings.some(r => r.peg < 0 && r.y > FLOOR - 25 && (r.x < 40 || r.x > LW - 40));
+          if (corner && T - lastStuck > 40){ lastStuck = T; say(pick(L.stuck)); mood('wow', 1.4); }
+          else { say(pick(L.taunt)); mood('laugh', 1.5); A.kid('laugh'); }
+        }
+        // you stopped playing
+        if (!idleSaid && T - lastAction > 14 && T > 6){ idleSaid = true; say(pick(L.idle)); mood('sleepy', 4); }
+        // and he's always waiting for his turn
+        if (roundOn && turnStage < TURN.length && T - roundStart > TURN[turnStage][0] && T - lastSay > 4 && moodT <= 0){
+          say(TURN[turnStage][1]); mood('impatient', 3.2); turnStage++;
+        }
+      }
+
+      // eyes follow the action
+      const tr = tank.getBoundingClientRect(), sr = svg.getBoundingClientRect();
+      let tx = tr.left + tr.width / 2, ty = tr.top + tr.height * 0.55;
+      if (focusT > 0 && focus){ focusT -= dt; tx = tr.left + focus.x * S; ty = tr.top + focus.top * S; }
+      else {
+        let best = null, bv = 45;
+        for (const r of rings){ const v = Math.hypot(r.vx, r.vy); if (r.peg < 0 && v > bv){ bv = v; best = r; } }
+        if (best){ tx = tr.left + best.x * S; ty = tr.top + best.y * S; }
+      }
+      const ex = sr.left + sr.width * 100 / 200, ey = sr.top + sr.height * 89 / 140;
+      const dx = tx - ex, dy = ty - ey, d = Math.hypot(dx, dy) || 1;
+      const k = Math.min(1, dt * 6);
+      px += (dx / d * 3 - px) * k; py += (dy / d * 2.4 - py) * k;
+      pupL.setAttribute('transform', `translate(${px.toFixed(2)} ${py.toFixed(2)})`);
+      pupR.setAttribute('transform', `translate(${px.toFixed(2)} ${py.toFixed(2)})`);
+      hd += (clamp(dx / d * 7, -8, 8) - hd) * k;
+      look.style.transform = `rotate(${hd.toFixed(2)}deg)`;
+    },
+  };
+})();
+
+/* ---------- input ---------- */
+const btns = [$('btnL'), $('btnR')];
+function press(i){
+  if (jets[i].held) return;
+  jets[i].held = true;
+  btns[i].classList.add('down');
+  bump = Math.max(bump, 0.25 * (1 - jets[i].sq));   // you feel the thump through the plastic
+  $('hint').classList.add('gone');
+  if (!started && !won){ started = true; startTime = performance.now(); }
+  kid.press();
+  sfx.press(i);
+}
+function release(i){ jets[i].held = false; btns[i].classList.remove('down'); }
+
+btns.forEach((b, i) => {
+  b.addEventListener('pointerdown', e => { A.init(); e.preventDefault(); try { b.setPointerCapture(e.pointerId); } catch(_){} press(i); });
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(ev => b.addEventListener(ev, () => release(i)));
+  b.addEventListener('contextmenu', e => e.preventDefault());
+});
+const LEFT = ['a', 's', 'f', 'z'], RIGHT = ['l', 'k', 'j', 'm'];
+const TL = ['arrowleft', 'q'], TR = ['arrowright', 'e'];
+const tiltKeys = { l: false, r: false };
+let drag = null, sensorOn = false, sensorTilt = 0, gotSensor = false;
+const restTilt = () => sensorOn ? sensorTilt : ((tiltKeys.r ? 1 : 0) - (tiltKeys.l ? 1 : 0)) * MAX_TILT;
+
+addEventListener('keydown', e => {
+  A.init();
+  const k = e.key.toLowerCase();
+  if (TL.includes(k) || TR.includes(k)){
+    tiltKeys[TL.includes(k) ? 'l' : 'r'] = true;
+    if (!drag) tiltTarget = restTilt();
+    e.preventDefault(); return;
+  }
+  if (e.repeat) return;
+  if (LEFT.includes(k)){ press(0); e.preventDefault(); }
+  else if (RIGHT.includes(k)){ press(1); e.preventDefault(); }
+  else if (k === 'r') resetGame();
+});
+addEventListener('keyup', e => {
+  const k = e.key.toLowerCase();
+  if (LEFT.includes(k)) release(0);
+  if (RIGHT.includes(k)) release(1);
+  if (TL.includes(k) || TR.includes(k)){
+    tiltKeys[TL.includes(k) ? 'l' : 'r'] = false;
+    if (!drag) tiltTarget = restTilt();
+  }
+});
+addEventListener('blur', () => { release(0); release(1); tiltKeys.l = tiltKeys.r = false; tiltTarget = restTilt(); });
+
+// grab the toy anywhere (except the buttons) and drag sideways to tilt it
+const stage = document.querySelector('.stage'), consoleEl = document.querySelector('.console'), rig = $('rig');
+// rotate the toy (and the brother leaning on it) around the toy's own centre
+function placePivot(){ const off = consoleEl.offsetTop + consoleEl.offsetHeight / 2; rig.style.transformOrigin = `50% ${off}px`; }
+addEventListener('resize', placePivot); placePivot();
+// iPhone blocks motion sensors inside embedded frames, so don't offer it there
+try { if (window.top !== window.self && typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') $('tiltBtn').style.display = 'none'; } catch(_){ }
+stage.addEventListener('pointerdown', e => {
+  A.init();
+  if (e.target.closest('button')) return;
+  const cr = consoleEl.getBoundingClientRect();
+  const cx = cr.left + cr.width / 2, cy = cr.top + cr.height / 2;
+  drag = { id: e.pointerId, cx, cy, last: Math.atan2(e.clientY - cy, e.clientX - cx), px: e.clientX, acc: 0, start: tiltTarget };
+  kid.action();
+  try { stage.setPointerCapture(e.pointerId); } catch(_){}
+  consoleEl.classList.add('grabbing');
+  $('hint').classList.add('gone');
+});
+stage.addEventListener('pointermove', e => {
+  if (!drag || e.pointerId !== drag.id) return;
+  const a = Math.atan2(e.clientY - drag.cy, e.clientX - drag.cx);
+  let d = a - drag.last; d = Math.atan2(Math.sin(d), Math.cos(d));
+  if (Math.hypot(e.clientX - drag.cx, e.clientY - drag.cy) < 45) d = (e.clientX - drag.px) / 170; // too close to the centre: use sideways motion
+  drag.last = a; drag.px = e.clientX; drag.acc += d;
+  tiltTarget = clamp(drag.start + drag.acc, -MAX_TILT, MAX_TILT);
+});
+const endDrag = e => {
+  if (!drag || e.pointerId !== drag.id) return;
+  drag = null; consoleEl.classList.remove('grabbing');
+  tiltTarget = restTilt();                       // let go and it rights itself
+};
+stage.addEventListener('pointerup', endDrag);
+stage.addEventListener('pointercancel', endDrag);
+
+// phone motion sensor (works when the page is opened in a normal browser tab)
+let toastT = 0;
+function toast(msg){ const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 3800); }
+// Work out which way real gravity points across the screen, however the phone is held
+// (upright, reclined, or above your face in bed), and use that as the toy's tilt.
+function onOri(e){
+  if (!sensorOn || e.beta == null || e.gamma == null) return;
+  gotSensor = true;
+  const b = e.beta * Math.PI / 180, g = e.gamma * Math.PI / 180;
+  const gx = Math.cos(b) * Math.sin(g), gy = Math.sin(b);       // gravity along screen-right and screen-down
+  let a = Math.atan2(gx, gy);
+  const ang = ((screen.orientation && screen.orientation.angle) || window.orientation || 0) * Math.PI / 180;
+  a -= ang;
+  a = Math.atan2(Math.sin(a), Math.cos(a));
+  const m = Math.hypot(gx, gy);                                   // phone lying flat: gravity barely crosses the screen
+  sensorTilt = clamp(a, -1.05, 1.05) * Math.min(1, m / 0.3);
+  if (!drag) tiltTarget = sensorTilt;
+}
+async function enableSensor(silent){
+  try {
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function'){
+      const res = await DeviceOrientationEvent.requestPermission();
+      if (res !== 'granted') throw new Error('denied');
+    }
+  } catch(_){ if (!silent) toast("Motion access wasn't allowed. Drag the toy to tilt instead."); return; }
+  gotSensor = false;
+  addEventListener('deviceorientation', onOri);
+  setSensor(true);
+  setTimeout(() => {
+    if (sensorOn && !gotSensor){ setSensor(false); if (!silent) toast('No tilt sensor reached this page. Drag the toy or use ← → to tilt.'); }
+  }, 1600);
+}
+function setSensor(on){
+  sensorOn = on;
+  $('tiltBtn').setAttribute('aria-pressed', on);
+  $('tiltBtn').textContent = on ? 'Phone tilt: on' : 'Use phone tilt';
+  if (on) $('tiltBtn').classList.remove('nudge');
+  if (!on){ removeEventListener('deviceorientation', onOri); tiltTarget = restTilt(); }
+}
+$('tiltBtn').addEventListener('click', async () => {
+  A.init();
+  if (sensorOn){ setSensor(false); return; }
+  enableSensor(false);
+});
+// On a phone opened directly (not inside another app's frame): Android needs no permission, so tilt is on
+// straight away; iPhone needs one tap, so the button is highlighted and the first pump press also asks.
+const inFrame = (() => { try { return window.top !== window.self; } catch(_){ return true; } })();
+const isTouch = matchMedia('(pointer:coarse)').matches;
+const needsAsk = typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function';
+if (isTouch && !inFrame){
+  if (!needsAsk) enableSensor(true);
+  else {
+    $('tiltBtn').classList.add('nudge'); $('tiltBtn').textContent = 'Tap to tilt with your phone';
+    let asked = false;
+    const askOnce = () => { if (asked || sensorOn) return; asked = true; enableSensor(true); };
+    btns.forEach(b => b.addEventListener('click', askOnce));
+  }
+}
+$('soundBtn').addEventListener('click', () => {
+  A.init();
+  A.setMuted(!A.muted);
+  $('soundBtn').textContent = A.muted ? 'Sound: off' : 'Sound: on';
+  $('soundBtn').setAttribute('aria-pressed', !A.muted);
+});
+$('reset').addEventListener('click', resetGame);
+$('again').addEventListener('click', resetGame);
+addEventListener('resize', resize);
+
+/* ---------- loop ---------- */
+let last = performance.now();
+function frame(now){
+  const dt = Math.min(0.05, (now - last) / 1000); last = now; T += dt;
+  const sub = 3;
+  for (let i = 0; i < sub; i++) step(dt / sub);
+  if (started && !won) elapsed = (now - startTime) / 1000;
+  if (!won && score() === N){
+    won = true; winTimer = 0.7;
+    const sec = Math.floor(elapsed);
+    $('winTime').textContent = `Time: ${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
+    sfx.win(); kid.win(); launchConfetti(); $('hint').classList.add('gone');
+  }
+  if (winTimer > 0){ winTimer -= dt; if (winTimer <= 0) $('win').classList.add('show'); }
+  updateHUD();
+  const vt = sensorOn ? 0 : tilt, fit = 1 / (1 + 0.45 * Math.abs(Math.sin(vt))); // shrink a little while tilted so it stays on screen
+  rig.style.transform = `rotate(${vt}rad) translateY(${(-bump * 5).toFixed(2)}px) scale(${(fit * (1 + bump * 0.02)).toFixed(4)})`;
+  A.setWater(jets[0].power, jets[1].power, Math.min(0.6, Math.abs(tiltV) * 0.2));
+  kid.update(dt);
+  btns[0].style.setProperty('--sq', jets[0].sq.toFixed(3)); btns[1].style.setProperty('--sq', jets[1].sq.toFixed(3));
+  drawSky(T, dt);
+  draw();
+  requestAnimationFrame(frame);
+}
+
+window.__rt = { get rings(){ return rings; }, PEGS, setTilt: v => { tiltTarget = v; }, tilt: () => tilt };
+resetGame();
+resize();
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
