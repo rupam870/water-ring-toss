@@ -657,8 +657,8 @@ void main(){
   float asp = uRes.x / uRes.y;
   float j1 = uJet.x, j2 = uJet.y;
   float surf = 1.0 - (uSurf - (uv.x*300.0 - 150.0)*uTilt)/520.0 + 0.004*sin(uv.x*14.0 + uT*1.7) + 0.003*sin(uv.x*31.0 - uT*2.3)
-             + 0.016*j1*exp(-pow((uv.x-0.17)/0.12, 2.0))*(0.7+0.3*sin(uT*9.0))
-             + 0.016*j2*exp(-pow((uv.x-0.83)/0.12, 2.0))*(0.7+0.3*sin(uT*9.0+1.0));
+             + 0.016*j1*exp(-pow((uv.x-0.24)/0.12, 2.0))*(0.7+0.3*sin(uT*9.0))
+             + 0.016*j2*exp(-pow((uv.x-0.76)/0.12, 2.0))*(0.7+0.3*sin(uT*9.0+1.0));
   surf = min(surf, 1.03);
   vec3 col;
   if (uv.y > surf){
@@ -673,7 +673,7 @@ void main(){
     col = mix(col, top, smoothstep(0.55, 1.0, d));
     // wobbling caustic net
     vec2 warp = 0.06 * vec2(fbm(uv*3.0 + uT*0.15), fbm(uv*3.0 - uT*0.17 + 4.0));
-    float jetWarp = (j1*exp(-pow((uv.x-0.17)/0.2,2.0)) + j2*exp(-pow((uv.x-0.83)/0.2,2.0)));
+    float jetWarp = (j1*exp(-pow((uv.x-0.24)/0.2,2.0)) + j2*exp(-pow((uv.x-0.76)/0.2,2.0)));
     warp += 0.05 * jetWarp * vec2(sin(uv.y*30.0 - uT*8.0), cos(uv.x*25.0 + uT*7.0));
     vec2 cuv = vec2(uv.x*asp, uv.y) * 1.25 + warp;
     float c = caustic(cuv, uT*0.42 + 23.0);
@@ -686,15 +686,15 @@ void main(){
     col += vec3(0.55, 0.88, 1.0) * r * 0.13 * smoothstep(0.15, 1.0, d);
     // churn above the jets
     float n1 = fbm(vec2(uv.x*9.0, uv.y*5.0 - uT*3.5));
-    float m1 = exp(-pow((uv.x-0.17)/(0.06 + 0.12*uv.y), 2.0)) * smoothstep(0.85, 0.0, uv.y);
-    float m2 = exp(-pow((uv.x-0.83)/(0.06 + 0.12*uv.y), 2.0)) * smoothstep(0.85, 0.0, uv.y);
+    float m1 = exp(-pow((uv.x-0.24)/(0.06 + 0.12*uv.y), 2.0)) * smoothstep(0.85, 0.0, uv.y);
+    float m2 = exp(-pow((uv.x-0.76)/(0.06 + 0.12*uv.y), 2.0)) * smoothstep(0.85, 0.0, uv.y);
     col += vec3(0.7, 0.95, 1.0) * (j1*m1 + j2*m2) * n1 * 0.3;
     // bright underside of the surface
     col += vec3(0.5, 0.85, 0.95) * smoothstep(surf - 0.035, surf, uv.y) * 0.22;
     // sandy-dark floor + pump nozzles
     col *= mix(0.5, 1.0, smoothstep(0.0, 0.07, uv.y));
-    float noz = smoothstep(0.035, 0.02, length(vec2((uv.x-0.17)*asp, uv.y*1.3 - 0.0)))
-              + smoothstep(0.035, 0.02, length(vec2((uv.x-0.83)*asp, uv.y*1.3 - 0.0)));
+    float noz = smoothstep(0.035, 0.02, length(vec2((uv.x-0.24)*asp, uv.y*1.3 - 0.0)))
+              + smoothstep(0.035, 0.02, length(vec2((uv.x-0.76)*asp, uv.y*1.3 - 0.0)));
     col = mix(col, vec3(0.03,0.05,0.07), clamp(noz,0.0,1.0)*0.8);
   }
   // side falloff (tank walls)
@@ -727,7 +727,7 @@ if (glOK){
    ===================================================================== */
 const LW = 300, LH = 520, SURF = 34, FLOOR = 506, R = 19, N = 12;
 const G = 175, DRAG = 1.7, JET = 1500;
-const JX = [51, 249];
+const JX = [72, 228];   // nozzles sit a little in from the walls, angled toward the middle
 const PEGS = [
   { x: 96,  top: 205, color: '#ff5a4e' },
   { x: 206, top: 290, color: '#7ee36b' },
@@ -736,7 +736,7 @@ const COLORS = ['#ff4d6d', '#ffd23f', '#3ddc97', '#4cc9f0', '#b388ff', '#ff8c42'
 
 const tank = $('tank'), gcv = $('game'), g = gcv.getContext('2d');
 let S = 1, DPR = 1, T = 0;
-let rings = [], bubbles = [], motes = [], foam = [];
+let rings = [], bubbles = [], motes = [], foam = [], glitter = [];
 const jets = [{ held: false, sq: 0, power: 0, suck: 0 }, { held: false, sq: 0, power: 0, suck: 0 }];
 let started = false, startTime = 0, elapsed = 0, won = false, winTimer = -1, lastScore = -1;
 
@@ -757,6 +757,14 @@ function resetGame(){
   bubbles = [];
   motes = [];
   for (let i = 0; i < 70; i++) motes.push({ x: rnd(0, LW), y: rnd(SURF, FLOOR), vx: 0, vy: 0, a: rnd(0.08, 0.3), s: rnd(0.5, 1.3) });
+  // glitter: flat flakes that sink slowly, settle on the floor, and flash when they turn to the light
+  const GCOL = ['255,220,130', '255,236,170', '235,248,255', '255,160,215', '160,250,255', '200,175,255'];
+  glitter = [];
+  for (let i = 0; i < 230; i++){
+    const rest = Math.random() < 0.65;
+    glitter.push({ x: rnd(6, LW - 6), y: rest ? FLOOR - rnd(0.5, 3) : rnd(SURF + 10, FLOOR), rest,
+      ph: rnd(0, 6.28), spin: rnd(2, 6) * (Math.random() < 0.5 ? -1 : 1), sz: rnd(0.9, 1.9), c: GCOL[Math.floor(Math.random() * GCOL.length)], s: rnd(0, 100) });
+  }
   started = false; elapsed = 0; won = false; winTimer = -1; lastScore = -1;
   $('win').classList.remove('show');
   $('hint').classList.remove('gone');
@@ -781,8 +789,8 @@ function resize(){
 const MAX_TILT = 0.42;
 let tilt = 0, tiltV = 0, tiltTarget = 0;
 // ---------- gravity as the toy feels it: tilt + any shaking of the phone ----------
-const G_NET = 300;            // gravity minus buoyancy for a plastic ring (px/s²)
-const K_SHAKE = 300 / 9.81;   // phone acceleration (m/s²) → px/s² in the toy
+const G_NET = 220;            // gravity minus buoyancy for a plastic ring (px/s²)
+const K_SHAKE = 220 / 9.81;   // phone acceleration (m/s²) → px/s² in the toy
 let shake = { x: 0, y: 0 };   // smoothed phone acceleration in screen axes (x right, y down), m/s²
 let gEx = 0, gEy = G_NET, gTheta = 0;
 
@@ -821,7 +829,6 @@ function markCells(){
     let t = 0;
     if (y > FLOOR) t = 1;
     else if (y < surfY(x)) t = 2;
-    else for (const P of PEGS) if (i === Math.floor(P.x / CS) && y > P.top) t = 1;
     ftype[k] = t;
     if (t){ fu[k] = 0; fv[k] = 0; }
   }
@@ -851,11 +858,12 @@ function fluidStep(dt){
     }
     // the nozzle itself: water really flows in through it (and back out when the bellows refills)
     const vin = VIN * p - VSUCK * s;
-    for (let di = -1; di <= 1; di++){
+    for (let di = -2; di <= 2; di++){
+      if (ni + di < 0 || ni + di >= NX) continue;
       const k = ni + di + nj * NX; if (ftype[k]) continue;
-      const w = di === 0 ? 1 : 0.5;
+      const w = [0.3, 0.7, 1, 0.7, 0.3][di + 2];
       fsrc[k] += 0.5 * vin * w;
-      if (vin > 0) fv[k] = Math.min(fv[k], -vin * w);
+      if (vin > 0){ fv[k] = Math.min(fv[k], -vin * w); fu[k] = (jn === 0 ? 1 : -1) * vin * w * 0.22; }
     }
   }
   // turning the toy: the water's inertia makes it lag behind (Euler force)
@@ -913,6 +921,10 @@ function fluidStep(dt){
       fp[k] = (sum - fD[k]) * 0.25;
     }
   }
+  for (const P of PEGS){
+    const i = Math.floor(P.x / CS), rd = Math.exp(-2.2 * dt);
+    for (let j = Math.ceil(P.top / CS); j < NY; j++){ const k = i + j * NX; if (!ftype[k]){ fu[k] *= rd; fv[k] *= rd; } }
+  }
   let e = 0, cnt = 0;
   const dmp = Math.exp(-F_DAMP * dt);
   for (let j = 1; j < NY - 1; j++) for (let i = 1; i < NX - 1; i++){
@@ -933,11 +945,18 @@ function waterSpin(x, y, h){
 /* ---------- how a ring moves through water ---------- */
 // Drag depends on the ring's angle: falling flat meets lots of water, edge-on slices through.
 // That is what makes real rings glide, swoop and flutter as they sink.
-const CN1 = 1.0, CN2 = 0.008, CT1 = 0.3, CT2 = 0.0025;
+const CN1 = 1.6, CN2 = 0.01, CT1 = 0.3, CT2 = 0.0025;
 const INV_M = 1 / 1.8;        // added mass: you also have to shove the water around the ring
 const KB = 0.0016;            // broadside torque: a falling plate turns to face its motion
-const MU_S = 0.38, MU_K = 0.18; // static / sliding friction on the floor
+const MU_S = 0.32, MU_K = 0.15; // static / sliding friction on the floor
 const ringRY = r => R * (0.3 + 0.7 * Math.abs(Math.sin(r.tilt)));
+// half-width of the ring's hole as seen from the side, minus the rod's radius
+const ROD_R = 2.5, HOLE = 0.86;
+function holeHalf(r){
+  const across = R * HOLE * Math.abs(Math.cos(r.rot));            // tipped sideways: the hole looks narrower
+  const depth = Math.abs(Math.cos(r.tilt));                        // facing you edge-on: almost no room front-to-back
+  return depth < 0.25 ? 0 : Math.max(0, across - ROD_R);
+}
 function ringDrag(r, vrx, vry){
   const ct = Math.abs(Math.cos(r.tilt));
   const nx = -Math.sin(r.rot) * ct, ny = Math.cos(r.rot) * ct;
@@ -1018,33 +1037,46 @@ function step(dt){
 
       for (let k = 0; k < PEGS.length; k++){
         const P = PEGS[k], dx = r.x - P.x, adx = Math.abs(dx), s = dx >= 0 ? 1 : -1;
+        const capR = holeHalf(r);                     // how far off-centre the tip can be and still go through the hole
         if (r.y < P.top){
           // only the solid rim can strike the tip; the hole passes over it
-          if (adx > R * 0.72 && adx < R + 2.5 && r.y + ry * 0.5 > P.top){
+          if (adx > capR && adx < R + 2.5 && r.y + ry * 0.5 > P.top){
             r.x += s * Math.min(2, R + 2.5 - adx);
             r.vx = s * Math.max(Math.abs(r.vx), 18);
             if (r.vy > 0){ if (r.vy > 25){ sfx.tap(); if (r.vy > 30) kid.nearMiss(P); } r.vy *= 0.6; }
             r.tv += s * 0.6; r.rv += s * 1.2;
           }
-        } else if (prevY < P.top && adx < R * 0.72 && Math.abs(Math.sin(r.tilt)) < 0.8 && Math.abs(Math.sin(r.rot)) < 0.75){
-          // threaded! (it has to arrive flat enough, in both directions, to fit over the tip)
-          r.peg = k; r.ox = dx; r.y = P.top + 1; r.vx = 0; r.vy = Math.max(r.vy, 20);
+        } else if (prevY < P.top && adx < capR){
+          // threaded! the tip went through the hole; the ring settles flat as it slides down
+          r.peg = k; r.ox = dx; r.oxv = 0; r.y = P.top + 1; r.vx = 0; r.vy = Math.max(r.vy, 20);
           sfx.catchRing(); break;
         }
         // below the tip, free rings drift past the rod in front of or behind it (the tank has depth)
       }
     } else {
       const P = PEGS[r.peg];
-      const vr = r.vy - vw;
-      const ay = (gEy - (CN1 + CN2 * Math.abs(vr)) * vr) * INV_M;   // a strong upflow can lift it off
+      // feel the water flowing through and around the ring
+      const off = R * 0.8;   // average the water across the ring's width
+      const pu = (sampleF(fu, P.x - off, r.y) + sampleF(fu, P.x, r.y) + sampleF(fu, P.x + off, r.y)) / 3;
+      const pv = (sampleF(fv, P.x - off, r.y) + sampleF(fv, P.x, r.y) + sampleF(fv, P.x + off, r.y)) / 3;
+      const pspin = (sampleF(fv, P.x + off, r.y) - sampleF(fv, P.x - off, r.y)) / (2 * off);
+      const vr = r.vy - pv;
+      const ay = (gEy - (CN1 + CN2 * Math.abs(vr)) * vr) * INV_M;   // an upflow lifts it up the rod, maybe right off
       r.vy += ay * dt;
       r.y += r.vy * dt;
-      r.ox *= Math.exp(-4 * dt);
-      r.x = P.x + r.ox + Math.sin(T * 2 + r.seed) * 0.5;
+      // it can shuffle sideways as far as the hole allows, pushed by the current and the tilt
+      const slack = R * HOLE - ROD_R;
+      const ov = r.oxv || 0;
+      r.oxv = ov + (((pu - ov) * (CT1 + CT2 * Math.abs(pu - ov)) + gEx * 0.25) * INV_M) * dt;
+      r.ox += r.oxv * dt;
+      if (Math.abs(r.ox) > slack){ r.ox = Math.sign(r.ox) * slack; r.oxv *= -0.3; }
+      r.x = P.x + r.ox;
+      // and rocks on the rod when the water hits it unevenly
       r.tilt -= Math.PI * Math.round(r.tilt / Math.PI);
-      const target = 0.12 * (r.tilt < 0 ? -1 : 1);
-      r.tilt += (target - r.tilt) * Math.min(1, 5 * dt); r.tv = 0;
-      r.rot += (0 - r.rot) * Math.min(1, 5 * dt); r.rv = 0;
+      const rock = clamp(Math.abs(vr) * 0.004, 0, 0.45);
+      const target = (0.12 + rock * (0.5 + 0.5 * Math.sin(T * 9 + r.seed))) * (r.tilt < 0 ? -1 : 1);
+      r.tilt += (target - r.tilt) * Math.min(1, 6 * dt); r.tv = 0;
+      r.rot += (clamp(pspin * 0.6 + pu * 0.0015, -0.4, 0.4) - r.rot) * Math.min(1, 6 * dt); r.rv = 0;
       if (r.y < P.top - 3){                         // pushed back off the tip
         r.peg = -1; r.z = Math.random() < 0.5 ? -1 : 1; r.vx = rnd(-30, 30); r.vy = Math.min(r.vy, -10);
         sfx.slipOff(); kid.slip(r.counted); r.counted = false;
@@ -1109,6 +1141,18 @@ function step(dt){
   bubbles = bubbles.filter(b => b.y > surfY(b.x) + 1 && b.x > 2 && b.x < LW - 2 && b.y < FLOOR + 4);
   for (const f of foam){ f.x += (f.vx + sampleF(fu, f.x, surfY(f.x) + 6) * 0.5) * dt; f.life -= dt; }
   foam = foam.filter(f => f.life > 0 && f.x > 2 && f.x < LW - 2);
+
+  // glitter rides the water, sinks slowly, and only lifts off the floor when the water really moves
+  for (const f of glitter){
+    const u = sampleF(fu, f.x, f.y), v = sampleF(fv, f.x, f.y), sp = Math.abs(u) + Math.abs(v);
+    if (f.rest){ if (sp < 30){ f.ph += 0.15 * dt; continue; } f.rest = false; }
+    f.x += (u + gEx * 0.032 + Math.sin(T * 1.3 + f.s) * 2.5) * dt;
+    f.y += (v + gEy * 0.032 + Math.cos(T * 1.7 + f.s) * 1.5) * dt;
+    f.ph += f.spin * (0.25 + Math.min(2.5, sp / 70)) * dt;     // tumbles faster in moving water
+    if (f.y > FLOOR - 1){ f.y = FLOOR - rnd(0.5, 3); f.rest = true; }
+    const sy = surfY(f.x); if (f.y < sy + 2) f.y = sy + 2;
+    if (f.x < 4) f.x = 4; if (f.x > LW - 4) f.x = LW - 4;
+  }
 
   // drifting specks just ride the water (and settle very slowly)
   for (const m of motes){
@@ -1183,6 +1227,22 @@ function draw(){
   }
 
   for (const m of motes){ g.fillStyle = `rgba(210,240,255,${m.a})`; g.fillRect(m.x, m.y, m.s, m.s); }
+  // glitter: a dull fleck most of the time, a bright glint when the flake faces the light
+  g.save(); g.globalCompositeOperation = 'lighter';
+  for (const f of glitter){
+    const face = Math.cos(f.ph), glint = Math.pow(Math.max(0, face), 14);
+    const depth = (f.y - SURF) / (FLOOR - SURF);
+    g.globalAlpha = 0.3 + 0.25 * Math.abs(face) - depth * 0.08;
+    g.fillStyle = `rgb(${f.c})`;
+    g.fillRect(f.x - f.sz * 0.5 * Math.abs(face) - 0.3, f.y - 0.4, f.sz * Math.abs(face) + 0.6, 0.9);
+    if (glint > 0.25){
+      g.globalAlpha = glint * (1 - depth * 0.35);
+      const k = 1.4 + glint * 2.6;
+      g.beginPath(); g.moveTo(f.x, f.y - k); g.quadraticCurveTo(f.x, f.y, f.x + k, f.y); g.quadraticCurveTo(f.x, f.y, f.x, f.y + k);
+      g.quadraticCurveTo(f.x, f.y, f.x - k, f.y); g.quadraticCurveTo(f.x, f.y, f.x, f.y - k); g.fill();
+    }
+  }
+  g.restore(); g.globalAlpha = 1;
 
   // soft shadows on the back wall
   g.lineWidth = 6; g.strokeStyle = 'rgba(0,22,40,.2)';
@@ -1628,7 +1688,7 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 
-window.__rt = { get rings(){ return rings; }, PEGS, setTilt: v => { tiltTarget = v; }, tilt: () => tilt, energy: () => waterEnergy, set: o => { if ('VORT' in o) VORT = o.VORT; if ('VIN' in o) VIN = o.VIN; if ('VSUCK' in o) VSUCK = o.VSUCK; if ('JETH' in o) JETH = o.JETH; if ('VTHR' in o) VTHR = o.VTHR; if ('AIRLIFT' in o) AIRLIFT = o.AIRLIFT; if ('REACT' in o) REACT = o.REACT; if ('JETF' in o) JETF = o.JETF; if ('SRC' in o) SRC = o.SRC; }, fl: () => { let mn = 0, mx = 0, at = 0; for (let k = 0; k < fv.length; k++){ if (fv[k] < mn){ mn = fv[k]; at = k; } } return { minV: Math.round(mn), at: [at % NX, Math.floor(at / NX)], jet: jets.map(j => +j.power.toFixed(2)) }; }, step: (n, dt) => { const t0 = performance.now(); for (let i = 0; i < n; i++) step(dt); return (performance.now() - t0) / n; } };
+window.__rt = { get rings(){ return rings; }, PEGS, setTilt: v => { tiltTarget = v; }, tilt: () => tilt, wat: (x, y) => [Math.round(sampleF(fu, x, y)), Math.round(sampleF(fv, x, y))], energy: () => waterEnergy, set: o => { if ('VORT' in o) VORT = o.VORT; if ('VIN' in o) VIN = o.VIN; if ('VSUCK' in o) VSUCK = o.VSUCK; if ('JETH' in o) JETH = o.JETH; if ('VTHR' in o) VTHR = o.VTHR; if ('AIRLIFT' in o) AIRLIFT = o.AIRLIFT; if ('REACT' in o) REACT = o.REACT; if ('JETF' in o) JETF = o.JETF; if ('SRC' in o) SRC = o.SRC; }, fl: () => { let mn = 0, mx = 0, at = 0; for (let k = 0; k < fv.length; k++){ if (fv[k] < mn){ mn = fv[k]; at = k; } } return { minV: Math.round(mn), at: [at % NX, Math.floor(at / NX)], jet: jets.map(j => +j.power.toFixed(2)) }; }, step: (n, dt) => { const t0 = performance.now(); for (let i = 0; i < n; i++) step(dt); return (performance.now() - t0) / n; } };
 resetGame();
 resize();
 requestAnimationFrame(frame);
