@@ -79,8 +79,38 @@
     background:radial-gradient(circle at 50% 45%,rgba(0,40,70,.55),rgba(0,15,35,.8));text-align:center;
     opacity:0;pointer-events:none;transition:opacity .6s}
   .win.show{opacity:1;pointer-events:auto}
-  .win h2{font:700 8cqw/1.05 Fredoka,sans-serif;color:#fff6cf;text-shadow:0 0 4cqw rgba(255,220,120,.6)}
-  .win p{font:500 4.2cqw Fredoka,sans-serif;color:#cfefff}
+  .win{gap:1.6cqw;background:radial-gradient(circle at 50% 40%,rgba(10,50,90,.72),rgba(0,12,32,.9))}
+  .win h2{font:700 10cqw/1.05 Fredoka,sans-serif;color:#fff6cf;text-shadow:0 0 5cqw rgba(255,220,120,.7)}
+  .win.show h2{animation:popIn .6s cubic-bezier(.3,1.6,.5,1) .2s both}
+  .win p{font:500 4cqw Fredoka,sans-serif;color:#cfefff}
+  .wstars{display:flex;gap:2cqw;font:700 13cqw/1 Fredoka,sans-serif}
+  .wstars span{color:rgba(255,255,255,.16);transform:scale(.4);opacity:0}
+  .win.show .wstars span{animation:starIn .55s cubic-bezier(.3,1.8,.5,1) both}
+  .win.show .wstars span:nth-child(1){animation-delay:.45s}
+  .win.show .wstars span:nth-child(2){animation-delay:.75s}
+  .win.show .wstars span:nth-child(3){animation-delay:1.05s}
+  .wstars span.lit{color:#ffd23f;text-shadow:0 0 4cqw rgba(255,210,60,.8)}
+  @keyframes starIn{0%{opacity:0;transform:scale(.3) rotate(-30deg)}100%{opacity:1;transform:none}}
+  @keyframes popIn{0%{opacity:0;transform:scale(.6)}100%{opacity:1;transform:none}}
+  .win .wtime{font:700 9cqw/1 VT323,monospace;color:#b6ff9e;text-shadow:0 0 3cqw rgba(160,255,130,.6)}
+  .win .wsub{font-weight:600;color:#fff;opacity:.9}
+  .win .wbest{font-size:3.6cqw;opacity:.8}
+  .win .wbest.new{color:#ffd23f;opacity:1;font-weight:700}
+  .win .wstats{font-size:3.3cqw;opacity:.6}
+  .wbtns{display:flex;gap:2.5cqw;margin-top:2cqw}
+  .pill.share{background:linear-gradient(#9ff1ff,#4cc9f0);color:#063250;box-shadow:inset 0 1px 0 #e6fdff,0 .8cqw 0 #1d7fa3,0 1.2cqw 1.6cqw rgba(0,0,0,.25)}
+  .linkBtn{background:none;border:none;color:#ffe39a;font:600 3.8cqw Fredoka,sans-serif;cursor:pointer;margin-top:1cqw;text-decoration:underline;text-underline-offset:3px}
+  .modes{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3cqw;padding:5cqw;
+    background:radial-gradient(circle at 50% 40%,rgba(10,50,90,.78),rgba(0,12,32,.92));opacity:0;pointer-events:none;transition:opacity .35s}
+  .modes.show{opacity:1;pointer-events:auto}
+  .modes h3{font:700 6.5cqw Fredoka,sans-serif;color:#fff6cf}
+  .modeList{display:flex;flex-direction:column;gap:2.4cqw;width:100%}
+  .modeBtn{display:flex;flex-direction:column;align-items:flex-start;gap:.6cqw;text-align:left;padding:3cqw 4cqw;border-radius:4cqw;cursor:pointer;
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;font-family:Fredoka,sans-serif}
+  .modeBtn.on{background:rgba(255,200,90,.18);border-color:rgba(255,215,130,.7)}
+  .modeBtn .mName{font-size:5.4cqw;font-weight:700}
+  .modeBtn .mBlurb{font-size:3.4cqw;opacity:.8}
+  .modeBtn .mBest{font-size:3.2cqw;color:#b6ff9e}
 
   .bottom{position:relative;display:flex;align-items:center;justify-content:space-between;height:30cqw;padding:0 3cqw;margin-top:2cqw}
   .pump{
@@ -113,7 +143,7 @@
   .toast{position:fixed;left:50%;bottom:18px;transform:translate(-50%,20px);opacity:0;transition:.35s;pointer-events:none;
     font:500 14px Fredoka,sans-serif;color:#fff;background:rgba(10,18,50,.85);border:1px solid rgba(180,195,255,.3);padding:9px 16px;border-radius:12px;max-width:90vw;text-align:center}
   .toast.show{opacity:1;transform:translate(-50%,0)}
-  /* ---------- little brother (leaning over the top of the toy) ---------- */
+  /* ---------- Pip, the little astronaut (leaning over the top of the toy) ---------- */
   .rig{display:flex;flex-direction:column;align-items:center;gap:12px;will-change:transform}
   .buddy{width:var(--cw);height:var(--kh);display:flex;align-items:center;justify-content:center;gap:6px;
     position:relative;z-index:2;pointer-events:none;margin-bottom:calc(-12px - var(--kh) * 0.1)}
@@ -122,6 +152,9 @@
   .kid svg{display:block;width:100%;height:100%;overflow:visible}
   .kid svg *{transform-box:view-box}
   .kid #kidAll{transform-origin:100px 140px;animation:breathe 3.4s ease-in-out infinite}
+  .kid #bulbGlow{animation:bulb 1.8s ease-in-out infinite}
+  .kid.cheer #bulbGlow,.kid.party #bulbGlow{animation-duration:.35s}
+  @keyframes bulb{50%{opacity:.25}}
   @keyframes breathe{50%{transform:translateY(1.5px)}}
   .kid.hop #kidAll{animation:hop .5s cubic-bezier(.3,.7,.4,1)}
   .kid.party #kidAll{animation:hop .55s cubic-bezier(.3,.7,.4,1) infinite}
@@ -186,53 +219,73 @@
       <svg viewBox="0 0 200 140">
         <defs>
           <radialGradient id="kSkin" cx=".42" cy=".38" r=".72">
-            <stop offset="0" stop-color="#f4c7a1"/><stop offset=".7" stop-color="#e0a67d"/><stop offset="1" stop-color="#cb8c63"/>
+            <stop offset="0" stop-color="#ffd9bd"/><stop offset=".7" stop-color="#f2b894"/><stop offset="1" stop-color="#df9c77"/>
+          </radialGradient>
+          <radialGradient id="kHelm" cx=".35" cy=".28" r=".85">
+            <stop offset="0" stop-color="#ffffff"/><stop offset=".65" stop-color="#e9edf7"/><stop offset="1" stop-color="#b9c3da"/>
+          </radialGradient>
+          <linearGradient id="kSuit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6f8fd"/><stop offset="1" stop-color="#c3cce0"/></linearGradient>
+          <radialGradient id="kGlass" cx=".3" cy=".25" r=".9">
+            <stop offset="0" stop-color="#bfe6ff" stop-opacity=".22"/><stop offset=".7" stop-color="#6aa8ff" stop-opacity=".1"/><stop offset="1" stop-color="#1c3a8a" stop-opacity=".35"/>
           </radialGradient>
           <linearGradient id="kGlow" x1="0" y1="0" x2="0" y2="1">
-            <stop offset=".55" stop-color="#ffa64d" stop-opacity="0"/><stop offset="1" stop-color="#ffa64d" stop-opacity=".5"/>
+            <stop offset=".55" stop-color="#ffa64d" stop-opacity="0"/><stop offset="1" stop-color="#ffa64d" stop-opacity=".45"/>
           </linearGradient>
-          <radialGradient id="kCheek"><stop offset="0" stop-color="#ff7474" stop-opacity=".6"/><stop offset="1" stop-color="#ff7474" stop-opacity="0"/></radialGradient>
-          <linearGradient id="kHat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6fe0d0"/><stop offset="1" stop-color="#2aa293"/></linearGradient>
-          <linearGradient id="kCoat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8070"/><stop offset="1" stop-color="#d4433b"/></linearGradient>
-          <radialGradient id="kMit" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#ffd76a"/><stop offset="1" stop-color="#e6a21c"/></radialGradient>
+          <radialGradient id="kCheek"><stop offset="0" stop-color="#ff7d8f" stop-opacity=".65"/><stop offset="1" stop-color="#ff7d8f" stop-opacity="0"/></radialGradient>
+          <radialGradient id="kBulb"><stop offset="0" stop-color="#fffbe0"/><stop offset=".45" stop-color="#ffd23f"/><stop offset="1" stop-color="#ffb300" stop-opacity="0"/></radialGradient>
+          <clipPath id="kVisor"><ellipse cx="100" cy="88" rx="41" ry="36"/></clipPath>
         </defs>
         <g id="kidAll">
-          <path d="M34 146 C 38 118, 68 110, 100 110 C 132 110, 162 118, 166 146 Z" fill="url(#kCoat)"/>
-          <path d="M82 113 Q100 123 118 113" stroke="#b5352e" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <!-- suit -->
+          <path d="M30 146 C 34 116, 66 106, 100 106 C 134 106, 166 116, 170 146 Z" fill="url(#kSuit)"/>
+          <path d="M70 118 Q100 110 130 118" stroke="#9fb0d0" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <rect x="118" y="122" width="22" height="13" rx="3" fill="#4cc9f0"/><circle cx="124" cy="128.5" r="2.4" fill="#ff5a4e"/><circle cx="132" cy="128.5" r="2.4" fill="#ffd23f"/>
+          <circle cx="76" cy="128" r="6" fill="#ff8c42"/><path d="M73 128 l3 -3 3 3 -3 3z" fill="#fff"/>
           <g id="headLook"><g id="head">
-            <circle cx="50" cy="86" r="9" fill="#d99a70"/><circle cx="150" cy="86" r="9" fill="#cf8f66"/>
-            <circle cx="100" cy="80" r="50" fill="url(#kSkin)"/>
-            <circle cx="100" cy="80" r="50" fill="url(#kGlow)"/>
-            <path d="M60 58 C 66 70, 76 68, 81 60 C 86 69, 96 69, 100 60 C 105 69, 115 69, 120 60 C 125 68, 134 70, 140 58 L 140 52 L 60 52 Z" fill="#2b1d1a"/>
-            <path d="M50 62 C 48 16, 152 16, 150 62 Z" fill="url(#kHat)"/>
-            <rect x="45" y="51" width="110" height="17" rx="8.5" fill="#259487"/>
-            <g stroke="#1d7a6f" stroke-width="2.2" stroke-linecap="round">
-              <path d="M57 55v9M66 55v9M75 55v9M84 55v9M93 55v9M102 55v9M111 55v9M120 55v9M129 55v9M138 55v9M146 56v7"/>
+            <!-- antenna with a blinking light -->
+            <path d="M100 30 L100 12" stroke="#b9c3da" stroke-width="3" stroke-linecap="round"/>
+            <circle id="bulbGlow" cx="100" cy="10" r="11" fill="url(#kBulb)"/>
+            <circle cx="100" cy="10" r="4.2" fill="#ffe26a"/>
+            <!-- ear pods -->
+            <rect x="34" y="72" width="16" height="26" rx="8" fill="#d6dcea"/><circle cx="42" cy="85" r="3.4" fill="#ff8c42"/>
+            <rect x="150" y="72" width="16" height="26" rx="8" fill="#c7cfe1"/><circle cx="158" cy="85" r="3.4" fill="#ff8c42"/>
+            <!-- helmet -->
+            <circle cx="100" cy="82" r="56" fill="url(#kHelm)"/>
+            <!-- face seen through the visor -->
+            <ellipse cx="100" cy="88" rx="41" ry="36" fill="#14214f"/>
+            <g clip-path="url(#kVisor)">
+              <circle cx="100" cy="94" r="38" fill="url(#kSkin)"/>
+              <circle cx="100" cy="94" r="38" fill="url(#kGlow)"/>
+              <path d="M70 64 C 78 52, 96 48, 106 54 C 112 50, 124 54, 128 62 C 118 60, 112 64, 104 62 C 98 68, 84 66, 76 70 Z" fill="#3b2418"/>
+              <g id="brows" stroke="#3b2418" stroke-width="3" stroke-linecap="round" fill="none">
+                <path id="browL" d="M73 76 Q80 72.5 87 75.5"/><path id="browR" d="M113 75.5 Q120 72.5 127 76"/>
+              </g>
+              <g class="eyeOpen">
+                <g id="pupL"><ellipse cx="80" cy="89" rx="7.6" ry="9.6" fill="#1d1430"/><circle cx="82.6" cy="85.4" r="3.1" fill="#fff"/><circle cx="77.6" cy="93" r="1.4" fill="#fff" opacity=".8"/></g>
+                <g id="pupR"><ellipse cx="120" cy="89" rx="7.6" ry="9.6" fill="#1d1430"/><circle cx="122.6" cy="85.4" r="3.1" fill="#fff"/><circle cx="117.6" cy="93" r="1.4" fill="#fff" opacity=".8"/></g>
+                <g id="lids"><ellipse cx="80" cy="88" rx="10" ry="12" fill="#f4c19f"/><ellipse cx="120" cy="88" rx="10" ry="12" fill="#f4c19f"/></g>
+              </g>
+              <g class="eyeArc" stroke="#1d1430" stroke-width="3.6" fill="none" stroke-linecap="round">
+                <path d="M72 91 Q80 82 88 91"/><path d="M112 91 Q120 82 128 91"/>
+              </g>
+              <ellipse cx="67" cy="102" rx="10" ry="7" fill="url(#kCheek)"/><ellipse cx="133" cy="102" rx="10" ry="7" fill="url(#kCheek)"/>
+              <ellipse cx="100" cy="99" rx="2.6" ry="1.8" fill="#d0866a"/>
+              <path class="m m-neutral" d="M93 107 Q100 112.5 107 107" stroke="#6b2a22" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+              <g class="m m-happy"><path d="M90 105 Q100 122 110 105 Z" fill="#6b2318"/><path d="M94 113.5 Q100 118.5 106 113.5 Q100 110.5 94 113.5 Z" fill="#ff8f8f"/></g>
+              <g class="m m-laugh"><path d="M86 103 Q100 128 114 103 Q100 107 86 103 Z" fill="#6b2318"/><path d="M93 116 Q100 123 107 116 Q100 112 93 116 Z" fill="#ff8f8f"/><path d="M90 104.5 Q100 108 110 104.5" stroke="#fff" stroke-width="3" fill="none"/></g>
+              <ellipse class="m m-wow" cx="100" cy="110" rx="5" ry="6.5" fill="#6b2318"/>
+              <path class="m m-sleepy" d="M95 109 L105 109" stroke="#6b2a22" stroke-width="2.8" stroke-linecap="round"/>
+              <path class="m m-sad" d="M92 112 Q100 104.5 108 112" stroke="#6b2a22" stroke-width="2.8" fill="none" stroke-linecap="round"/>
             </g>
-            <path d="M70 34 C 82 26, 100 24, 116 28" stroke="#a6f2e7" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/>
-            <circle cx="100" cy="17" r="12" fill="#fff3da"/><circle cx="96" cy="13" r="4.5" fill="#fff"/>
-            <g id="brows" stroke="#2b1d1a" stroke-width="3" stroke-linecap="round" fill="none">
-              <path id="browL" d="M71 75 Q79 71.5 87 74.5"/><path id="browR" d="M113 74.5 Q121 71.5 129 75"/>
-            </g>
-            <g class="eyeOpen">
-              <g id="pupL"><ellipse cx="80" cy="89" rx="7.6" ry="9.6" fill="#2b1d1a"/><circle cx="82.6" cy="85.4" r="3.1" fill="#fff"/><circle cx="77.6" cy="93" r="1.4" fill="#fff" opacity=".8"/></g>
-              <g id="pupR"><ellipse cx="120" cy="89" rx="7.6" ry="9.6" fill="#2b1d1a"/><circle cx="122.6" cy="85.4" r="3.1" fill="#fff"/><circle cx="117.6" cy="93" r="1.4" fill="#fff" opacity=".8"/></g>
-              <g id="lids"><ellipse cx="80" cy="88" rx="10" ry="12" fill="#e6ae86"/><ellipse cx="120" cy="88" rx="10" ry="12" fill="#e6ae86"/></g>
-            </g>
-            <g class="eyeArc" stroke="#2b1d1a" stroke-width="3.6" fill="none" stroke-linecap="round">
-              <path d="M72 91 Q80 82 88 91"/><path d="M112 91 Q120 82 128 91"/>
-            </g>
-            <ellipse cx="65" cy="102" rx="12" ry="8" fill="url(#kCheek)"/><ellipse cx="135" cy="102" rx="12" ry="8" fill="url(#kCheek)"/>
-            <ellipse cx="100" cy="99" rx="3.2" ry="2.2" fill="#c47e5a"/>
-            <path class="m m-neutral" d="M93 107 Q100 112.5 107 107" stroke="#5a2a1a" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-            <g class="m m-happy"><path d="M90 105 Q100 122 110 105 Z" fill="#6b2318"/><path d="M94 113.5 Q100 118.5 106 113.5 Q100 110.5 94 113.5 Z" fill="#ff8f8f"/></g>
-            <g class="m m-laugh"><path d="M86 103 Q100 128 114 103 Q100 107 86 103 Z" fill="#6b2318"/><path d="M93 116 Q100 123 107 116 Q100 112 93 116 Z" fill="#ff8f8f"/><path d="M90 104.5 Q100 108 110 104.5" stroke="#fff" stroke-width="3" fill="none"/></g>
-            <ellipse class="m m-wow" cx="100" cy="110" rx="5" ry="6.5" fill="#6b2318"/>
-            <path class="m m-sleepy" d="M95 109 L105 109" stroke="#5a2a1a" stroke-width="2.8" stroke-linecap="round"/>
-            <path class="m m-sad" d="M92 112 Q100 104.5 108 112" stroke="#5a2a1a" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+            <!-- glass over the face: tint + reflections -->
+            <ellipse cx="100" cy="88" rx="41" ry="36" fill="url(#kGlass)"/>
+            <path d="M68 70 C 74 60, 86 55, 98 54" stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none" opacity=".55"/>
+            <circle cx="132" cy="70" r="3" fill="#fff" opacity=".5"/>
+            <ellipse cx="100" cy="88" rx="41" ry="36" fill="none" stroke="#9fb0d0" stroke-width="3"/>
           </g></g>
-          <g id="handL"><ellipse cx="54" cy="132" rx="14" ry="11" fill="url(#kMit)"/><path d="M45 128 q4 -6 9 -2" stroke="#d18f12" stroke-width="2" fill="none" stroke-linecap="round"/></g>
-          <g id="handR"><g id="handRIn"><ellipse cx="146" cy="132" rx="14" ry="11" fill="url(#kMit)"/><path d="M146 126 q5 -6 9 -1" stroke="#d18f12" stroke-width="2" fill="none" stroke-linecap="round"/></g></g>
+          <!-- gloves resting on the toy -->
+          <g id="handL"><ellipse cx="54" cy="132" rx="14" ry="11" fill="#f6f8fd"/><ellipse cx="54" cy="136" rx="14" ry="6" fill="#d6dcea"/><path d="M45 128 q4 -6 9 -2" stroke="#b9c3da" stroke-width="2" fill="none" stroke-linecap="round"/></g>
+          <g id="handR"><g id="handRIn"><ellipse cx="146" cy="132" rx="14" ry="11" fill="#f6f8fd"/><ellipse cx="146" cy="136" rx="14" ry="6" fill="#d6dcea"/><path d="M146 126 q5 -6 9 -1" stroke="#b9c3da" stroke-width="2" fill="none" stroke-linecap="round"/></g></g>
         </g>
       </svg>
     </div>
@@ -249,9 +302,18 @@
       <div class="glass"></div>
       <div class="hint" id="hint">Tap for a puff · hold for a big push</div>
       <div class="win" id="win">
-        <h2>All rings in!</h2>
-        <p id="winTime"></p>
-        <button class="pill" id="again">PLAY AGAIN</button>
+        <div class="wstars" id="winStars"><span>★</span><span>★</span><span>★</span></div>
+        <h2 id="winTitle">Nailed it!</h2>
+        <p class="wsub" id="winSub"></p>
+        <p class="wtime" id="winTime"></p>
+        <p class="wbest" id="winBest"></p>
+        <p class="wstats" id="winStats"></p>
+        <div class="wbtns"><button class="pill share" id="shareBtn">SHARE</button><button class="pill" id="again">PLAY AGAIN</button></div>
+        <button class="linkBtn" id="nextMode">Try Medium →</button>
+      </div>
+      <div class="modes" id="modes">
+        <h3>Pick your challenge</h3>
+        <div class="modeList" id="modeList"></div>
       </div>
     </div>
     <footer class="bottom">
@@ -263,6 +325,7 @@
   </div>
   <div class="controls">
     <button class="chip" id="soundBtn" aria-pressed="true">Sound: on</button>
+    <button class="chip" id="modeBtn">Mode: Easy</button>
     <button class="chip" id="tiltBtn" aria-pressed="false">Use phone tilt</button>
     <span class="caption">Pump: <b>A</b> / <b>L</b> (tap = puff, hold = push) · Tilt: drag the toy or <b>←</b> <b>→</b> · <b>R</b> reset</span>
   </div>
@@ -415,11 +478,22 @@ const A = (() => {
   }
   function win(){
     if (!ok()) return;
-    const t = ctx.currentTime, b = bus(0.7);
-    [523.25, 659.25, 783.99, 1046.5, 783.99, 1046.5, 1318.51].forEach((f, i) => bell(f, t + i * 0.17, 0.1, b));
+    const t = ctx.currentTime, b = bus(0.75);
+    // a little music-box fanfare, then a soft held chord
+    const tune = [[523.25, 0], [659.25, 0.16], [783.99, 0.32], [1046.5, 0.48], [783.99, 0.72], [1046.5, 0.88], [1318.51, 1.04], [1567.98, 1.3]];
+    tune.forEach(([f, d]) => bell(f, t + d, 0.11, b));
+    [1046.5, 1318.51, 1567.98, 2093].forEach((f, i) => bell(f, t + 1.75 + i * 0.03, 0.07, b));
+    tone('sine', 130.81, 130.81, t + 1.75, 0.3, 0.06, 2.4, b);
   }
+  function pop(){
+    if (!ok('pop', 0.12)) return;
+    const t = ctx.currentTime, b = bus(0.6, rnd(-0.6, 0.6));
+    noise(bb, t, 'lowpass', 900, 200, 0.7, 0.005, 0.09, 0.5, b);
+    for (let i = 0; i < 6; i++) noise(nb, t + 0.15 + i * rnd(0.04, 0.09), 'highpass', 3000, 3000, 0.5, 0.002, 0.012, 0.03, b);
+  }
+  function star(i){ if (!ok()) return; const f = [1046.5, 1318.51, 1567.98][i] || 1567.98; bell(f, ctx.currentTime, 0.08, bus(0.6)); }
   function reset(){ if (!ok()) return; noise(bb, ctx.currentTime, 'lowpass', 700, 150, 0.6, 0.05, 0.16, 1.1, bus(0.5)); }
-  // little brother: soft, quiet voice-ish sounds
+  // Pip: soft, quiet voice-ish sounds
   function kid(kind){
     if (!ok('kid', 0.4)) return;
     const t = ctx.currentTime, b = bus(0.4, 0.7);
@@ -449,7 +523,7 @@ const A = (() => {
     chirp();
   }
   function setMuted(m){ muted = m; if (out) out.gain.setTargetAtTime(m ? 0 : 0.85, ctx.currentTime, 0.08); }
-  return { init, pump, bloop, clack, tick, stack, clink, slip, ding, win, reset, kid, setWater, setMuted, get muted(){ return muted; } };
+  return { init, pump, bloop, clack, tick, stack, clink, slip, ding, win, pop, star, reset, kid, setWater, setMuted, get muted(){ return muted; } };
 })();
 
 const sfx = {
@@ -598,6 +672,8 @@ function drawSky(t, dt){
     if (k >= 1) shoot = null;
   }
 
+  stepFireworks(dt); drawFireworks();
+
   // trees, gently swaying
   for (const tr of trees){
     sc.save();
@@ -725,7 +801,20 @@ if (glOK){
 /* =====================================================================
    GAME  (logical tank is 300 × 520)
    ===================================================================== */
-const LW = 300, LH = 520, SURF = 34, FLOOR = 506, R = 19, N = 12;
+const LW = 300, LH = 520, SURF = 34, FLOOR = 506, R = 19;
+// Easy: fewer rings, wider holes, the pegs gently guide rings in, nothing gets knocked off (about a minute).
+// Medium: a little help (about five minutes). Hard: the real toy, no help.
+const MODES = {
+  easy:   { label: 'Easy',   n: 6,  simple: true, hole: 9, funnel: 16, funnelR: 72, funnelH: 2.6, lock: true,  pegHold: 2.2, target: 60,  blurb: '6 rings · wider holes · about a minute', title: 'Nailed it!' },
+  medium: { label: 'Medium', n: 10, hole: 2, funnel: 4,  funnelR: 30, funnelH: 1.4, lock: false, pegHold: 1.8, target: 300, blurb: '10 rings · a little help · about 5 minutes', title: 'Brilliant!' },
+  hard:   { label: 'Hard',   n: 12, hole: 0, funnel: 0,  funnelR: 0,  funnelH: 0, lock: false, pegHold: 1,   target: 600, blurb: '12 rings · the real toy, no help', title: 'LEGENDARY!' },
+};
+const store = { get(k){ try { return localStorage.getItem(k); } catch(_){ return null; } }, set(k, v){ try { localStorage.setItem(k, v); } catch(_){ } } };
+let mode = (location.hash || '').slice(1);
+if (!MODES[mode]) mode = store.get('ar-mode') || 'easy';
+if (!MODES[mode]) mode = 'easy';
+let MODE = MODES[mode], N = MODE.n;
+let pressCount = 0, nearCount = 0, slowT = 0;
 const G = 175, DRAG = 1.7, JET = 1500;
 const JX = [72, 228];   // nozzles sit a little in from the walls, angled toward the middle
 const PEGS = [
@@ -747,6 +836,7 @@ function shade(hex, k){
 }
 
 function resetGame(){
+  N = MODE.n;
   rings = [];
   for (let i = 0; i < N; i++){
     const c = COLORS[i % COLORS.length];
@@ -765,10 +855,12 @@ function resetGame(){
     glitter.push({ x: rnd(6, LW - 6), y: rest ? FLOOR - rnd(0.5, 3) : rnd(SURF + 10, FLOOR), rest,
       ph: rnd(0, 6.28), spin: rnd(2, 6) * (Math.random() < 0.5 ? -1 : 1), sz: rnd(0.9, 1.9), c: GCOL[Math.floor(Math.random() * GCOL.length)], s: rnd(0, 100) });
   }
-  started = false; elapsed = 0; won = false; winTimer = -1; lastScore = -1;
+  started = false; elapsed = 0; won = false; winTimer = -1; lastScore = -1; pressCount = 0; nearCount = 0; slowT = 0;
+  N = MODE.n;
   $('win').classList.remove('show');
   $('hint').classList.remove('gone');
   updateHUD();
+  rings.forEach(r => { r.glowDelay = 0; }); fwT = 0;
   sparks = []; pops = []; combo = 0; foam = []; fu.fill(0); fv.fill(0); shake.x = shake.y = 0;
   if (typeof kid !== 'undefined') kid.reset();
   sfx.reset();
@@ -955,7 +1047,7 @@ const ROD_R = 2.5, HOLE = 0.86;
 function holeHalf(r){
   const across = R * HOLE * Math.abs(Math.cos(r.rot));            // tipped sideways: the hole looks narrower
   const depth = Math.abs(Math.cos(r.tilt));                        // facing you edge-on: almost no room front-to-back
-  return depth < 0.25 ? 0 : Math.max(0, across - ROD_R);
+  return depth < 0.25 ? 0 : Math.max(0, across - ROD_R + MODE.hole);
 }
 function ringDrag(r, vrx, vry){
   const ct = Math.abs(Math.cos(r.tilt));
@@ -1000,10 +1092,18 @@ function step(dt){
       const [dx_, dy_] = ringDrag(r, vrx, vry);
       let ax = (gEx + dx_) * INV_M, ay = (gEy + dy_) * INV_M;
       pushWater(r.x, r.y, -dx_ * REACT, -dy_ * REACT, dt);   // the ring drags water along: a wake
+      if (MODE.funnel) for (const P of PEGS){                  // easier modes: a gentle pull onto the tip
+        const h = P.top - r.y, ddx = r.x - P.x, reach = MODE.funnelR * MODE.funnelH;
+        if (h > -4 && h < reach && Math.abs(ddx) < MODE.funnelR){
+          const w = 1 - Math.max(0, h) / reach;
+          ax -= (ddx * MODE.funnel + r.vx * Math.sqrt(MODE.funnel) * 2.2) * w; r.rv -= r.rot * 3 * w * dt;   // damped, so it settles onto the rod
+        }
+      }
 
       // resting on the floor: it won't budge until the push beats static friction
       const ry0 = ringRY(r), onFloorNow = r.y >= FLOOR - ry0 - 0.8;
-      if (onFloorNow){
+      if (onFloorNow && MODE.simple){ ax -= r.vx * 2.5; }                 // easy: rings slide freely like the early versions
+      else if (onFloorNow){
         const N = Math.max(0, ay);
         if (Math.abs(r.vx) < 5 && Math.abs(ax) < MU_S * N){ ax = 0; r.vx *= 0.3; }
         else ax -= Math.sign(r.vx || ax) * MU_K * N;
@@ -1027,6 +1127,7 @@ function step(dt){
       r.tilt += r.tv * dt;
       r.tilt -= Math.PI * Math.round(r.tilt / Math.PI);
       if (onFloorNow){ r.rot += (0 - r.rot) * Math.min(1, 8 * dt); r.rv *= 0.6; }   // lying on the floor
+      if (MODE.simple){ r.rot *= Math.exp(-6 * dt); r.rv *= Math.exp(-6 * dt); r.tilt *= Math.exp(-3 * dt); }   // easy: flat and steady
 
       const ry = ringRY(r);
       if (r.x < R + 3){ r.x = R + 3; r.vx = Math.abs(r.vx) * 0.3; }
@@ -1043,7 +1144,7 @@ function step(dt){
           if (adx > capR && adx < R + 2.5 && r.y + ry * 0.5 > P.top){
             r.x += s * Math.min(2, R + 2.5 - adx);
             r.vx = s * Math.max(Math.abs(r.vx), 18);
-            if (r.vy > 0){ if (r.vy > 25){ sfx.tap(); if (r.vy > 30) kid.nearMiss(P); } r.vy *= 0.6; }
+            if (r.vy > 0){ if (r.vy > 25){ sfx.tap(); if (r.vy > 30){ kid.nearMiss(P); nearCount++; } } r.vy *= 0.6; }
             r.tv += s * 0.6; r.rv += s * 1.2;
           }
         } else if (prevY < P.top && adx < capR){
@@ -1061,7 +1162,7 @@ function step(dt){
       const pv = (sampleF(fv, P.x - off, r.y) + sampleF(fv, P.x, r.y) + sampleF(fv, P.x + off, r.y)) / 3;
       const pspin = (sampleF(fv, P.x + off, r.y) - sampleF(fv, P.x - off, r.y)) / (2 * off);
       const vr = r.vy - pv;
-      const ay = (gEy - (CN1 + CN2 * Math.abs(vr)) * vr) * INV_M;   // an upflow lifts it up the rod, maybe right off
+      const ay = (gEy * MODE.pegHold - (CN1 + CN2 * Math.abs(vr)) * vr) * INV_M;   // an upflow lifts it up the rod, maybe right off
       r.vy += ay * dt;
       r.y += r.vy * dt;
       // it can shuffle sideways as far as the hole allows, pushed by the current and the tilt
@@ -1077,6 +1178,7 @@ function step(dt){
       const target = (0.12 + rock * (0.5 + 0.5 * Math.sin(T * 9 + r.seed))) * (r.tilt < 0 ? -1 : 1);
       r.tilt += (target - r.tilt) * Math.min(1, 6 * dt); r.tv = 0;
       r.rot += (clamp(pspin * 0.6 + pu * 0.0015, -0.4, 0.4) - r.rot) * Math.min(1, 6 * dt); r.rv = 0;
+      if (MODE.lock && r.y < P.top + 16){ r.y = P.top + 16; if (r.vy < 0) r.vy = 0; }   // easy: once it's on, it stays on
       if (r.y < P.top - 3){                         // pushed back off the tip
         r.peg = -1; r.z = Math.random() < 0.5 ? -1 : 1; r.vx = rnd(-30, 30); r.vy = Math.min(r.vy, -10);
         sfx.slipOff(); kid.slip(r.counted); r.counted = false;
@@ -1308,7 +1410,10 @@ function stepRewards(dt){
   sparks = sparks.filter(p => p.life > 0);
   for (const p of pops){ p.y -= 22 * dt; p.life -= 0.75 * dt; }
   pops = pops.filter(p => p.life > 0);
-  for (const r of rings) if (r.glow) r.glow = Math.max(0, r.glow - dt * 0.8);
+  for (const r of rings){
+    if (r.glowDelay > 0){ r.glowDelay -= dt; if (r.glowDelay <= 0){ r.glow = 1; burst(r.x, r.y, r.c, 12, 55); } }
+    if (r.glow) r.glow = Math.max(0, r.glow - dt * 0.5);
+  }
   for (const P of PEGS) if (P.glow) P.glow = Math.max(0, P.glow - dt * 1.2);
   flash = Math.max(0, flash - dt * 2.5);
   bump = Math.max(0, bump - dt * 3);
@@ -1358,8 +1463,9 @@ function drawConfetti(dt){
 }
 
 const kid = (() => {
-  // He's the sibling sitting next to you: thrilled when rings go in, gutted when they fall out,
-  // leaning in when one is about to land, teasing when it gets boring, and always angling for his turn.
+  // Pip, a little astronaut who fell from the stars, sits with you like a sibling would: thrilled when rings
+  // go in, gutted when they fall out, leaning in when one is about to land, teasing when it gets boring,
+  // and always angling for a turn.
   const el = $('kid'), svg = el.querySelector('svg'), bub = $('bubble');
   const pupL = $('pupL'), pupR = $('pupR'), look = $('headLook');
   const MOODS = ['happy', 'laugh', 'wow', 'cheer', 'sleepy', 'upset', 'impatient', 'lean'];
@@ -1379,19 +1485,19 @@ const kid = (() => {
   }
   function hop(){ el.classList.remove('hop'); void el.offsetWidth; el.classList.add('hop'); }
   const L = {
-    catch: ['Yesss!!', 'Woohoo!', 'Nice one!', 'Ek aur! Ek aur!', 'Did you see that?!', 'Arre wah!', 'Bullseye!', 'GOAL! I mean… RING!'],
-    lost: ['NOOO! It was IN!', 'Whyyy 😭', 'Arre, it fell off!', "Don't press so hard!", 'Nooo, not that one!'],
+    catch: ['Yesss!!', 'Woohoo!', 'Out of this world!', 'Stellar!', 'Did you see that?!', 'Arre wah!', 'Bullseye!', 'One small ring for you…'],
+    lost: ['NOOO! It was IN!', 'Whyyy 😭', 'Houston, we have a problem!', "Don't press so hard!", 'Nooo, not that one!'],
     near: ['Arre! So close!', 'Almost!!', 'It hit the top 😩', 'Ufff, next time!'],
     antic: ['Ooh ooh ooh…', 'Go go go…', "It's coming… it's coming…", 'Yes yes yes…'],
     miss: ['Awww 😩', 'Nooo, so close!', 'Ugh! Missed!'],
     mash: ['Slowly! Slowly!', "Not so hard, you'll break it!", 'Gently! Gently!'],
-    taunt: ['Even I can do it faster 😛', 'Slow coach!', "Should I try? I'm better.", 'The rings are winning 😂', 'Rings are this way, hello!', 'Baby game and still stuck? 😜'],
-    idle: ['Are you sleeping? 😴', 'Hellooo?', "If you're not playing, give it to me!"],
+    taunt: ['Even I can do it faster 😛', 'Slow coach!', "Should I try? I'm better.", 'The rings are winning 😂', 'Rings are this way, hello!', 'On my planet we finish this in 10 seconds 😜'],
+    idle: ['Are you sleeping? 😴', 'Hellooo? Earth to you!', "If you're not playing, give it to me!"],
     stuck: ['Tilt it! Tilt it!', 'Turn it sideways, na!'],
     reset: ['Again?! Okay fine…', 'This time all twelve!', 'Then my turn, promise?'],
   };
   // waiting for his turn gets louder the longer you play
-  const TURN = [[45, 'Can I play after this?'], [95, 'Meri baari kab aayegi?'], [150, 'Okay one more minute, then MY turn!'], [215, 'Mummyyy! Not giving me a turn!'], [290, "I'm telling Mummy 😤"]];
+  const TURN = [[45, 'Can I play after this?'], [95, 'Meri baari kab aayegi?'], [150, 'Okay one more minute, then MY turn!'], [215, 'I came all the way from space for this… 🥺'], [290, "I'm telling the Moon 😤"]];
 
   return {
     action(){ lastAction = T; idleSaid = false; if (el.classList.contains('sleepy')) mood(null); },
@@ -1425,7 +1531,11 @@ const kid = (() => {
     },
     win(){
       winT = 0; mood('cheer', 99); el.classList.add('party'); A.kid('yay');
-      say('YOU DID IT!!! 🎉', true);
+      say(mode === 'hard' ? 'HARD MODE?! You are a LEGEND!!! 🏆' : mode === 'medium' ? 'YOU DID IT!!! Superstar! 🌟' : 'YOU DID IT!!! 🎉', true);
+    },
+    hello(m){
+      const lines = { easy: "Hi, I'm Pip! I fell from the stars to watch you play 🌟", medium: 'Medium! Ten rings… you got this!', hard: 'Hard mode?! Twelve rings, no help. Gulp. 😬' };
+      say(lines[m] || lines.easy, true); mood('happy', 2.5); hop();
     },
     reset(){
       el.classList.remove('party'); winT = -1; mood('happy', 1.5); this.action();
@@ -1437,7 +1547,7 @@ const kid = (() => {
       if (bubbleT > 0){ bubbleT -= dt; if (bubbleT <= 0) bub.classList.remove('show'); }
       if (winT >= 0){
         winT += dt;
-        if (winT > 2.8 && winT - dt <= 2.8){ say('NOW MY TURN! Give give give! 🙌', true); el.classList.remove('party'); mood('impatient', 99); }
+        if (winT > 4.5 && winT - dt <= 4.5){ say('Share it! Then… MY turn? 🙌', true); el.classList.remove('party'); mood('impatient', 99); }
       }
       nextBlink -= dt;
       if (nextBlink <= 0){ el.classList.add('blink'); setTimeout(() => el.classList.remove('blink'), 130); nextBlink = rnd(2.2, 5.5); }
@@ -1498,9 +1608,189 @@ const kid = (() => {
   };
 })();
 
+/* =====================================================================
+   MODES, WINNING, SHARING
+   ===================================================================== */
+const fmtTime = sec => { sec = Math.max(0, Math.floor(sec)); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); };
+function bestFor(m){ const v = parseFloat(store.get('ar-best-' + m)); return isFinite(v) ? v : null; }
+function renderModes(){
+  const box = $('modeList'); box.innerHTML = '';
+  for (const [k, m] of Object.entries(MODES)){
+    const b = document.createElement('button');
+    b.className = 'modeBtn' + (k === mode ? ' on' : '');
+    const best = bestFor(k);
+    b.innerHTML = `<span class="mName">${m.label}</span><span class="mBlurb">${m.blurb}</span>${best != null ? `<span class="mBest">Best ${fmtTime(best)}</span>` : ''}`;
+    b.addEventListener('click', () => { A.init(); selectMode(k); });
+    box.appendChild(b);
+  }
+}
+function openModes(){ renderModes(); $('modes').classList.add('show'); }
+function selectMode(k){
+  mode = k; MODE = MODES[k]; N = MODE.n;
+  store.set('ar-mode', k);
+  try { if (location.hash !== '#' + k) location.hash = k; } catch(_){ }
+  $('modeBtn').textContent = 'Mode: ' + MODE.label;
+  $('modes').classList.remove('show');
+  resetGame();
+  kid.hello(k);
+}
+
+// ---------- the big moment ----------
+function starsFor(t){ return t <= MODE.target ? 3 : t <= MODE.target * 2 ? 2 : 1; }
+let winStars = 3, winNewBest = false;
+function celebrate(){
+  won = true;
+  const t = elapsed;
+  winStars = starsFor(t);
+  const prev = bestFor(mode);
+  winNewBest = prev == null || t < prev;
+  if (winNewBest) store.set('ar-best-' + mode, t.toFixed(2));
+  slowT = 0.9;                                        // the last ring settles in slow motion
+  // every landed ring lights up in turn, bottom to top
+  const order = rings.filter(r => r.peg >= 0).sort((a, b) => b.y - a.y);
+  order.forEach((r, i) => { r.glowDelay = 0.5 + i * 0.13; });
+  sfx.win(); kid.win(); $('hint').classList.add('gone');
+  setTimeout(() => { launchConfetti(); launchFireworks(8); flash = 1; bump = 1; }, 500);
+  // fill in the card
+  $('winTitle').textContent = MODE.title;
+  $('winSub').textContent = `All ${N} rings in · ${MODE.label}`;
+  $('winTime').textContent = fmtTime(t);
+  $('winBest').textContent = winNewBest ? (prev == null ? 'First win on ' + MODE.label + '!' : 'New best! (was ' + fmtTime(prev) + ')') : 'Best: ' + fmtTime(prev);
+  $('winBest').classList.toggle('new', winNewBest);
+  $('winStats').textContent = `${pressCount} pumps · ${nearCount} near misses`;
+  [...$('winStars').children].forEach((el, i) => el.classList.toggle('lit', i < winStars));
+  const order2 = Object.keys(MODES), next = order2[order2.indexOf(mode) + 1];
+  $('nextMode').style.display = next ? '' : 'none';
+  if (next) $('nextMode').textContent = `Try ${MODES[next].label} →`;
+  $('nextMode').dataset.next = next || '';
+  winTimer = 1.8;
+}
+function stepWinStars(){
+  // star "pings" as each star pops in on the card
+  if (!$('win').classList.contains('show')) return;
+}
+
+// ---------- fireworks over the trees ----------
+let fwShells = [], fwSparks = [], fwT = 0;
+const FW_COLS = ['255,90,120', '255,210,80', '90,230,160', '90,200,255', '190,140,255', '255,150,80', '255,255,255'];
+function launchFireworks(d){ fwT = d; }
+function stepFireworks(dt){
+  if (fwT > 0){
+    fwT -= dt;
+    if (Math.random() < dt * 2.4) fwShells.push({ x: rnd(SW * 0.12, SW * 0.88), y: SH + 10, vy: -rnd(SH * 0.85, SH * 1.15), ty: rnd(SH * 0.08, SH * 0.4), c: FW_COLS[Math.floor(Math.random() * FW_COLS.length)] });
+  }
+  for (const f of fwShells){
+    f.y += f.vy * dt; f.vy += SH * 0.45 * dt;
+    if (f.y <= f.ty || f.vy > -60){
+      f.dead = true;
+      const n = 70, sp = Math.min(SW, SH) * rnd(0.22, 0.36), ring = Math.random() < 0.3;
+      for (let i = 0; i < n; i++){
+        const a = (i / n) * Math.PI * 2 + rnd(-0.05, 0.05), v = sp * (ring ? 1 : rnd(0.25, 1));
+        fwSparks.push({ x: f.x, y: f.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: rnd(1.1, 1.9), c: Math.random() < 0.15 ? '255,255,255' : f.c });
+      }
+      A.pop();
+    }
+  }
+  fwShells = fwShells.filter(f => !f.dead);
+  for (const p of fwSparks){ const d = Math.exp(-1.6 * dt); p.vx *= d; p.vy = p.vy * d + 70 * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt; }
+  fwSparks = fwSparks.filter(p => p.life > 0);
+}
+function drawFireworks(){
+  if (!fwShells.length && !fwSparks.length) return;
+  sc.save(); sc.globalCompositeOperation = 'lighter';
+  for (const f of fwShells){
+    const g2 = sc.createLinearGradient(f.x, f.y, f.x, f.y + 40);
+    g2.addColorStop(0, `rgba(${f.c},.9)`); g2.addColorStop(1, `rgba(${f.c},0)`);
+    sc.strokeStyle = g2; sc.lineWidth = 2; sc.beginPath(); sc.moveTo(f.x, f.y); sc.lineTo(f.x, f.y + 40); sc.stroke();
+  }
+  for (const p of fwSparks){
+    const a = Math.min(1, p.life) * (0.6 + 0.4 * Math.sin(T * 30 + p.x));
+    sc.fillStyle = `rgba(${p.c},${a})`;
+    sc.beginPath(); sc.arc(p.x, p.y, 1.8, 0, 7); sc.fill();
+    sc.fillStyle = `rgba(${p.c},${a * 0.25})`;
+    sc.beginPath(); sc.arc(p.x, p.y, 5, 0, 7); sc.fill();
+  }
+  sc.restore();
+}
+
+// ---------- share card ----------
+function kidImage(){
+  return new Promise(res => {
+    const src = $('kid').querySelector('svg').cloneNode(true);
+    src.setAttribute('xmlns', 'http://www.w3.org/2000/svg'); src.setAttribute('width', '400'); src.setAttribute('height', '280');
+    src.querySelectorAll('.m:not(.m-happy), .eyeOpen').forEach(n => n.remove());   // a big happy face
+    src.querySelectorAll('[transform]').forEach(n => { if (n.id === 'pupL' || n.id === 'pupR') n.removeAttribute('transform'); });
+    const img = new Image();
+    img.onload = () => res(img); img.onerror = () => res(null);
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(src));
+  });
+}
+async function makeShareCard(){
+  try { await document.fonts.ready; } catch(_){ }
+  const W = 1080, H = 1350, c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d');
+  let g2 = x.createLinearGradient(0, 0, 0, H); g2.addColorStop(0, '#040824'); g2.addColorStop(0.6, '#0b1a48'); g2.addColorStop(1, '#16306a');
+  x.fillStyle = g2; x.fillRect(0, 0, W, H);
+  for (let i = 0; i < 40; i++){ const gx = rnd(0, W), gy = H * 0.3 + (gx - W / 2) * -0.5 + rnd(-60, 60), gr = rnd(60, 160);
+    const rg = x.createRadialGradient(gx, gy, 0, gx, gy, gr); rg.addColorStop(0, 'rgba(170,185,255,.05)'); rg.addColorStop(1, 'rgba(170,185,255,0)'); x.fillStyle = rg; x.fillRect(gx - gr, gy - gr, gr * 2, gr * 2); }
+  for (let i = 0; i < 380; i++){ x.fillStyle = `rgba(255,255,255,${rnd(0.2, 0.9)})`; const r0 = Math.random() < 0.08 ? rnd(1.6, 2.6) : rnd(0.5, 1.4); x.beginPath(); x.arc(rnd(0, W), rnd(0, H), r0, 0, 7); x.fill(); }
+  // pine silhouettes in the corners
+  x.fillStyle = '#020611';
+  for (const [bx, lean, h] of [[-40, 0.25, 820], [90, 0.18, 640], [W + 40, -0.25, 820], [W - 90, -0.18, 640]]){
+    x.save(); x.translate(bx, H + 20); x.rotate(lean); x.beginPath(); x.moveTo(-h * 0.17, 0);
+    for (let i = 0; i <= 12; i++){ const t = i / 12, y = -h * (0.06 + 0.92 * t), w = h * 0.17 * Math.pow(1 - t, 0.9); x.lineTo(-w, y); x.lineTo(-w * 0.45, y - h * 0.035); }
+    x.lineTo(0, -h); for (let i = 12; i >= 0; i--){ const t = i / 12, y = -h * (0.06 + 0.92 * t), w = h * 0.17 * Math.pow(1 - t, 0.9); x.lineTo(w * 0.45, y - h * 0.035); x.lineTo(w, y); }
+    x.closePath(); x.fill(); x.restore();
+  }
+  x.textAlign = 'center';
+  x.fillStyle = 'rgba(220,230,255,.75)'; x.font = '600 34px Fredoka, sans-serif'; x.fillText('A Q U A   R I N G S', W / 2, 110);
+  x.fillStyle = '#fff6cf'; x.font = '700 92px Fredoka, sans-serif'; x.shadowColor = 'rgba(255,220,120,.6)'; x.shadowBlur = 30;
+  x.fillText(`All ${N} rings in!`, W / 2, 225); x.shadowBlur = 0;
+  x.font = '700 120px Fredoka, sans-serif';
+  for (let i = 0; i < 3; i++){ x.fillStyle = i < winStars ? '#ffd23f' : 'rgba(255,255,255,.18)'; x.fillText('★', W / 2 + (i - 1) * 130, 365); }
+  x.fillStyle = '#cfe9ff'; x.font = '600 50px Fredoka, sans-serif'; x.fillText(`${fmtTime(elapsed)}  ·  ${MODE.label} mode`, W / 2, 452);
+  // the toy with every ring on its peg
+  const tw = 330, th = 390, tx = (W - tw) / 2, ty = 680;
+  x.fillStyle = '#f7931e'; x.beginPath(); x.roundRect(tx - 45, ty - 40, tw + 90, th + 150, [60, 60, 95, 95]); x.fill();
+  const wg = x.createLinearGradient(0, ty, 0, ty + th); wg.addColorStop(0, '#2fb6d3'); wg.addColorStop(1, '#063250');
+  x.fillStyle = wg; x.beginPath(); x.roundRect(tx, ty, tw, th, 30); x.fill();
+  for (let i = 0; i < 70; i++){ x.fillStyle = `rgba(${['255,220,130', '235,248,255', '255,160,215', '160,250,255'][i % 4]},${rnd(0.4, 0.9)})`; x.fillRect(tx + rnd(10, tw - 10), ty + rnd(30, th - 10), 3, 2); }
+  const pegs = [[tx + tw * 0.32, ty + th * 0.4, '#ff5a4e'], [tx + tw * 0.69, ty + th * 0.55, '#7ee36b']];
+  for (const [px, py, col] of pegs){ x.fillStyle = col; x.fillRect(px - 5, py, 10, ty + th - py - 12); x.beginPath(); x.arc(px, py, 7, 0, 7); x.fill(); }
+  const onPeg = [[], []]; rings.forEach((r, i) => onPeg[r.peg >= 0 ? r.peg : i % 2].push(r));
+  onPeg.forEach((list, k) => list.forEach((r, i) => {
+    const [px] = pegs[k], ry = ty + th - 22 - i * 13;
+    x.strokeStyle = r.c; x.lineWidth = 9; x.beginPath(); x.ellipse(px, ry, 36, 9, 0, 0, Math.PI * 2); x.stroke();
+    x.strokeStyle = 'rgba(255,255,255,.5)'; x.lineWidth = 3; x.beginPath(); x.ellipse(px, ry - 3, 32, 6, 0, Math.PI * 0.15, Math.PI * 0.65); x.stroke();
+  }));
+  x.fillStyle = '#ffd400'; for (const bx of [tx + 40, tx + tw - 40]){ x.beginPath(); x.arc(bx, ty + th + 58, 34, 0, 7); x.fill(); }
+  const ki = await kidImage(); if (ki) x.drawImage(ki, W / 2 - 125, ty - 205, 250, 175);
+  x.fillStyle = '#fff'; x.font = '700 54px Fredoka, sans-serif'; x.fillText('Can you beat it?', W / 2, H - 105);
+  x.fillStyle = 'rgba(207,233,255,.85)'; x.font = '500 34px Fredoka, sans-serif'; x.fillText('rupam870.github.io/water-ring-toss', W / 2, H - 52);
+  return await new Promise(res => c.toBlob(res, 'image/png'));
+}
+const GAME_URL = 'https://rupam870.github.io/water-ring-toss/';
+async function shareWin(){
+  const text = `I got all ${N} rings onto the pegs in ${fmtTime(elapsed)} on ${MODE.label} ${'⭐'.repeat(winStars)} in Aqua Rings 🌌 Can you beat me?`;
+  const url = GAME_URL + '#' + mode;
+  $('shareBtn').textContent = 'MAKING CARD…';
+  let file = null;
+  try { const blob = await makeShareCard(); if (blob) file = new File([blob], `aqua-rings-${mode}.png`, { type: 'image/png' }); } catch(_){ }
+  $('shareBtn').textContent = 'SHARE';
+  try {
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })){ await navigator.share({ files: [file], text: text + '\n' + url }); return; }
+    if (navigator.share){ await navigator.share({ title: 'Aqua Rings', text, url }); return; }
+  } catch(e){ if (e && e.name === 'AbortError') return; }
+  let copied = false;
+  try { await navigator.clipboard.writeText(text + '\n' + url); copied = true; } catch(_){ }
+  if (file){ try { const a = document.createElement('a'); a.href = URL.createObjectURL(file); a.download = file.name; document.body.appendChild(a); a.click(); a.remove(); } catch(_){ } }
+  toast(copied ? 'Copied your score and link! The card image is downloading too.' : 'Sharing is blocked in this view. Open ' + GAME_URL + ' to share.');
+}
+
 /* ---------- input ---------- */
 const btns = [$('btnL'), $('btnR')];
 function press(i){
+  pressCount++;
   if (jets[i].held) return;
   jets[i].held = true;
   btns[i].classList.add('down');
@@ -1549,7 +1839,7 @@ addEventListener('blur', () => { release(0); release(1); tiltKeys.l = tiltKeys.r
 
 // grab the toy anywhere (except the buttons) and drag sideways to tilt it
 const stage = document.querySelector('.stage'), consoleEl = document.querySelector('.console'), rig = $('rig');
-// rotate the toy (and the brother leaning on it) around the toy's own centre
+// rotate the toy (and Pip leaning on it) around the toy's own centre
 function placePivot(){ const off = consoleEl.offsetTop + consoleEl.offsetHeight / 2; rig.style.transformOrigin = `50% ${off}px`; }
 addEventListener('resize', placePivot); placePivot();
 // iPhone blocks motion sensors inside embedded frames, so don't offer it there
@@ -1661,22 +1951,22 @@ $('soundBtn').addEventListener('click', () => {
 });
 $('reset').addEventListener('click', resetGame);
 $('again').addEventListener('click', resetGame);
+$('shareBtn').addEventListener('click', () => { A.init(); shareWin(); });
+$('nextMode').addEventListener('click', () => { const n = $('nextMode').dataset.next; if (n) selectMode(n); });
+$('modeBtn').addEventListener('click', () => { A.init(); openModes(); });
+$('modeBtn').textContent = 'Mode: ' + MODE.label;
 addEventListener('resize', resize);
 
 /* ---------- loop ---------- */
 let last = performance.now();
 function frame(now){
   const dt = Math.min(0.05, (now - last) / 1000); last = now; T += dt;
-  const sub = 3;
-  for (let i = 0; i < sub; i++) step(dt / sub);
+  const sub = 3, pdt = dt * (slowT > 0 ? 0.3 : 1);   // the winning moment plays in slow motion
+  if (slowT > 0) slowT -= dt;
+  for (let i = 0; i < sub; i++) step(pdt / sub);
   if (started && !won) elapsed = (now - startTime) / 1000;
-  if (!won && score() === N){
-    won = true; winTimer = 0.7;
-    const sec = Math.floor(elapsed);
-    $('winTime').textContent = `Time: ${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
-    sfx.win(); kid.win(); launchConfetti(); $('hint').classList.add('gone');
-  }
-  if (winTimer > 0){ winTimer -= dt; if (winTimer <= 0) $('win').classList.add('show'); }
+  if (!won && score() === N) celebrate();
+  if (winTimer > 0){ winTimer -= dt; if (winTimer <= 0){ $('win').classList.add('show'); for (let i = 0; i < winStars; i++) setTimeout(() => A.star(i), 450 + i * 300); } }
   updateHUD();
   const vt = sensorOn ? 0 : tilt, fit = 1 / (1 + 0.45 * Math.abs(Math.sin(vt))); // shrink a little while tilted so it stays on screen
   rig.style.transform = `rotate(${vt}rad) translateY(${(-bump * 5).toFixed(2)}px) scale(${(fit * (1 + bump * 0.02)).toFixed(4)})`;
@@ -1688,9 +1978,10 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 
-window.__rt = { get rings(){ return rings; }, PEGS, setTilt: v => { tiltTarget = v; }, tilt: () => tilt, wat: (x, y) => [Math.round(sampleF(fu, x, y)), Math.round(sampleF(fv, x, y))], energy: () => waterEnergy, set: o => { if ('VORT' in o) VORT = o.VORT; if ('VIN' in o) VIN = o.VIN; if ('VSUCK' in o) VSUCK = o.VSUCK; if ('JETH' in o) JETH = o.JETH; if ('VTHR' in o) VTHR = o.VTHR; if ('AIRLIFT' in o) AIRLIFT = o.AIRLIFT; if ('REACT' in o) REACT = o.REACT; if ('JETF' in o) JETF = o.JETF; if ('SRC' in o) SRC = o.SRC; }, fl: () => { let mn = 0, mx = 0, at = 0; for (let k = 0; k < fv.length; k++){ if (fv[k] < mn){ mn = fv[k]; at = k; } } return { minV: Math.round(mn), at: [at % NX, Math.floor(at / NX)], jet: jets.map(j => +j.power.toFixed(2)) }; }, step: (n, dt) => { const t0 = performance.now(); for (let i = 0; i < n; i++) step(dt); return (performance.now() - t0) / n; } };
+window.__rt = { card: async () => { const b = await makeShareCard(); return await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(b); }); }, get rings(){ return rings; }, PEGS, setTilt: v => { tiltTarget = v; }, tilt: () => tilt, wat: (x, y) => [Math.round(sampleF(fu, x, y)), Math.round(sampleF(fv, x, y))], energy: () => waterEnergy, set: o => { if ('VORT' in o) VORT = o.VORT; if ('VIN' in o) VIN = o.VIN; if ('VSUCK' in o) VSUCK = o.VSUCK; if ('JETH' in o) JETH = o.JETH; if ('VTHR' in o) VTHR = o.VTHR; if ('AIRLIFT' in o) AIRLIFT = o.AIRLIFT; if ('REACT' in o) REACT = o.REACT; if ('JETF' in o) JETF = o.JETF; if ('SRC' in o) SRC = o.SRC; }, fl: () => { let mn = 0, mx = 0, at = 0; for (let k = 0; k < fv.length; k++){ if (fv[k] < mn){ mn = fv[k]; at = k; } } return { minV: Math.round(mn), at: [at % NX, Math.floor(at / NX)], jet: jets.map(j => +j.power.toFixed(2)) }; }, step: (n, dt) => { const t0 = performance.now(); for (let i = 0; i < n; i++) step(dt); return (performance.now() - t0) / n; } };
 resetGame();
 resize();
+openModes();
 requestAnimationFrame(frame);
 })();
 </script>
