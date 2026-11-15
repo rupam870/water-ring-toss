@@ -143,7 +143,31 @@
   .toast{position:fixed;left:50%;bottom:18px;transform:translate(-50%,20px);opacity:0;transition:.35s;pointer-events:none;
     font:500 14px Fredoka,sans-serif;color:#fff;background:rgba(10,18,50,.85);border:1px solid rgba(180,195,255,.3);padding:9px 16px;border-radius:12px;max-width:90vw;text-align:center}
   .toast.show{opacity:1;transform:translate(-50%,0)}
-  /* ---------- Momo the red panda & Bun the bunny (leaning over the top of the toy) ---------- */
+  /* ---------- Mira & her little cousin Kabir (made with Atlabs; one picture per expression, all cheerful) ---------- */
+  .pal{position:relative;flex:none;height:var(--kh);animation:breathe 3.4s ease-in-out infinite;
+    filter:drop-shadow(0 6px 10px rgba(0,0,0,.35)) drop-shadow(0 0 22px rgba(255,160,70,.15))}
+  .pal.momo{height:calc(var(--kh) * 1.08);width:calc(var(--kh) * 1.08 * .919)}
+  .pal.bun{height:calc(var(--kh) * .92);width:calc(var(--kh) * .92 * 1.077);margin-right:-4%;animation-delay:.6s}
+  .pal.hop{animation:hop .5s cubic-bezier(.3,.7,.4,1)}
+  .pal.bun.hop{animation:hop .5s cubic-bezier(.3,.7,.4,1) .12s}
+  .pal.party{animation:hop .55s cubic-bezier(.3,.7,.4,1) infinite}
+  .pal.bun.party{animation-delay:.2s}
+  .palIn,.palFx{position:absolute;inset:0;transform-origin:50% 100%}
+  .palFx{transition:transform .35s ease}
+  .pal img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:50% 100%;opacity:0;transition:opacity .14s;
+    -webkit-user-select:none;user-select:none;pointer-events:none}
+  .pal img.f-calm{opacity:1}
+  .pal.cheer .f-calm,.pal.laugh .f-calm,.pal.upset .f-calm,.pal.impatient .f-calm,.pal.wow .f-calm,.pal.lean .f-calm{opacity:0}
+  .pal.cheer .f-cheer,.pal.laugh .f-cheer{opacity:1}
+  .pal.upset .f-giggle,.pal.impatient .f-giggle{opacity:1}
+  .pal.wow .f-wow,.pal.lean .f-wow{opacity:1}
+  .pal.lean .palFx{transform:translateY(5%) scale(1.07)}
+  .pal.sleepy .palFx{transform:rotate(7deg) translateY(4%)}
+  .pal.laugh .palFx{animation:giggle .16s ease-in-out infinite alternate}
+  .pal.upset .palFx{animation:sulk 1s ease-out}
+  .pal.impatient .palFx{animation:fidget .5s ease-in-out infinite alternate}
+  @keyframes fidget{from{transform:rotate(-2deg)}to{transform:rotate(2deg) translateY(2%)}}
+  /* ---------- (older drawn characters, no longer used) ---------- */
   .rig{display:flex;flex-direction:column;align-items:center;gap:12px;will-change:transform;margin-top:40px}
   .buddy{width:var(--cw);height:var(--kh);display:flex;align-items:flex-end;justify-content:center;gap:0;
     position:relative;z-index:2;pointer-events:none;margin-bottom:calc(-12px - var(--kh) * 0.1)}
@@ -240,88 +264,8 @@
   <div class="rig" id="rig">
   <div class="buddy" aria-hidden="true">
     <div class="bubble" id="bubble"></div>
-    <div class="kid bun" id="bun">
-      <svg viewBox="0 0 160 140">
-        <defs>
-          <radialGradient id="bFur" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#f6eee8"/><stop offset="1" stop-color="#dcd0c8"/></radialGradient>
-          <linearGradient id="bGlow" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="#ffb066" stop-opacity="0"/><stop offset="1" stop-color="#ffb066" stop-opacity=".35"/></linearGradient>
-        </defs>
-        <g class="bAll">
-          <path d="M28 146 C 32 120, 56 112, 80 112 C 104 112, 128 120, 132 146 Z" fill="#b9a7f5"/>
-          <path d="M60 118 Q80 126 100 118" stroke="#9784e0" stroke-width="3" fill="none" stroke-linecap="round"/>
-          <g class="bLook">
-            <g class="earL"><ellipse cx="62" cy="34" rx="12" ry="32" fill="url(#bFur)" transform="rotate(-10 62 34)"/><ellipse cx="62" cy="36" rx="6" ry="24" fill="#ffc1d0" transform="rotate(-10 62 36)"/></g>
-            <g class="earR"><ellipse cx="100" cy="34" rx="12" ry="32" fill="url(#bFur)" transform="rotate(12 100 34)"/><ellipse cx="100" cy="36" rx="6" ry="24" fill="#ffc1d0" transform="rotate(12 100 36)"/></g>
-            <ellipse cx="80" cy="90" rx="42" ry="38" fill="url(#bFur)"/>
-            <ellipse cx="80" cy="90" rx="42" ry="38" fill="url(#bGlow)"/>
-            <g class="eyeOpen">
-              <g id="bPupL"><ellipse cx="66" cy="92" rx="5.6" ry="7" fill="#231a2e"/><circle cx="68" cy="89.3" r="2.3" fill="#fff"/></g>
-              <g id="bPupR"><ellipse cx="94" cy="92" rx="5.6" ry="7" fill="#231a2e"/><circle cx="96" cy="89.3" r="2.3" fill="#fff"/></g>
-              <g class="bLids"><ellipse cx="66" cy="91" rx="7.5" ry="9" fill="#f3ebe5"/><ellipse cx="94" cy="91" rx="7.5" ry="9" fill="#f3ebe5"/></g>
-            </g>
-            <g class="eyeArc" stroke="#231a2e" stroke-width="3" fill="none" stroke-linecap="round"><path d="M60 94 Q66 87 72 94"/><path d="M88 94 Q94 87 100 94"/></g>
-            <ellipse cx="54" cy="104" rx="8" ry="5" fill="#ff9db4" opacity=".55"/><ellipse cx="106" cy="104" rx="8" ry="5" fill="#ff9db4" opacity=".55"/>
-            <path d="M76 100 Q80 98 84 100 Q82 104 80 104 Q78 104 76 100 Z" fill="#ff8fa8"/>
-            <path class="m m-neutral" d="M74 108 Q77 111 80 108 Q83 111 86 108" stroke="#7a4a5a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-            <g class="m m-happy"><path d="M73 107 Q80 119 87 107 Z" fill="#6b2a3a"/><path d="M76 113 Q80 116 84 113 Q80 111 76 113 Z" fill="#ff9db4"/></g>
-            <g class="m m-laugh"><path d="M71 106 Q80 124 89 106 Q80 109 71 106 Z" fill="#6b2a3a"/></g>
-            <ellipse class="m m-wow" cx="80" cy="111" rx="4" ry="5" fill="#6b2a3a"/>
-            <path class="m m-sleepy" d="M76 110 L84 110" stroke="#7a4a5a" stroke-width="2.2" stroke-linecap="round"/>
-            <path class="m m-sad" d="M74 113 Q80 107 86 113" stroke="#7a4a5a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-          </g>
-          <g class="bPawL"><ellipse cx="50" cy="133" rx="12" ry="9" fill="#fbf6f2"/><circle cx="50" cy="134" r="3" fill="#ffc1d0"/></g>
-          <g class="bPawR"><ellipse cx="110" cy="133" rx="12" ry="9" fill="#fbf6f2"/><circle cx="110" cy="134" r="3" fill="#ffc1d0"/></g>
-        </g>
-      </svg>
-    </div>
-    <div class="kid" id="kid">
-      <svg viewBox="0 0 200 140">
-        <defs>
-          <radialGradient id="kFur" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#f39a5c"/><stop offset=".65" stop-color="#e06f35"/><stop offset="1" stop-color="#b9501f"/></radialGradient>
-          <linearGradient id="kBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c95a26"/><stop offset="1" stop-color="#5a2414"/></linearGradient>
-          <linearGradient id="kGlow" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="#ffb066" stop-opacity="0"/><stop offset="1" stop-color="#ffb066" stop-opacity=".4"/></linearGradient>
-          <radialGradient id="kCheek"><stop offset="0" stop-color="#ff7d8f" stop-opacity=".6"/><stop offset="1" stop-color="#ff7d8f" stop-opacity="0"/></radialGradient>
-        </defs>
-        <g id="kidAll">
-          <!-- striped tail, curling up behind the shoulder -->
-          <g id="tail"><path d="M150 138 C 182 124, 194 96, 182 72 C 176 62, 164 64, 168 74 C 178 94, 170 116, 146 128 Z" fill="#d9662f"/>
-            <path d="M176 80 C 172 86, 174 92, 179 96 M181 100 C 175 104, 173 110, 176 116 M170 118 C 164 120, 160 124, 160 130" stroke="#7a2e14" stroke-width="6" fill="none" stroke-linecap="round"/></g>
-          <path d="M34 146 C 38 116, 68 108, 100 108 C 132 108, 162 116, 166 146 Z" fill="url(#kBody)"/>
-          <g id="headLook"><g id="head">
-            <!-- ears -->
-            <circle cx="56" cy="46" r="17" fill="#c95a26"/><circle cx="56" cy="47" r="10" fill="#fff1dd"/><circle cx="57" cy="49" r="5.5" fill="#6b2a18"/>
-            <circle cx="144" cy="46" r="17" fill="#c95a26"/><circle cx="144" cy="47" r="10" fill="#fff1dd"/><circle cx="143" cy="49" r="5.5" fill="#6b2a18"/>
-            <!-- head -->
-            <ellipse cx="100" cy="84" rx="56" ry="48" fill="url(#kFur)"/>
-            <ellipse cx="100" cy="84" rx="56" ry="48" fill="url(#kGlow)"/>
-            <!-- white mask: cheeks, muzzle -->
-            <ellipse cx="66" cy="102" rx="17" ry="14" fill="#fff6ec"/><ellipse cx="134" cy="102" rx="17" ry="14" fill="#fff6ec"/>
-            <ellipse cx="100" cy="106" rx="24" ry="17" fill="#fff6ec"/>
-            <!-- tear marks -->
-            <path d="M79 98 C 77 104, 74 110, 70 116 M121 98 C 123 104, 126 110, 130 116" stroke="#8a3a1a" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"/>
-            <!-- white brow spots (they move with the mood) -->
-            <g id="brows"><ellipse id="browL" cx="80" cy="73" rx="7.5" ry="5" fill="#fff6ec"/><ellipse id="browR" cx="120" cy="73" rx="7.5" ry="5" fill="#fff6ec"/></g>
-            <g class="eyeOpen">
-              <g id="pupL"><ellipse cx="80" cy="89" rx="7.6" ry="9.2" fill="#1d1210"/><circle cx="82.6" cy="85.4" r="3.1" fill="#fff"/><circle cx="77.6" cy="92.6" r="1.4" fill="#fff" opacity=".8"/></g>
-              <g id="pupR"><ellipse cx="120" cy="89" rx="7.6" ry="9.2" fill="#1d1210"/><circle cx="122.6" cy="85.4" r="3.1" fill="#fff"/><circle cx="117.6" cy="92.6" r="1.4" fill="#fff" opacity=".8"/></g>
-              <g id="lids"><ellipse cx="80" cy="88" rx="10" ry="12" fill="#e57a40"/><ellipse cx="120" cy="88" rx="10" ry="12" fill="#e57a40"/></g>
-            </g>
-            <g class="eyeArc" stroke="#1d1210" stroke-width="3.6" fill="none" stroke-linecap="round"><path d="M72 91 Q80 82 88 91"/><path d="M112 91 Q120 82 128 91"/></g>
-            <ellipse cx="62" cy="106" rx="8" ry="5" fill="url(#kCheek)"/><ellipse cx="138" cy="106" rx="8" ry="5" fill="url(#kCheek)"/>
-            <path d="M94 97 Q100 94 106 97 Q104 103 100 104 Q96 103 94 97 Z" fill="#2a1612"/>
-            <path class="m m-neutral" d="M93 108 Q96.5 112 100 108 Q103.5 112 107 108" stroke="#5a2a1a" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-            <g class="m m-happy"><path d="M91 106 Q100 122 109 106 Z" fill="#6b2318"/><path d="M95 114 Q100 118.5 105 114 Q100 111 95 114 Z" fill="#ff8f8f"/></g>
-            <g class="m m-laugh"><path d="M87 104 Q100 128 113 104 Q100 108 87 104 Z" fill="#6b2318"/><path d="M93 116 Q100 123 107 116 Q100 112 93 116 Z" fill="#ff8f8f"/></g>
-            <ellipse class="m m-wow" cx="100" cy="112" rx="5" ry="6.5" fill="#6b2318"/>
-            <path class="m m-sleepy" d="M95 110 L105 110" stroke="#5a2a1a" stroke-width="2.6" stroke-linecap="round"/>
-            <path class="m m-sad" d="M92 114 Q100 106.5 108 114" stroke="#5a2a1a" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-          </g></g>
-          <!-- dark paws resting on the toy -->
-          <g id="handL"><ellipse cx="54" cy="132" rx="14" ry="11" fill="#3a1d14"/><circle cx="54" cy="134" r="4" fill="#ffb3b3" opacity=".8"/><circle cx="47" cy="128" r="2.2" fill="#ffb3b3" opacity=".8"/><circle cx="54" cy="125.5" r="2.2" fill="#ffb3b3" opacity=".8"/><circle cx="61" cy="128" r="2.2" fill="#ffb3b3" opacity=".8"/></g>
-          <g id="handR"><g id="handRIn"><ellipse cx="146" cy="132" rx="14" ry="11" fill="#3a1d14"/><circle cx="146" cy="134" r="4" fill="#ffb3b3" opacity=".8"/><circle cx="139" cy="128" r="2.2" fill="#ffb3b3" opacity=".8"/><circle cx="146" cy="125.5" r="2.2" fill="#ffb3b3" opacity=".8"/><circle cx="153" cy="128" r="2.2" fill="#ffb3b3" opacity=".8"/></g></g>
-        </g>
-      </svg>
-    </div>
+    <div class="pal bun" id="bun"><div class="palIn" id="bunLook"><div class="palFx"><img class="f f-calm" src="chars/boy-calm.webp" alt="" draggable="false"><img class="f f-cheer" src="chars/boy-cheer.webp" alt="" draggable="false"><img class="f f-giggle" src="chars/boy-giggle.webp" alt="" draggable="false"><img class="f f-wow" src="chars/boy-wow.webp" alt="" draggable="false"></div></div></div>
+    <div class="pal momo" id="kid"><div class="palIn" id="headLook"><div class="palFx"><img class="f f-calm" src="chars/girl-calm.webp" alt="" draggable="false"><img class="f f-cheer" src="chars/girl-cheer.webp" alt="" draggable="false"><img class="f f-giggle" src="chars/girl-giggle.webp" alt="" draggable="false"><img class="f f-wow" src="chars/girl-wow.webp" alt="" draggable="false"></div></div></div>
   </div>
   <div class="console">
     <header class="top">
@@ -526,7 +470,7 @@ const A = (() => {
   }
   function star(i){ if (!ok()) return; const f = [1046.5, 1318.51, 1567.98][i] || 1567.98; bell(f, ctx.currentTime, 0.08, bus(0.6)); }
   function reset(){ if (!ok()) return; noise(bb, ctx.currentTime, 'lowpass', 700, 150, 0.6, 0.05, 0.16, 1.1, bus(0.5)); }
-  // Momo & Bun: soft, quiet voice-ish sounds
+  // Mira & Kabir: soft, quiet voice-ish sounds
   function kid(kind){
     if (!ok('kid', 0.4)) return;
     const t = ctx.currentTime, b = bus(0.4, 0.7);
@@ -766,8 +710,8 @@ void main(){
   float asp = uRes.x / uRes.y;
   float j1 = uJet.x, j2 = uJet.y;
   float surf = 1.0 - (uSurf - (uv.x*300.0 - 150.0)*uTilt)/520.0 + 0.004*sin(uv.x*14.0 + uT*1.7) + 0.003*sin(uv.x*31.0 - uT*2.3)
-             + 0.016*j1*exp(-pow((uv.x-0.24)/0.12, 2.0))*(0.7+0.3*sin(uT*9.0))
-             + 0.016*j2*exp(-pow((uv.x-0.76)/0.12, 2.0))*(0.7+0.3*sin(uT*9.0+1.0));
+             + 0.016*j1*exp(-pow((uv.x-0.17)/0.12, 2.0))*(0.7+0.3*sin(uT*9.0))
+             + 0.016*j2*exp(-pow((uv.x-0.83)/0.12, 2.0))*(0.7+0.3*sin(uT*9.0+1.0));
   surf = min(surf, 1.03);
   vec3 col;
   if (uv.y > surf){
@@ -782,7 +726,7 @@ void main(){
     col = mix(col, top, smoothstep(0.55, 1.0, d));
     // wobbling caustic net
     vec2 warp = 0.06 * vec2(fbm(uv*3.0 + uT*0.15), fbm(uv*3.0 - uT*0.17 + 4.0));
-    float jetWarp = (j1*exp(-pow((uv.x-0.24)/0.2,2.0)) + j2*exp(-pow((uv.x-0.76)/0.2,2.0)));
+    float jetWarp = (j1*exp(-pow((uv.x-0.17)/0.2,2.0)) + j2*exp(-pow((uv.x-0.83)/0.2,2.0)));
     warp += 0.05 * jetWarp * vec2(sin(uv.y*30.0 - uT*8.0), cos(uv.x*25.0 + uT*7.0));
     vec2 cuv = vec2(uv.x*asp, uv.y) * 1.25 + warp;
     float c = caustic(cuv, uT*0.42 + 23.0);
@@ -795,15 +739,15 @@ void main(){
     col += vec3(0.55, 0.88, 1.0) * r * 0.13 * smoothstep(0.15, 1.0, d);
     // churn above the jets
     float n1 = fbm(vec2(uv.x*9.0, uv.y*5.0 - uT*3.5));
-    float m1 = exp(-pow((uv.x-0.24)/(0.06 + 0.12*uv.y), 2.0)) * smoothstep(0.85, 0.0, uv.y);
-    float m2 = exp(-pow((uv.x-0.76)/(0.06 + 0.12*uv.y), 2.0)) * smoothstep(0.85, 0.0, uv.y);
+    float m1 = exp(-pow((uv.x-0.17)/(0.06 + 0.12*uv.y), 2.0)) * smoothstep(0.85, 0.0, uv.y);
+    float m2 = exp(-pow((uv.x-0.83)/(0.06 + 0.12*uv.y), 2.0)) * smoothstep(0.85, 0.0, uv.y);
     col += vec3(0.7, 0.95, 1.0) * (j1*m1 + j2*m2) * n1 * 0.3;
     // bright underside of the surface
     col += vec3(0.5, 0.85, 0.95) * smoothstep(surf - 0.035, surf, uv.y) * 0.22;
     // sandy-dark floor + pump nozzles
     col *= mix(0.5, 1.0, smoothstep(0.0, 0.07, uv.y));
-    float noz = smoothstep(0.035, 0.02, length(vec2((uv.x-0.24)*asp, uv.y*1.3 - 0.0)))
-              + smoothstep(0.035, 0.02, length(vec2((uv.x-0.76)*asp, uv.y*1.3 - 0.0)));
+    float noz = smoothstep(0.035, 0.02, length(vec2((uv.x-0.17)*asp, uv.y*1.3 - 0.0)))
+              + smoothstep(0.035, 0.02, length(vec2((uv.x-0.83)*asp, uv.y*1.3 - 0.0)));
     col = mix(col, vec3(0.03,0.05,0.07), clamp(noz,0.0,1.0)*0.8);
   }
   // side falloff (tank walls)
@@ -839,8 +783,8 @@ let R = 19;   // ring radius: bigger rings (with bigger holes) on easier modes, 
 // Easy: fewer rings, wider holes, the pegs gently guide rings in, nothing gets knocked off (about a minute).
 // Medium: a little help (about five minutes). Hard: the real toy, no help.
 const MODES = {
-  easy:   { label: 'Easy',   n: 6,  ringR: 25, simple: true, hole: 5, aim: 0.5, funnel: 0, funnelR: 0, funnelH: 0, lock: true,  pegHold: 2.2, target: 60,  blurb: '6 big rings · about a minute', title: 'Nailed it!' },
-  medium: { label: 'Medium', n: 10, ringR: 21, hole: 1, aim: 0.3, funnel: 0,  funnelR: 0,  funnelH: 0, lock: false, pegHold: 1.8, target: 300, blurb: '10 rings · about 5 minutes', title: 'Brilliant!' },
+  easy:   { label: 'Easy',   n: 6,  ringR: 25, simple: true, flat: true, hole: 5, aim: 0.5, funnel: 0, funnelR: 0, funnelH: 0, lock: true,  pegHold: 2.2, target: 60,  blurb: '6 big rings · about a minute', title: 'Nailed it!' },
+  medium: { label: 'Medium', n: 10, ringR: 21, flat: true, hole: 1, aim: 0.3, funnel: 0,  funnelR: 0,  funnelH: 0, lock: false, pegHold: 1.8, target: 300, blurb: '10 rings · about 5 minutes', title: 'Brilliant!' },
   hard:   { label: 'Hard',   n: 12, ringR: 19, hole: 0, aim: 0.22, funnel: 0,  funnelR: 0,  funnelH: 0, lock: false, pegHold: 1,   target: 600, blurb: '12 rings · the real toy, no help', title: 'LEGENDARY!' },
 };
 const store = { get(k){ try { return localStorage.getItem(k); } catch(_){ return null; } }, set(k, v){ try { localStorage.setItem(k, v); } catch(_){ } } };
@@ -850,7 +794,7 @@ if (!MODES[mode]) mode = 'easy';
 let MODE = MODES[mode], N = MODE.n;
 let pressCount = 0, nearCount = 0, slowT = 0;
 const G = 175, DRAG = 1.7, JET = 1500;
-const JX = [72, 228];   // nozzles sit a little in from the walls, angled toward the middle
+const JX = [51, 249];
 const PEGS = [
   { x: 96,  top: 205, color: '#ff5a4e' },
   { x: 206, top: 290, color: '#7ee36b' },
@@ -895,7 +839,7 @@ function resetGame(){
   $('hint').classList.remove('gone');
   updateHUD();
   rings.forEach(r => { r.glowDelay = 0; }); fwT = 0;
-  sparks = []; pops = []; combo = 0; foam = []; fu.fill(0); fv.fill(0); shake.x = shake.y = 0;
+  sparks = []; pops = []; combo = 0; foam = []; churn = 0; shake.x = shake.y = 0;
   if (typeof kid !== 'undefined') kid.reset();
   sfx.reset();
 }
@@ -914,16 +858,21 @@ function resize(){
 /* ---------- tilt (drag / arrow keys / phone sensor) ---------- */
 const MAX_TILT = 0.42;
 let tilt = 0, tiltV = 0, tiltTarget = 0;
-// ---------- gravity as the toy feels it: tilt + any shaking of the phone ----------
-const G_NET = 220;            // gravity minus buoyancy for a plastic ring (px/s²)
-const K_SHAKE = 220 / 9.81;   // phone acceleration (m/s²) → px/s² in the toy
+// ---------- the water: the earlier hand-tuned flow (jets, floor current, lingering eddies) ----------
+const K_SHAKE = 175 / 9.81;   // phone acceleration (m/s²) → px/s² in the toy
 let shake = { x: 0, y: 0 };   // smoothed phone acceleration in screen axes (x right, y down), m/s²
-let gEx = 0, gEy = G_NET, gTheta = 0;
-
+let churn = 0, waterEnergy = 0;
+// half-width of the ring's hole as seen from the side, minus the rod's radius
+const ROD_R = 2.5, HOLE = 0.86;
+function holeHalf(r){
+  const across = R * HOLE * Math.abs(Math.cos(r.rot));
+  const depth = Math.abs(Math.cos(r.tilt));
+  return depth < 0.25 ? 0 : Math.min(R * 0.97 * Math.abs(Math.cos(r.rot)), Math.max(0, across - ROD_R + MODE.hole));
+}
 // the air bubble keeps its size and slides to the high side, so the water line stays level
 let surfC = SURF, surfK = 0;
 function solveSurface(){
-  surfK = Math.tan(clamp(gTheta, -1.3, 1.3));
+  surfK = Math.tan(tilt);
   const A0 = SURF * LW;
   let lo = 0, hi = SURF + LW * Math.abs(surfK) + 10;
   for (let it = 0; it < 22; it++){
@@ -935,254 +884,117 @@ function solveSurface(){
   surfC = (lo + hi) / 2;
 }
 const surfY = x => Math.max(0, surfC - (x - 150) * surfK);
-
-/* =====================================================================
-   THE WATER: a small incompressible fluid grid ("stable fluids").
-   Jets push real water, which has to come back down somewhere; releasing a
-   button sucks water back into the nozzle; swirls linger and drift; rings
-   leave wakes; turning the toy makes the water lag behind.
-   ===================================================================== */
-const CS = 10, NX = 30, NY = 52, NC = NX * NY;
-const fu = new Float32Array(NC), fv = new Float32Array(NC), fu0 = new Float32Array(NC), fv0 = new Float32Array(NC);
-const fp = new Float32Array(NC), fD = new Float32Array(NC), fsrc = new Float32Array(NC), fw = new Float32Array(NC);
-const ftype = new Uint8Array(NC);      // 0 water, 1 solid (walls, floor, rods), 2 air
-let VIN = 690, VSUCK = 700, JETH = 8, VTHR = 20, JETF = 2200, SRC = 0, VORT = 3, F_DAMP = 0.3, REACT = 0.22, AIRLIFT = 10;
-let waterEnergy = 0, churn = 0, prevTiltV = 0;
-
-function markCells(){
-  for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++){
-    const k = i + j * NX, x = (i + 0.5) * CS, y = (j + 0.5) * CS;
-    let t = 0;
-    if (y > FLOOR) t = 1;
-    else if (y < surfY(x)) t = 2;
-    ftype[k] = t;
-    if (t){ fu[k] = 0; fv[k] = 0; }
-  }
+/* jet force at a point: [ax, ay, turbulence] */
+function jetForce(x, y, j){
+  const p = jets[j].power;
+  if (p < 0.005) return [0, 0, 0];
+  const dx = x - JX[j];
+  const spread = 52 + (FLOOR - y) * 0.2;            // plume widens as it rises
+  const f = Math.exp(-dx * dx / (2 * spread * spread));
+  const h = Math.max(0, y - SURF) / (FLOOR - SURF);
+  const hf = 0.25 + 0.75 * h * h;                   // strongest near the nozzle
+  return [ (dx / spread) * 320 * p * f * hf, -JET * p * f * hf, p * f * hf ];
 }
-function sampleF(f, x, y){
-  let gx = clamp(x / CS - 0.5, 0, NX - 1.001), gy = clamp(y / CS - 0.5, 0, NY - 1.001);
-  const i = gx | 0, j = gy | 0, sx = gx - i, sy = gy - j, k = i + j * NX;
-  return (f[k] * (1 - sx) + f[k + 1] * sx) * (1 - sy) + (f[k + NX] * (1 - sx) + f[k + NX + 1] * sx) * sy;
-}
-function pushWater(x, y, ax, ay, dt){       // add acceleration to the water around a point
-  let gx = clamp(x / CS - 0.5, 0, NX - 1.001), gy = clamp(y / CS - 0.5, 0, NY - 1.001);
-  const i = gx | 0, j = gy | 0, sx = gx - i, sy = gy - j, k = i + j * NX;
-  const w = [(1 - sx) * (1 - sy), sx * (1 - sy), (1 - sx) * sy, sx * sy], ks = [k, k + 1, k + NX, k + NX + 1];
-  for (let n = 0; n < 4; n++) if (!ftype[ks[n]]){ fu[ks[n]] += ax * w[n] * dt; fv[ks[n]] += ay * w[n] * dt; }
-}
-function fluidStep(dt){
-  markCells();
-  fsrc.fill(0);
-  // the pumps: a squeeze shoots water up out of the nozzle; letting go draws it back in
-  for (let jn = 0; jn < 2; jn++){
-    const p = jets[jn].power, s = jets[jn].suck, ni = Math.floor(JX[jn] / CS), nj = Math.floor((FLOOR - 4) / CS);
-    for (let dj = 0; dj < JETH; dj++) for (let di = -1; di <= 1; di++){
-      const i = ni + di, j = nj - dj; if (i < 0 || i >= NX) continue;
-      const k = i + j * NX; if (ftype[k]) continue;
-      const w = (di === 0 ? 1 : 0.45) * (1 - dj / (JETH + 2));
-      fv[k] -= JETF * p * w * dt;
-    }
-    // the nozzle itself: water really flows in through it (and back out when the bellows refills)
-    const vin = VIN * p - VSUCK * s;
-    for (let di = -2; di <= 2; di++){
-      if (ni + di < 0 || ni + di >= NX) continue;
-      const k = ni + di + nj * NX; if (ftype[k]) continue;
-      const w = [0.3, 0.7, 1, 0.7, 0.3][di + 2];
-      fsrc[k] += 0.5 * vin * w;
-      if (vin > 0){ fv[k] = Math.min(fv[k], -vin * w); fu[k] = (jn === 0 ? 1 : -1) * vin * w * MODE.aim; }
-    }
-  }
-  // turning the toy: the water's inertia makes it lag behind (Euler force)
-  const alpha = (tiltV - prevTiltV) / dt; prevTiltV = tiltV;
-  if (Math.abs(alpha) > 0.01) for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++){
-    const k = i + j * NX; if (ftype[k]) continue;
-    fu[k] += alpha * ((j + 0.5) * CS - 260) * dt;
-    fv[k] -= alpha * ((i + 0.5) * CS - 150) * dt;
-  }
-  // shaking sloshes the free surface, which stirs the water underneath it
-  if (Math.abs(shake.x) + Math.abs(shake.y) > 0.6) for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++){
-    const k = i + j * NX; if (ftype[k]) continue;
-    const depth = (j + 0.5) * CS - surfY((i + 0.5) * CS);
-    if (depth > 60) continue;
-    const w = 1 - depth / 60;
-    fu[k] -= K_SHAKE * shake.x * 0.7 * w * dt;
-    fv[k] -= K_SHAKE * shake.y * 0.35 * w * dt;
-  }
-  // vorticity confinement: keeps the swirls alive for a few seconds like real water
-  for (let j = 1; j < NY - 1; j++) for (let i = 1; i < NX - 1; i++){
-    const k = i + j * NX;
-    fw[k] = ftype[k] ? 0 : 0.5 * ((fv[k + 1] - fv[k - 1]) - (fu[k + NX] - fu[k - NX]));
-  }
-  for (let j = 2; j < NY - 2; j++) for (let i = 2; i < NX - 2; i++){
-    const k = i + j * NX; if (ftype[k]) continue;
-    const nx = 0.5 * (Math.abs(fw[k + 1]) - Math.abs(fw[k - 1])), ny = 0.5 * (Math.abs(fw[k + NX]) - Math.abs(fw[k - NX]));
-    const l = Math.hypot(nx, ny) + 1e-5;
-    if (Math.abs(fw[k]) < VTHR) continue;
-    fu[k] += VORT * dt * (ny / l) * fw[k];
-    fv[k] -= VORT * dt * (nx / l) * fw[k];
-  }
-  // carry the flow along with itself (semi-Lagrangian advection)
-  fu0.set(fu); fv0.set(fv);
-  for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++){
-    const k = i + j * NX; if (ftype[k]) continue;
-    const x = (i + 0.5) * CS - fu0[k] * dt, y = (j + 0.5) * CS - fv0[k] * dt;
-    fu[k] = sampleF(fu0, x, y); fv[k] = sampleF(fv0, x, y);
-  }
-  // make it incompressible: water pushed up one side must come down somewhere else
-  const nb = (k, d) => { const t = ftype[k + d]; return t; };
-  for (let j = 1; j < NY - 1; j++) for (let i = 1; i < NX - 1; i++){
-    const k = i + j * NX; if (ftype[k]) { fD[k] = 0; continue; }
-    const uR = ftype[k + 1] === 1 ? 0 : (ftype[k + 1] === 2 ? fu[k] : fu[k + 1]);
-    const uL = ftype[k - 1] === 1 ? 0 : (ftype[k - 1] === 2 ? fu[k] : fu[k - 1]);
-    const vD = ftype[k + NX] === 1 ? 0 : (ftype[k + NX] === 2 ? fv[k] : fv[k + NX]);
-    const vU = ftype[k - NX] === 1 ? 0 : (ftype[k - NX] === 2 ? fv[k] : fv[k - NX]);
-    fD[k] = 0.5 * (uR - uL + vD - vU) - fsrc[k];
-  }
-  fp.fill(0);
-  for (let it = 0; it < 26; it++){
-    for (let j = 1; j < NY - 1; j++) for (let i = 1; i < NX - 1; i++){
-      const k = i + j * NX; if (ftype[k]) continue;
-      let sum = 0;
-      for (const d of [1, -1, NX, -NX]){ const t = nb(k, d); sum += t === 1 ? fp[k] : t === 2 ? 0 : fp[k + d]; }
-      fp[k] = (sum - fD[k]) * 0.25;
-    }
-  }
-  for (const P of PEGS){
-    const i = Math.floor(P.x / CS), rd = Math.exp(-2.2 * dt);
-    for (let j = Math.ceil(P.top / CS); j < NY; j++){ const k = i + j * NX; if (!ftype[k]){ fu[k] *= rd; fv[k] *= rd; } }
-  }
-  let e = 0, cnt = 0;
-  const dmp = Math.exp(-F_DAMP * dt);
-  for (let j = 1; j < NY - 1; j++) for (let i = 1; i < NX - 1; i++){
-    const k = i + j * NX; if (ftype[k]) continue;
-    const pv = d => { const t = ftype[k + d]; return t === 1 ? fp[k] : t === 2 ? 0 : fp[k + d]; };
-    fu[k] = (fu[k] - 0.5 * (pv(1) - pv(-1))) * dmp;
-    fv[k] = (fv[k] - 0.5 * (pv(NX) - pv(-NX))) * dmp;
-    e += fu[k] * fu[k] + fv[k] * fv[k]; cnt++;
-  }
-  waterEnergy = Math.sqrt(e / Math.max(1, cnt));
-  churn = Math.min(1.6, waterEnergy / 90);
-}
-// how fast the water is spinning at a point (clockwise on screen = positive)
-function waterSpin(x, y, h){
-  return 0.5 * ((sampleF(fv, x + h, y) - sampleF(fv, x - h, y)) - (sampleF(fu, x, y + h) - sampleF(fu, x, y - h))) / (2 * h);
-}
-
-/* ---------- how a ring moves through water ---------- */
-// Drag depends on the ring's angle: falling flat meets lots of water, edge-on slices through.
-// That is what makes real rings glide, swoop and flutter as they sink.
-const CN1 = 1.6, CN2 = 0.01, CT1 = 0.3, CT2 = 0.0025;
-const INV_M = 1 / 1.8;        // added mass: you also have to shove the water around the ring
-const KB = 0.0016;            // broadside torque: a falling plate turns to face its motion
-const MU_S = 0.32, MU_K = 0.15; // static / sliding friction on the floor
 const ringRY = r => R * (0.3 + 0.7 * Math.abs(Math.sin(r.tilt)));
-// half-width of the ring's hole as seen from the side, minus the rod's radius
-const ROD_R = 2.5, HOLE = 0.86;
-function holeHalf(r){
-  const across = R * HOLE * Math.abs(Math.cos(r.rot));            // tipped sideways: the hole looks narrower
-  const depth = Math.abs(Math.cos(r.tilt));                        // facing you edge-on: almost no room front-to-back
-  return depth < 0.25 ? 0 : Math.min(R * 0.97 * Math.abs(Math.cos(r.rot)), Math.max(0, across - ROD_R + MODE.hole));
+// slow swirling eddies left behind by earlier presses
+function churnFlow(x, y){
+  if (churn < 0.01) return [0, 0];
+  const a = Math.sin(y * 0.031 + T * 1.7) + Math.sin(x * 0.027 - T * 1.3 + y * 0.01);
+  const b = Math.cos(x * 0.029 + T * 1.5) + Math.sin(y * 0.022 - T * 1.9 + x * 0.012);
+  const c = Math.min(1.6, churn);
+  return [a * c * 105, b * c * 85];
 }
-function ringDrag(r, vrx, vry){
-  const ct = Math.abs(Math.cos(r.tilt));
-  const nx = -Math.sin(r.rot) * ct, ny = Math.cos(r.rot) * ct;
-  const vn = vrx * nx + vry * ny, pnx = vn * nx, pny = vn * ny;
-  const tx = vrx - pnx, ty = vry - pny, vt = Math.hypot(tx, ty);
-  const cn = CN1 + CN2 * Math.abs(vn), cT = CT1 + CT2 * vt;
-  return [-(cn * pnx + cT * tx), -(cn * pny + cT * ty)];
+// when a pump fires, water rushes along the floor toward its nozzle to refill it
+function floorPull(x, y, j){
+  const p = jets[j].suck + jets[j].power * 0.25;
+  if (p < 0.01) return 0;
+  const near = Math.exp(-(FLOOR - y) / 55);
+  const dx = JX[j] - x, dist = Math.abs(dx);
+  return Math.sign(dx) * 900 * p * near * Math.min(1, dist / 40) * (0.55 + 0.45 * Math.exp(-dist / 160));
 }
 
 function step(dt){
-  if (performance.now() - lastMotion > 250){ shake.x *= Math.exp(-8 * dt); shake.y *= Math.exp(-8 * dt); }
   // the toy follows your hand with a little spring
   tiltV += ((tiltTarget - tilt) * 70 - tiltV * 13) * dt;
-  const tmax = sensorOn ? 1.05 : 0.6;
+  const tmax = sensorOn ? 1.05 : 0.6;   // a real phone can be tipped further than a drag
   tilt = clamp(tilt + tiltV * dt, -tmax, tmax);
-  // effective gravity in the toy: real gravity, tipped by the tilt, plus any shaking
-  gEx = G_NET * Math.sin(tilt) - K_SHAKE * shake.x;
-  gEy = G_NET * Math.cos(tilt) - K_SHAKE * shake.y;
-  gTheta = Math.atan2(gEx, Math.max(30, gEy));
   solveSurface();
+  if (performance.now() - lastMotion > 250){ shake.x *= Math.exp(-8 * dt); shake.y *= Math.exp(-8 * dt); }
+  const gx = G * Math.sin(tilt) - K_SHAKE * shake.x, gy = G * Math.cos(tilt) - K_SHAKE * shake.y;
+  const SLOSH = 0.65;                                // water lags behind when the toy turns
 
   for (const j of jets){
     // the button squeezes a rubber bellows: fast at first, then it runs out of water to push.
+    // A quick tap is a gentle puff, a full press is a big push. Letting go refills it (and sucks water back in).
     const prev = j.sq;
     if (j.held) j.sq = Math.min(1, prev + (7 * (1 - prev) + 1.2) * dt);
     else j.sq = Math.max(0, prev - 1.7 * dt);
     const d = (j.sq - prev) / dt;
     j.power += (Math.min(3, Math.max(0, d) * 0.7) - j.power) * Math.min(1, dt * 25);
     j.suck += (Math.max(0, -d) * 0.45 - j.suck) * Math.min(1, dt * 12);
+    churn += j.power * dt * 0.9;
   }
-
-  fluidStep(dt);
+  churn *= Math.exp(-dt / 2.8);
+  waterEnergy = churn * 90;
+  const total = jets[0].power + jets[1].power;
 
   for (const r of rings){
     const prevY = r.y;
-    const uw = sampleF(fu, r.x, r.y), vw = sampleF(fv, r.x, r.y);
-    const spin = waterSpin(r.x, r.y, R);
+    let ax = gx, ay = gy, jy = 0, turb = 0;
+    for (let j = 0; j < 2; j++){
+      const f = jetForce(r.x, r.y, j);
+      ax += f[0]; jy += f[1]; turb += f[2];
+      // recirculation: water pushed up the plume spills sideways along the top
+      ax += Math.sign(150 - JX[j]) * 90 * jets[j].power * Math.exp(-(r.y - SURF) / 110);
+      if (r.peg < 0) ax += floorPull(r.x, r.y, j);
+    }
+    ax += tiltV * (r.y - 300) * SLOSH;
+    ay += -tiltV * (r.x - 150) * SLOSH;
+    // smooth, slow tumbling in the current (no per-frame jitter)
+    const swirl = Math.sin(T * 1.3 + r.seed) + 0.6 * Math.sin(T * 2.1 + r.seed * 1.7);
+    r.tv += swirl * 3.2 * turb * dt;
+    r.rv += Math.sin(T * 0.9 + r.seed * 2.3) * 1.2 * turb * dt;
 
     if (r.peg < 0){
-      const vrx = r.vx - uw, vry = r.vy - vw;
-      const [dx_, dy_] = ringDrag(r, vrx, vry);
-      let ax = (gEx + dx_) * INV_M, ay = (gEy + dy_) * INV_M;
-      pushWater(r.x, r.y, -dx_ * REACT, -dy_ * REACT, dt);   // the ring drags water along: a wake
-      if (MODE.funnel) for (const P of PEGS){                  // easier modes: a gentle pull onto the tip
-        const h = P.top - r.y, ddx = r.x - P.x, reach = MODE.funnelR * MODE.funnelH;
-        if (h > -4 && h < reach && Math.abs(ddx) < MODE.funnelR){
-          const w = 1 - Math.max(0, h) / reach;
-          ax -= (ddx * MODE.funnel + r.vx * Math.sqrt(MODE.funnel) * 2.2) * w; r.rv -= r.rot * 3 * w * dt;   // damped, so it settles onto the rod
-        }
-      }
-
-      // resting on the floor: it won't budge until the push beats static friction
-      const ry0 = ringRY(r), onFloorNow = r.y >= FLOOR - ry0 - 0.8;
-      if (onFloorNow && MODE.simple){ ax -= r.vx * 2.5; }                 // easy: rings slide freely like the early versions
-      else if (onFloorNow){
-        const N = Math.max(0, ay);
-        if (Math.abs(r.vx) < 5 && Math.abs(ax) < MU_S * N){ ax = 0; r.vx *= 0.3; }
-        else ax -= Math.sign(r.vx || ax) * MU_K * N;
-      }
-      r.vx += ax * dt; r.vy += ay * dt;
+      const cf = churnFlow(r.x, r.y);
+      ax += cf[0] + Math.sin(T * 0.8 + r.seed) * 6 + Math.sin(T * 2.7 + r.seed * 3.1) * 70 * turb;
+      ay += cf[1];
+      r.tv += Math.sin(T * 1.9 + r.seed * 1.3) * Math.min(1.6, churn) * 2.2 * dt;
+      r.vx += ax * dt; r.vy += (ay + jy) * dt;
+      const d = Math.exp(-DRAG * dt); r.vx *= d; r.vy *= d;
       r.x += r.vx * dt; r.y += r.vy * dt;
 
-      // in-plane angle: turns broadside to its motion (flutter) and gets spun by swirling water
-      const sr = Math.sin(r.rot), cr = Math.cos(r.rot), ct = Math.abs(Math.cos(r.tilt));
-      const vt = vrx * cr + vry * sr, vnp = -vrx * sr + vry * cr;
-      r.rv += (-KB * vnp * vt * ct + (spin - r.rv) * 0.8) * INV_M * dt;
-      r.rv *= Math.exp(-0.35 * dt);
-      r.rot = clamp(r.rot + r.rv * dt, -1.25, 1.25);
-      // tip toward/away from you: tumbles in swirls, settles flat when calm
-      const calm = Math.hypot(r.vx, r.vy) < 14;
-      r.tv += Math.sin(T * 1.9 + r.seed * 1.3) * Math.min(3, Math.abs(spin)) * 1.4 * dt;
-      r.tv += -Math.sin(2 * r.tilt) * (onFloorNow || calm ? 16 : 2.4) * dt;
-      if (onFloorNow && Math.abs(Math.sin(r.tilt)) > 0.25) r.tv -= Math.sign(r.tilt || 1) * 4 * dt;
-      r.tv *= Math.exp(-(onFloorNow ? 7 : 2.6) * dt);
+      const onFloor = r.y >= FLOOR - ringRY(r) - 0.6 || Math.hypot(r.vx, r.vy) < 14;
+      r.tv += -Math.sin(2 * r.tilt) * (onFloor ? 16 : 2.4) * dt;   // settle flat, fully flat on the floor
+      if (onFloor && Math.abs(Math.sin(r.tilt)) > 0.25) r.tv -= Math.sign(r.tilt || 1) * 4 * dt; // never balance on edge
+      r.tv *= Math.exp(-(onFloor ? 7 : 2.6) * dt);
       r.tv = clamp(r.tv, -2.2, 2.2);
       r.tilt += r.tv * dt;
       r.tilt -= Math.PI * Math.round(r.tilt / Math.PI);
-      if (onFloorNow){ r.rot += (0 - r.rot) * Math.min(1, 8 * dt); r.rv *= 0.6; }   // lying on the floor
-      if (MODE.simple){ r.rot *= Math.exp(-6 * dt); r.rv *= Math.exp(-6 * dt); r.tilt *= Math.exp(-3 * dt); }   // easy: flat and steady
+      r.rv += -r.rot * 2.4 * dt; r.rv *= Math.exp(-2 * dt); r.rv = clamp(r.rv, -0.8, 0.8);
+      r.rot = clamp(r.rot + r.rv * dt, -0.5, 0.5);
+      if (MODE.flat){ r.rot = 0; r.rv = 0; r.tilt = 0.12; r.tv = 0; }   // easy & medium: rings stay level and fall straight
 
       const ry = ringRY(r);
       if (r.x < R + 3){ r.x = R + 3; r.vx = Math.abs(r.vx) * 0.3; }
       if (r.x > LW - R - 3){ r.x = LW - R - 3; r.vx = -Math.abs(r.vx) * 0.3; }
       const sy = surfY(r.x);
-      if (r.y < sy + ry + 3){ r.y = sy + ry + 3; if (r.vy < -70){ sfx.tap(); r.tv += rnd(-1.5, 1.5); r.rv += rnd(-2, 2); } if (r.vy < 0) r.vy *= -0.25; }
-      if (r.y > FLOOR - ry){ r.y = FLOOR - ry; if (r.vy > 0) r.vy *= -0.12; }
+      if (r.y < sy + ry + 3){ r.y = sy + ry + 3; if (r.vy < -70){ sfx.tap(); r.tv += rnd(-1.5, 1.5); } if (r.vy < 0) r.vy *= -0.25; }
+      if (r.y > FLOOR - ry){ r.y = FLOOR - ry; if (r.vy > 0) r.vy *= -0.12; r.vx *= Math.exp(-2.5 * dt); }
 
       for (let k = 0; k < PEGS.length; k++){
         const P = PEGS[k], dx = r.x - P.x, adx = Math.abs(dx), s = dx >= 0 ? 1 : -1;
-        const capR = holeHalf(r);                     // how far off-centre the tip can be and still go through the hole
+        const capR = holeHalf(r);
         if (r.y < P.top){
           // only the solid rim can strike the tip; the hole passes over it
           if (adx > capR && adx < R + 2.5 && r.y + ry * 0.5 > P.top){
             r.x += s * Math.min(2, R + 2.5 - adx);
             r.vx = s * Math.max(Math.abs(r.vx), 18);
             if (r.vy > 0){ if (r.vy > 25){ sfx.tap(); if (r.vy > 30){ kid.nearMiss(P); nearCount++; } } r.vy *= 0.6; }
-            r.tv += s * 0.6; r.rv += s * 1.2;
+            r.tv += s * 0.6;
           }
         } else if (prevY < P.top && adx < capR){
-          // threaded! the tip went through the hole; the ring settles flat as it slides down
+          // threaded!
           r.peg = k; r.ox = dx; r.oxv = 0; r.y = P.top + 1; r.vx = 0; r.vy = Math.max(r.vy, 20);
           sfx.catchRing(); break;
         }
@@ -1190,28 +1002,15 @@ function step(dt){
       }
     } else {
       const P = PEGS[r.peg];
-      // feel the water flowing through and around the ring
-      const off = R * 0.8;   // average the water across the ring's width
-      const pu = (sampleF(fu, P.x - off, r.y) + sampleF(fu, P.x, r.y) + sampleF(fu, P.x + off, r.y)) / 3;
-      const pv = (sampleF(fv, P.x - off, r.y) + sampleF(fv, P.x, r.y) + sampleF(fv, P.x + off, r.y)) / 3;
-      const pspin = (sampleF(fv, P.x + off, r.y) - sampleF(fv, P.x - off, r.y)) / (2 * off);
-      const vr = r.vy - pv;
-      const ay = (gEy * MODE.pegHold - (CN1 + CN2 * Math.abs(vr)) * vr) * INV_M;   // an upflow lifts it up the rod, maybe right off
-      r.vy += ay * dt;
+      r.vy += (gy * MODE.pegHold + jy * 0.7 + ay - gy + churnFlow(r.x, r.y)[1] * 0.45) * dt;   // a storm can lift rings off a peg
+      r.vy *= Math.exp(-DRAG * 1.2 * dt);
       r.y += r.vy * dt;
-      // it can shuffle sideways as far as the hole allows, pushed by the current and the tilt
-      const slack = R * HOLE - ROD_R;
-      const ov = r.oxv || 0;
-      r.oxv = ov + (((pu - ov) * (CT1 + CT2 * Math.abs(pu - ov)) + gEx * 0.25) * INV_M) * dt;
-      r.ox += r.oxv * dt;
-      if (Math.abs(r.ox) > slack){ r.ox = Math.sign(r.ox) * slack; r.oxv *= -0.3; }
-      r.x = P.x + r.ox;
-      // and rocks on the rod when the water hits it unevenly
+      r.ox *= Math.exp(-4 * dt);
+      r.x = P.x + r.ox + Math.sin(T * 2 + r.seed) * 0.5;
       r.tilt -= Math.PI * Math.round(r.tilt / Math.PI);
-      const rock = clamp(Math.abs(vr) * 0.004, 0, 0.45);
-      const target = (0.12 + rock * (0.5 + 0.5 * Math.sin(T * 9 + r.seed))) * (r.tilt < 0 ? -1 : 1);
-      r.tilt += (target - r.tilt) * Math.min(1, 6 * dt); r.tv = 0;
-      r.rot += (clamp(pspin * 0.6 + pu * 0.0015, -0.4, 0.4) - r.rot) * Math.min(1, 6 * dt); r.rv = 0;
+      const target = 0.12 * (r.tilt < 0 ? -1 : 1);
+      r.tilt += (target - r.tilt) * Math.min(1, 5 * dt); r.tv = 0;
+      r.rot += (0 - r.rot) * Math.min(1, 5 * dt); r.rv = 0;
       if (MODE.lock && r.y < P.top + 16){ r.y = P.top + 16; if (r.vy < 0) r.vy = 0; }   // easy: once it's on, it stays on
       if (r.y < P.top - 3){                         // pushed back off the tip
         r.peg = -1; r.z = Math.random() < 0.5 ? -1 : 1; r.vx = rnd(-30, 30); r.vy = Math.min(r.vy, -10);
@@ -1255,50 +1054,65 @@ function step(dt){
     }
   }
 
-  // bubbles: ride the water, rise against (effective) gravity, and drag water up with them
-  const gl_ = Math.hypot(gEx, gEy) || 1, upx = -gEx / gl_, upy = -gEy / gl_;
+  // bubbles (they rise against gravity, whichever way the toy is tilted)
+  const sinT = Math.sin(tilt), cosT = Math.cos(tilt);
   for (let j = 0; j < 2; j++){
     const p = jets[j].power;
     let n = p * 110 * dt;
     while (n > 0){
-      if (Math.random() < n) bubbles.push({ x: JX[j] + rnd(-9, 9), y: FLOOR - rnd(0, 6), r: Math.random() < 0.25 ? rnd(1.8, 3.6) : rnd(0.6, 1.7), ph: rnd(0, 6.28), w: rnd(4, 12) });
+      if (Math.random() < n) bubbles.push({ x: JX[j] + rnd(-9, 9), y: FLOOR - rnd(0, 6), r: Math.random() < 0.25 ? rnd(1.8, 3.6) : rnd(0.6, 1.7),
+        vy: -rnd(60, 160) * (0.5 + p), vx: rnd(-25, 25), ph: rnd(0, 6.28), w: rnd(4, 12) });
       n -= 1;
     }
     if (p > 0.35 && Math.random() < dt * 16 * p) sfx.bubble(j);
   }
-  if (Math.random() < dt * 1.2) bubbles.push({ x: rnd(20, 280), y: FLOOR - 2, r: rnd(0.5, 1.4), ph: rnd(0, 6.28), w: rnd(2, 6) });
+  if (Math.random() < dt * 1.2) bubbles.push({ x: rnd(20, 280), y: FLOOR - 2, r: rnd(0.5, 1.4), vy: -rnd(20, 40), vx: 0, ph: rnd(0, 6.28), w: rnd(2, 6) });
   for (const b of bubbles){
-    const term = 45 + b.r * 32;
-    b.x += (sampleF(fu, b.x, b.y) + upx * term + Math.sin(T * 7 + b.ph) * b.w) * dt;
-    b.y += (sampleF(fv, b.x, b.y) + upy * term) * dt;
-    pushWater(b.x, b.y, upx * AIRLIFT * b.r, upy * AIRLIFT * b.r, dt);
+    const f0 = jetForce(b.x, b.y, 0), f1 = jetForce(b.x, b.y, 1);
+    const term = 45 + b.r * 32, k = Math.min(1, 3.2 * dt);   // bigger bubbles rise faster
+    b.vx += ((f0[0] + f1[0]) * 0.4 + tiltV * (b.y - 300) * SLOSH * 0.5) * dt;
+    b.vy += ((f0[1] + f1[1]) * 0.05) * dt;
+    const bc = churnFlow(b.x, b.y); b.vx += bc[0] * 0.6 * dt; b.vy += bc[1] * 0.3 * dt;
+    b.vx += (-sinT * term - b.vx) * k;                         // straight up in the real world,
+    b.vy += (-cosT * term - b.vy) * k;                         // whichever way the toy is held
+    b.x += (b.vx + Math.sin(T * 7 + b.ph) * b.w) * dt;
+    b.y += b.vy * dt;
   }
   for (const b of bubbles) if (b.y <= surfY(b.x) + 1 && foam.length < 70 && Math.random() < 0.5) foam.push({ x: b.x, r: b.r * 0.9, life: rnd(0.6, 2.4), vx: rnd(-6, 6) });
   bubbles = bubbles.filter(b => b.y > surfY(b.x) + 1 && b.x > 2 && b.x < LW - 2 && b.y < FLOOR + 4);
-  for (const f of foam){ f.x += (f.vx + sampleF(fu, f.x, surfY(f.x) + 6) * 0.5) * dt; f.life -= dt; }
+  for (const f of foam){ f.x += f.vx * dt; f.life -= dt; }
   foam = foam.filter(f => f.life > 0 && f.x > 2 && f.x < LW - 2);
 
-  // glitter rides the water, sinks slowly, and only lifts off the floor when the water really moves
+  // glitter: sinks slowly, rests on the floor until the water really moves, flashes as it tumbles
   for (const f of glitter){
-    const u = sampleF(fu, f.x, f.y), v = sampleF(fv, f.x, f.y), sp = Math.abs(u) + Math.abs(v);
-    if (f.rest){ if (sp < 30){ f.ph += 0.15 * dt; continue; } f.rest = false; }
-    f.x += (u + gEx * 0.032 + Math.sin(T * 1.3 + f.s) * 2.5) * dt;
-    f.y += (v + gEy * 0.032 + Math.cos(T * 1.7 + f.s) * 1.5) * dt;
-    f.ph += f.spin * (0.25 + Math.min(2.5, sp / 70)) * dt;     // tumbles faster in moving water
+    const f0 = jetForce(f.x, f.y, 0), f1 = jetForce(f.x, f.y, 1), cf = churnFlow(f.x, f.y);
+    const fx = (f0[0] + f1[0]) * 0.12 + cf[0] * 0.5, fy = (f0[1] + f1[1]) * 0.12 + cf[1] * 0.5;
+    const sp = Math.abs(fx) + Math.abs(fy);
+    if (f.rest){ if (sp < 60){ f.ph += 0.15 * dt; continue; } f.rest = false; f.vx = 0; f.vy = 0; }
+    f.vx = (f.vx || 0) + (fx + 5 * sinT + Math.sin(T * 1.3 + f.s) * 2) * dt;
+    f.vy = (f.vy || 0) + (fy + 5 * cosT) * dt;
+    const d = Math.exp(-1.8 * dt); f.vx *= d; f.vy *= d;
+    f.x += f.vx * dt; f.y += f.vy * dt;
+    f.ph += f.spin * (0.25 + Math.min(2.5, sp / 120)) * dt;
     if (f.y > FLOOR - 1){ f.y = FLOOR - rnd(0.5, 3); f.rest = true; }
-    const sy = surfY(f.x); if (f.y < sy + 2) f.y = sy + 2;
+    const sy = surfY(f.x); if (f.y < sy + 2){ f.y = sy + 2; f.vy = Math.abs(f.vy) * 0.3; }
     if (f.x < 4) f.x = 4; if (f.x > LW - 4) f.x = LW - 4;
   }
 
-  // drifting specks just ride the water (and settle very slowly)
+  // drifting specks
   for (const m of motes){
-    m.x += (sampleF(fu, m.x, m.y) + gEx * 0.02) * dt;
-    m.y += (sampleF(fv, m.x, m.y) + gEy * 0.02) * dt;
+    const f0 = jetForce(m.x, m.y, 0), f1 = jetForce(m.x, m.y, 1);
+    m.vx += ((f0[0] + f1[0]) * 0.5 + (floorPull(m.x, m.y, 0) + floorPull(m.x, m.y, 1)) * 0.6 + Math.sin(T * 0.3 + m.y * 0.05) * 3 + 6 * sinT + tiltV * (m.y - 300) * SLOSH) * dt;
+    const mc = churnFlow(m.x, m.y); m.vx += mc[0] * 0.5 * dt;
+    m.vy += (mc[1] * 0.5 + (f0[1] + f1[1]) * 0.4 + 6 * cosT - tiltV * (m.x - 150) * SLOSH) * dt;
+    const d = Math.exp(-2.4 * dt); m.vx *= d; m.vy *= d;
+    m.x += m.vx * dt; m.y += m.vy * dt;
     if (m.y > FLOOR) { m.y = surfY(m.x) + 4; m.x = rnd(0, LW); }
-    if (m.y < surfY(m.x)) m.y = surfY(m.x) + 2;
+    if (m.y < surfY(m.x)) { m.y = surfY(m.x) + 2; m.vy = Math.abs(m.vy); }
     if (m.x < 0) m.x += LW; if (m.x > LW) m.x -= LW;
   }
 }
+
 
 function score(){ return rings.filter(r => r.peg >= 0 && r.y > PEGS[r.peg].top + 12).length; }
 
@@ -1497,13 +1311,13 @@ function drawConfetti(dt){
 }
 
 const kid = (() => {
-  // Momo (a red panda) and Bun (a bunny) sit with you like siblings would: thrilled when rings
+  // Mira and her little cousin Kabir sit with you like cousins do: thrilled when rings
   // go in, gutted when they fall out, leaning in when one is about to land, teasing when it gets boring,
   // and always angling for a turn.
-  const el = $('kid'), svg = el.querySelector('svg'), bub = $('bubble');
-  const bun = $('bun'), bsvg = bun.querySelector('svg'), bPupL = $('bPupL'), bPupR = $('bPupR');
+  const el = $('kid'), svg = el, bub = $('bubble');
+  const bun = $('bun'), bsvg = bun, bLook = $('bunLook');
   let bpx = 0, bpy = 0, bNextBlink = 3.1;
-  const pupL = $('pupL'), pupR = $('pupR'), look = $('headLook');
+  const look = $('headLook');
   const MOODS = ['happy', 'laugh', 'wow', 'cheer', 'sleepy', 'upset', 'impatient', 'lean'];
   let moodT = 0, bubbleT = 0, lastSay = -99, nextBlink = 2, lastLine = '';
   let lastAction = 0, lastProgress = 0, idleSaid = false, tauntT = -99, presses = [], lastMash = -99;
@@ -1512,7 +1326,7 @@ const kid = (() => {
   let px = 0, py = 0, hd = 0, focus = null, focusT = 0;
   const pick = arr => { let s; do { s = arr[Math.floor(Math.random() * arr.length)]; } while (arr.length > 1 && s === lastLine); return s; };
   function mood(m, dur){ for (const e of [el, bun]){ MOODS.forEach(x => e.classList.remove(x)); if (m) e.classList.add(m); } moodT = dur || 0; }
-  // who: 'm' = Momo (red panda), 'b' = Bun (bunny). The bubble floats above whoever is talking.
+  // who: 'm' = Mira, 'b' = little Kabir. The bubble floats above whoever is talking.
   function say(text, force, who){
     if (!force && T - lastSay < 1.6) return false;
     lastSay = T; lastLine = text;
@@ -1527,27 +1341,27 @@ const kid = (() => {
     return true;
   }
   function hop(){ for (const e of [el, bun]){ e.classList.remove('hop'); void e.offsetWidth; e.classList.add('hop'); } }
-  // Bun (the bunny) chips in now and then with short, squeaky reactions
+  // little Kabir chips in now and then with short, excited reactions
   const B = {
-    catch: ['Yay yay yay!', 'Eeee! 🐰', 'Hop hop hooray!', 'Again! Again!'],
-    lost: ['Nooo 😭', 'Bun is sad…', 'Waaah!'],
+    catch: ['Yay yay yay!', 'Woohoo!!', 'Again! Again!', 'So cool!!'],
+    lost: ['Oopsie! 😆', 'Hehe, it jumped!', 'Bye-bye ring!'],
     antic: ['Ooooh…', 'Go go go!'],
-    turn: ['Then Bun! Then Bun!', 'Bun wants a turn too 🥺'],
+    turn: ['Then me! Then me!', 'I want a turn too!'],
   };
   const L = {
-    catch: ['Yesss!!', 'Woohoo!', 'Did you see that?!', 'Arre wah!', 'Bullseye!', 'Pawsome! 🐾', 'That was so clean!', 'Ek aur! Ek aur!'],
-    lost: ['NOOO! It was IN!', 'Whyyy 😭', 'Arre, it fell off!', "Don't press so hard!", 'Nooo, not that one!'],
-    near: ['Arre! So close!', 'Almost!!', 'It hit the top 😩', 'Ufff, next time!'],
+    catch: ['Yesss!!', 'Woohoo!', 'Did you see that?!', 'Wow, wow, wow!', 'Bullseye!', 'Awesome! ✨', 'That was so clean!', 'One more! One more!'],
+    lost: ['NOOO! It was IN!', 'Whyyy 😭', 'Oh no, it fell off!', "Don't press so hard!", 'Nooo, not that one!'],
+    near: ['Oh! So close!', 'Almost!!', 'It hit the top 😩', 'Argh, next time!'],
     antic: ['Ooh ooh ooh…', 'Go go go…', "It's coming… it's coming…", 'Yes yes yes…'],
     miss: ['Awww 😩', 'Nooo, so close!', 'Ugh! Missed!'],
     mash: ['Slowly! Slowly!', "Not so hard, you'll break it!", 'Gently! Gently!'],
-    taunt: ['Even I can do it faster 😛', 'Slow coach!', "Should I try? I'm better.", 'The rings are winning 😂', 'Rings are this way, hello!', 'Even my tail could do it faster 😜'],
+    taunt: ['Even I can do it faster 😛', 'Slow coach!', "Should I try? I'm better.", 'The rings are winning 😂', 'Rings are this way, hello!', 'Even Kabir could do it faster 😜'],
     idle: ['Are you sleeping? 😴', 'Hellooo?', "If you're not playing, give it to me!"],
-    stuck: ['Tilt it! Tilt it!', 'Turn it sideways, na!'],
+    stuck: ['Tilt it! Tilt it!', 'Try turning it sideways!'],
     reset: ['Again?! Okay fine…', 'This time all twelve!', 'Then my turn, promise?'],
   };
   // waiting for his turn gets louder the longer you play
-  const TURN = [[45, 'Can I play after this?', 'm'], [80, 'Then Bun! Then Bun!', 'b'], [120, 'Meri baari kab aayegi?', 'm'], [175, 'Okay one more minute, then MY turn!', 'm'], [235, 'Bun wants a turn too 🥺', 'b'], [300, "We're telling Mummy 😤", 'm']];
+  const TURN = [[45, 'Can I play after this?', 'm'], [80, 'Then me! Then me!', 'b'], [120, 'When is it my turn?', 'm'], [175, 'Okay one more minute, then MY turn!', 'm'], [235, 'I want a turn too!', 'b'], [300, "We're telling Mummy 😤", 'm']];
 
   return {
     action(){ lastAction = T; idleSaid = false; if (el.classList.contains('sleepy')) mood(null); },
@@ -1584,7 +1398,7 @@ const kid = (() => {
       say(mode === 'hard' ? 'HARD MODE?! You are a LEGEND!!! 🏆' : mode === 'medium' ? 'YOU DID IT!!! Superstar! 🌟' : 'YOU DID IT!!! 🎉', true);
     },
     hello(m){
-      const lines = { easy: "Hi! I'm Momo 🐾 and this is Bun 🐰 Can we watch?", medium: 'Medium! Ten rings… you got this!', hard: 'Hard mode?! Twelve rings, no help. Gulp. 😬' };
+      const lines = { easy: "Hi! I'm Mira, and this is my little cousin Kabir! Can we watch? 😄", medium: 'Medium! Ten rings… you got this!', hard: 'Hard mode?! Twelve rings, no help. Gulp. 😬' };
       say(lines[m] || lines.easy, true); mood('happy', 2.5); hop();
     },
     reset(){
@@ -1598,7 +1412,7 @@ const kid = (() => {
       if (winT >= 0){
         winT += dt;
         if (winT > 4.5 && winT - dt <= 4.5){ say('Share it! Then… MY turn? 🙌', true); el.classList.remove('party'); bun.classList.remove('party'); mood('impatient', 99); }
-        if (winT > 6.5 && winT - dt <= 6.5) say('Then Bun! 🐰', true, 'b');
+        if (winT > 6.5 && winT - dt <= 6.5) say('Then me!! 🙋', true, 'b');
       }
       nextBlink -= dt;
       if (nextBlink <= 0){ el.classList.add('blink'); setTimeout(() => el.classList.remove('blink'), 130); nextBlink = rnd(2.2, 5.5); }
@@ -1647,21 +1461,15 @@ const kid = (() => {
         for (const r of rings){ const v = Math.hypot(r.vx, r.vy); if (r.peg < 0 && v > bv){ bv = v; best = r; } }
         if (best){ tx = tr.left + best.x * S; ty = tr.top + best.y * S; }
       }
-      const ex = sr.left + sr.width * 100 / 200, ey = sr.top + sr.height * 89 / 140;
+      const k = Math.min(1, dt * 5);
+      const ex = sr.left + sr.width / 2, ey = sr.top + sr.height * 0.6;
       const dx = tx - ex, dy = ty - ey, d = Math.hypot(dx, dy) || 1;
-      const k = Math.min(1, dt * 6);
-      px += (dx / d * 3 - px) * k; py += (dy / d * 2.4 - py) * k;
-      pupL.setAttribute('transform', `translate(${px.toFixed(2)} ${py.toFixed(2)})`);
-      pupR.setAttribute('transform', `translate(${px.toFixed(2)} ${py.toFixed(2)})`);
-      hd += (clamp(dx / d * 7, -8, 8) - hd) * k;
+      hd += (clamp(dx / d * 9, -9, 9) - hd) * k;
       look.style.transform = `rotate(${hd.toFixed(2)}deg)`;
-      bNextBlink -= dt;
-      if (bNextBlink <= 0){ bun.classList.add('blink'); setTimeout(() => bun.classList.remove('blink'), 130); bNextBlink = rnd(2, 5); }
-      const br = bsvg.getBoundingClientRect(), bex = br.left + br.width * 80 / 160, bey = br.top + br.height * 92 / 140;
+      const br = bsvg.getBoundingClientRect(), bex = br.left + br.width / 2, bey = br.top + br.height * 0.6;
       const bdx = tx - bex, bdy = ty - bey, bd = Math.hypot(bdx, bdy) || 1;
-      bpx += (bdx / bd * 2.4 - bpx) * k; bpy += (bdy / bd * 2 - bpy) * k;
-      bPupL.setAttribute('transform', `translate(${bpx.toFixed(2)} ${bpy.toFixed(2)})`);
-      bPupR.setAttribute('transform', `translate(${bpx.toFixed(2)} ${bpy.toFixed(2)})`);
+      bpx += (clamp(bdx / bd * 9, -9, 9) - bpx) * k;
+      bLook.style.transform = `rotate(${bpx.toFixed(2)}deg)`;
     },
   };
 })();
@@ -1774,13 +1582,9 @@ function drawFireworks(){
 // ---------- share card ----------
 function kidImage(id){
   return new Promise(res => {
-    const src = $(id || 'kid').querySelector('svg').cloneNode(true);
-    src.setAttribute('xmlns', 'http://www.w3.org/2000/svg'); const vb = src.getAttribute('viewBox').split(' ').map(Number); src.setAttribute('width', vb[2] * 2); src.setAttribute('height', vb[3] * 2);
-    src.querySelectorAll('.m:not(.m-happy), .eyeOpen').forEach(n => n.remove());   // a big happy face
-    src.querySelectorAll('#pupL,#pupR,#bPupL,#bPupR').forEach(n => n.removeAttribute('transform'));
     const img = new Image();
     img.onload = () => res(img); img.onerror = () => res(null);
-    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(src));
+    img.src = id === 'bun' ? 'chars/boy-cheer.webp' : 'chars/girl-cheer.webp';
   });
 }
 async function makeShareCard(){
@@ -1823,8 +1627,8 @@ async function makeShareCard(){
   }));
   x.fillStyle = '#ffd400'; for (const bx of [tx + 40, tx + tw - 40]){ x.beginPath(); x.arc(bx, ty + th + 58, 34, 0, 7); x.fill(); }
   const ki = await kidImage('kid'), bi = await kidImage('bun');
-  if (bi) x.drawImage(bi, W / 2 - 205, ty - 150, 160, 140);
-  if (ki) x.drawImage(ki, W / 2 - 60, ty - 175, 230, 161);
+  if (bi){ const h = 175, w = h * bi.width / bi.height; x.drawImage(bi, W / 2 - 40 - w, ty - h + 22, w, h); }
+  if (ki){ const h = 170, w = h * ki.width / ki.height; x.drawImage(ki, W / 2 - 30, ty - h + 22, w, h); }
   x.fillStyle = '#fff'; x.font = '700 54px Fredoka, sans-serif'; x.fillText('Can you beat it?', W / 2, H - 105);
   x.fillStyle = 'rgba(207,233,255,.85)'; x.font = '500 34px Fredoka, sans-serif'; x.fillText('rupam870.github.io/water-ring-toss', W / 2, H - 52);
   return await new Promise(res => c.toBlob(res, 'image/png'));
@@ -1899,7 +1703,7 @@ addEventListener('blur', () => { release(0); release(1); tiltKeys.l = tiltKeys.r
 
 // grab the toy anywhere (except the buttons) and drag sideways to tilt it
 const stage = document.querySelector('.stage'), consoleEl = document.querySelector('.console'), rig = $('rig');
-// rotate the toy (and Momo & Bun leaning on it) around the toy's own centre
+// rotate the toy (and the cousins leaning on it) around the toy's own centre
 function placePivot(){ const off = consoleEl.offsetTop + consoleEl.offsetHeight / 2; rig.style.transformOrigin = `50% ${off}px`; }
 addEventListener('resize', placePivot); placePivot();
 // iPhone blocks motion sensors inside embedded frames, so don't offer it there
@@ -2038,7 +1842,7 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 
-window.__rt = { card: async () => { const b = await makeShareCard(); return await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(b); }); }, get rings(){ return rings; }, PEGS, setTilt: v => { tiltTarget = v; }, tilt: () => tilt, wat: (x, y) => [Math.round(sampleF(fu, x, y)), Math.round(sampleF(fv, x, y))], energy: () => waterEnergy, set: o => { if ('VORT' in o) VORT = o.VORT; if ('VIN' in o) VIN = o.VIN; if ('VSUCK' in o) VSUCK = o.VSUCK; if ('JETH' in o) JETH = o.JETH; if ('VTHR' in o) VTHR = o.VTHR; if ('AIRLIFT' in o) AIRLIFT = o.AIRLIFT; if ('REACT' in o) REACT = o.REACT; if ('JETF' in o) JETF = o.JETF; if ('SRC' in o) SRC = o.SRC; }, fl: () => { let mn = 0, mx = 0, at = 0; for (let k = 0; k < fv.length; k++){ if (fv[k] < mn){ mn = fv[k]; at = k; } } return { minV: Math.round(mn), at: [at % NX, Math.floor(at / NX)], jet: jets.map(j => +j.power.toFixed(2)) }; }, step: (n, dt) => { const t0 = performance.now(); for (let i = 0; i < n; i++) step(dt); return (performance.now() - t0) / n; } };
+window.__rt = { card: async () => { const b = await makeShareCard(); return await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(b); }); }, get rings(){ return rings; }, PEGS, setTilt: v => { tiltTarget = v; }, tilt: () => tilt, energy: () => waterEnergy };
 resetGame();
 resize();
 openModes();
