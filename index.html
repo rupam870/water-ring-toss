@@ -80,10 +80,10 @@
     opacity:0;pointer-events:none;transition:opacity .6s}
   .win.show{opacity:1;pointer-events:auto}
   .win{gap:1.6cqw;background:radial-gradient(circle at 50% 40%,rgba(10,50,90,.72),rgba(0,12,32,.9))}
-  .win h2{font:700 10cqw/1.05 Fredoka,sans-serif;color:#fff6cf;text-shadow:0 0 5cqw rgba(255,220,120,.7)}
+  .win h2{font:700 11.5cqw/1 Fredoka,sans-serif;color:#fff6cf;text-shadow:0 0 5cqw rgba(255,220,120,.7)}
   .win.show h2{animation:popIn .6s cubic-bezier(.3,1.6,.5,1) .2s both}
   .win p{font:500 4cqw Fredoka,sans-serif;color:#cfefff}
-  .wstars{display:flex;gap:2cqw;font:700 13cqw/1 Fredoka,sans-serif}
+  .wstars{display:flex;gap:2.5cqw;font:700 12cqw/1 Fredoka,sans-serif;margin-bottom:.5cqw}
   .wstars span{color:rgba(255,255,255,.16);transform:scale(.4);opacity:0}
   .win.show .wstars span{animation:starIn .55s cubic-bezier(.3,1.8,.5,1) both}
   .win.show .wstars span:nth-child(1){animation-delay:.45s}
@@ -92,12 +92,36 @@
   .wstars span.lit{color:#ffd23f;text-shadow:0 0 4cqw rgba(255,210,60,.8)}
   @keyframes starIn{0%{opacity:0;transform:scale(.3) rotate(-30deg)}100%{opacity:1;transform:none}}
   @keyframes popIn{0%{opacity:0;transform:scale(.6)}100%{opacity:1;transform:none}}
-  .win .wtime{font:700 9cqw/1 VT323,monospace;color:#b6ff9e;text-shadow:0 0 3cqw rgba(160,255,130,.6)}
-  .win .wsub{font-weight:600;color:#fff;opacity:.9}
-  .win .wbest{font-size:3.6cqw;opacity:.8}
+  .win .wtime{font:700 13cqw/1 VT323,monospace;color:#b6ff9e;text-shadow:0 0 3cqw rgba(160,255,130,.6);margin:0}
+  .win .wsub{font-size:5.2cqw;font-weight:600;color:#fff;opacity:.92}
+  .win .wbest{font-size:4.6cqw;opacity:.85}
   .win .wbest.new{color:#ffd23f;opacity:1;font-weight:700}
-  .win .wstats{font-size:3.3cqw;opacity:.6}
-  .wbtns{display:flex;gap:5cqw;margin-top:2.5cqw}
+  .win .wstats{font-size:4.2cqw;opacity:.6}
+  .wActions{display:flex;flex-direction:column;align-items:stretch;gap:3cqw;width:74%;margin-top:3cqw}
+  .wbtn{font:700 5.2cqw/1 Fredoka,sans-serif;padding:3.4cqw 3cqw;border-radius:99px;border:none;cursor:pointer;letter-spacing:.01em;transition:transform .1s}
+  .wbtn:active{transform:translateY(.6cqw)}
+  .wbtn.primary{font-size:6cqw;padding:4cqw 3cqw;color:#5a2800;background:linear-gradient(#ffe68a,#ffbf3c);
+    box-shadow:inset 0 1px 0 #fff6d8,0 1cqw 0 #b85a05,0 2cqw 4cqw rgba(255,190,60,.35);animation:glowBtn 1.8s ease-in-out infinite}
+  @keyframes glowBtn{50%{box-shadow:inset 0 1px 0 #fff6d8,0 1cqw 0 #b85a05,0 2cqw 7cqw rgba(255,200,80,.6)}}
+  .wbtn.secondary{color:#063250;background:linear-gradient(#bff6ff,#6fd6f5);box-shadow:inset 0 1px 0 #effdff,0 .8cqw 0 #1d7fa3}
+  .wbtn.ghost{font-size:4.6cqw;padding:2.6cqw;color:#dbeeff;background:transparent;border:1.5px solid rgba(219,238,255,.4)}
+  .win{gap:1cqw;overflow-y:auto;scrollbar-width:none;justify-content:safe center;padding-block:3cqw}
+  .win::-webkit-scrollbar{display:none}
+  .fb{width:80%;margin-top:3cqw;padding-top:2.6cqw;border-top:1px solid rgba(219,238,255,.14);display:flex;flex-direction:column;align-items:center;gap:2cqw}
+  .fbQ{font:600 4.4cqw Fredoka,sans-serif;color:#dbeeff;opacity:.85}
+  .fbFaces{display:flex;gap:2cqw}
+  .fbFaces button{font-size:5.8cqw;line-height:1;width:9.4cqw;height:9.4cqw;border-radius:50%;border:none;background:rgba(255,255,255,.07);cursor:pointer;filter:grayscale(.5);transition:transform .15s,filter .15s,background .15s}
+  .fbFaces button:hover{filter:none;transform:scale(1.12)}
+  .fbFaces button.on{filter:none;background:rgba(255,210,90,.28);transform:scale(1.15);box-shadow:0 0 0 1.5px #ffd23f}
+  .fbMore{display:none;width:100%;gap:2cqw;flex-direction:column}
+  .fb.rated .fbMore{display:flex}
+  .fbMore textarea{width:100%;box-sizing:border-box;font:500 3.9cqw/1.35 Fredoka,sans-serif;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(219,238,255,.25);border-radius:3cqw;padding:2.4cqw 3cqw;resize:none;outline:none}
+  .fbMore textarea:focus{border-color:#ffd23f}
+  .fbSend{align-self:center;font:700 4.4cqw Fredoka,sans-serif;color:#5a2800;background:#ffd23f;border:none;border-radius:99px;padding:2.4cqw 7cqw;cursor:pointer}
+  .fbNote{font-size:3.2cqw;opacity:.45}
+  .fbThanks{display:none;font:600 4.4cqw Fredoka,sans-serif;color:#ffe9a8}
+  .fb.sent .fbQ,.fb.sent .fbFaces,.fb.sent .fbMore,.fb.sent .fbNote{display:none}
+  .fb.sent .fbThanks{display:block}
   .pill.share{background:linear-gradient(#9ff1ff,#4cc9f0);color:#063250;box-shadow:inset 0 1px 0 #e6fdff,0 .8cqw 0 #1d7fa3,0 1.2cqw 1.6cqw rgba(0,0,0,.25)}
   .linkBtn{background:none;border:none;color:#ffe39a;font:600 3.8cqw Fredoka,sans-serif;cursor:pointer;margin-top:1cqw;text-decoration:underline;text-underline-offset:3px}
   .modes{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3cqw;padding:5cqw;
@@ -133,6 +157,13 @@
   .console.grabbing{cursor:grabbing}
   .stage{cursor:grab}
   .controls{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 16px;padding:0 12px;max-width:640px}
+  @media (min-width:900px) and (min-aspect-ratio:1/1){
+    .stage{--kh:clamp(80px,11svh,124px);--cw:min(580px, calc((100svh - 36px - var(--kh)) / 2.04))}
+    .rig{margin-top:6px}
+    .controls{position:fixed;right:28px;bottom:28px;flex-direction:column;align-items:flex-end;max-width:300px;padding:0;z-index:4}
+    .controls .caption{text-align:right;max-width:240px;line-height:1.5}
+    .chip{font-size:15px;padding:8px 16px}
+  }
   .chip{font:500 13px Fredoka,sans-serif;color:#e8eeff;background:rgba(120,140,220,.16);border:1px solid rgba(180,195,255,.28);
     padding:6px 12px;border-radius:99px;cursor:pointer;backdrop-filter:blur(4px)}
   .chip:hover{background:rgba(140,160,240,.26)}
@@ -146,8 +177,8 @@
   /* ---------- Mira & her little cousin Kabir (made with Atlabs; one picture per expression, all cheerful) ---------- */
   .pal{position:relative;flex:none;height:var(--kh);animation:breathe 3.4s ease-in-out infinite;
     filter:drop-shadow(0 6px 10px rgba(0,0,0,.35)) drop-shadow(0 0 22px rgba(255,160,70,.15))}
-  .pal.momo{height:calc(var(--kh) * 1.08);width:calc(var(--kh) * 1.08 * .919)}
-  .pal.bun{height:calc(var(--kh) * .92);width:calc(var(--kh) * .92 * 1.077);margin-right:-4%;animation-delay:.6s}
+  .pal.momo{height:calc(var(--kh) * 1.08);width:calc(var(--kh) * 1.08 * .979)}
+  .pal.bun{height:calc(var(--kh) * .92);width:calc(var(--kh) * .92 * 1.13);margin-right:-4%;animation-delay:.6s}
   .pal.hop{animation:hop .5s cubic-bezier(.3,.7,.4,1)}
   .pal.bun.hop{animation:hop .5s cubic-bezier(.3,.7,.4,1) .12s}
   .pal.party{animation:hop .55s cubic-bezier(.3,.7,.4,1) infinite}
@@ -156,11 +187,23 @@
   .palFx{transition:transform .35s ease}
   .pal img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:50% 100%;opacity:0;transition:opacity .14s;
     -webkit-user-select:none;user-select:none;pointer-events:none}
-  .pal img.f-calm{opacity:1}
-  .pal.cheer .f-calm,.pal.laugh .f-calm,.pal.upset .f-calm,.pal.impatient .f-calm,.pal.wow .f-calm,.pal.lean .f-calm{opacity:0}
-  .pal.cheer .f-cheer,.pal.laugh .f-cheer{opacity:1}
-  .pal.upset .f-giggle,.pal.impatient .f-giggle{opacity:1}
-  .pal.wow .f-wow,.pal.lean .f-wow{opacity:1}
+  .pal[data-face="calm"] .f-calm{opacity:1}
+  .pal[data-face="cheer"] .f-cheer{opacity:1}
+  .pal[data-face="giggle"] .f-giggle{opacity:1}
+  .pal[data-face="wow"] .f-wow{opacity:1}
+  .pal[data-face="wave"] .f-wave{opacity:1}
+  .pal[data-face="wink"] .f-wink{opacity:1}
+  .pal[data-face="clap"] .f-clap{opacity:1}
+  .pal[data-face="yawn"] .f-yawn{opacity:1}
+  /* tap or hover them */
+  .pal{pointer-events:auto;cursor:pointer}
+  .pal.poke .palFx{animation:boing .45s cubic-bezier(.3,1.7,.5,1)}
+  @keyframes boing{30%{transform:scale(1.12,.9)}60%{transform:scale(.95,1.06)}100%{transform:none}}
+  /* winning: they twirl */
+  .palIn{perspective:600px}
+  .pal.party .palFx{animation:twirl 1.8s ease-in-out infinite}
+  .pal.bun.party .palFx{animation-delay:.25s}
+  @keyframes twirl{0%{transform:rotateY(0)}45%{transform:rotateY(360deg) translateY(-6%)}55%,100%{transform:rotateY(360deg)}}
   .pal.lean .palFx{transform:translateY(5%) scale(1.07)}
   .pal.sleepy .palFx{transform:rotate(7deg) translateY(4%)}
   .pal.laugh .palFx{animation:giggle .16s ease-in-out infinite alternate}
@@ -168,7 +211,7 @@
   .pal.impatient .palFx{animation:fidget .5s ease-in-out infinite alternate}
   @keyframes fidget{from{transform:rotate(-2deg)}to{transform:rotate(2deg) translateY(2%)}}
   /* ---------- (older drawn characters, no longer used) ---------- */
-  .rig{display:flex;flex-direction:column;align-items:center;gap:12px;will-change:transform;margin-top:40px}
+  .rig{display:flex;flex-direction:column;align-items:center;gap:12px;will-change:transform;margin-top:40px;width:var(--cw);container-type:inline-size}
   .buddy{width:var(--cw);height:var(--kh);display:flex;align-items:flex-end;justify-content:center;gap:0;
     position:relative;z-index:2;pointer-events:none;margin-bottom:calc(-12px - var(--kh) * 0.1)}
   .kid{height:var(--kh);width:calc(var(--kh) * 1.43);flex:none;
@@ -252,6 +295,11 @@
     transform-origin:50% 100%;transition:opacity .18s,transform .28s cubic-bezier(.3,1.6,.5,1),left .2s}
   .bubble::after{content:"";position:absolute;left:var(--tail,50%);bottom:-8px;margin-left:-8px;border:8px solid transparent;border-top-color:#fffdf3;border-bottom:0}
   .bubble.show{opacity:1;transform:translate(-50%,0)}
+  .bubble.side{bottom:auto;top:14%;max-width:240px;width:max-content;transform:scale(.7);transform-origin:0 50%}
+  .bubble.side.show{transform:none}
+  .bubble.side::after{left:-8px;top:50%;bottom:auto;margin:-8px 0 0;border:8px solid transparent;border-right-color:#fffdf3;border-left:0}
+  .bubble.side.fromLeft{transform-origin:100% 50%}
+  .bubble.side.fromLeft::after{left:auto;right:-8px;border-right-color:transparent;border-left:8px solid #fffdf3}
   .lcd.pop{animation:lcdPop .55s ease-out}
   @keyframes lcdPop{25%{transform:scale(1.16);filter:brightness(1.7)}100%{transform:none}}
   @media (max-width:600px){.caption{display:none}.bubble{font-size:13px;padding:6px 10px}}
@@ -264,8 +312,8 @@
   <div class="rig" id="rig">
   <div class="buddy" aria-hidden="true">
     <div class="bubble" id="bubble"></div>
-    <div class="pal bun" id="bun"><div class="palIn" id="bunLook"><div class="palFx"><img class="f f-calm" src="chars/boy-calm.webp" alt="" draggable="false"><img class="f f-cheer" src="chars/boy-cheer.webp" alt="" draggable="false"><img class="f f-giggle" src="chars/boy-giggle.webp" alt="" draggable="false"><img class="f f-wow" src="chars/boy-wow.webp" alt="" draggable="false"></div></div></div>
-    <div class="pal momo" id="kid"><div class="palIn" id="headLook"><div class="palFx"><img class="f f-calm" src="chars/girl-calm.webp" alt="" draggable="false"><img class="f f-cheer" src="chars/girl-cheer.webp" alt="" draggable="false"><img class="f f-giggle" src="chars/girl-giggle.webp" alt="" draggable="false"><img class="f f-wow" src="chars/girl-wow.webp" alt="" draggable="false"></div></div></div>
+    <div class="pal bun" id="bun" data-face="calm" title="Kabir"><div class="palIn" id="bunLook"><div class="palFx"><img class="f f-calm" src="chars/boy-calm.webp" alt="" draggable="false"><img class="f f-cheer" src="chars/boy-cheer.webp" alt="" draggable="false"><img class="f f-giggle" src="chars/boy-giggle.webp" alt="" draggable="false"><img class="f f-wow" src="chars/boy-wow.webp" alt="" draggable="false"><img class="f f-wave" src="chars/boy-wave.webp" alt="" draggable="false"><img class="f f-wink" src="chars/boy-wink.webp" alt="" draggable="false"><img class="f f-clap" src="chars/boy-clap.webp" alt="" draggable="false"><img class="f f-yawn" src="chars/boy-yawn.webp" alt="" draggable="false"></div></div></div>
+    <div class="pal momo" id="kid" data-face="calm" title="Mira"><div class="palIn" id="headLook"><div class="palFx"><img class="f f-calm" src="chars/girl-calm.webp" alt="" draggable="false"><img class="f f-cheer" src="chars/girl-cheer.webp" alt="" draggable="false"><img class="f f-giggle" src="chars/girl-giggle.webp" alt="" draggable="false"><img class="f f-wow" src="chars/girl-wow.webp" alt="" draggable="false"><img class="f f-wave" src="chars/girl-wave.webp" alt="" draggable="false"><img class="f f-wink" src="chars/girl-wink.webp" alt="" draggable="false"><img class="f f-clap" src="chars/girl-clap.webp" alt="" draggable="false"><img class="f f-yawn" src="chars/girl-yawn.webp" alt="" draggable="false"></div></div></div>
   </div>
   <div class="console">
     <header class="top">
@@ -285,8 +333,23 @@
         <p class="wtime" id="winTime"></p>
         <p class="wbest" id="winBest"></p>
         <p class="wstats" id="winStats"></p>
-        <div class="wbtns"><button class="pill share" id="shareBtn">SHARE</button><button class="pill" id="again">PLAY AGAIN</button></div>
-        <button class="linkBtn" id="nextMode">Try Medium →</button>
+        <div class="wActions">
+          <button class="wbtn primary" id="nextMode">Try Medium →</button>
+          <button class="wbtn secondary" id="shareBtn">Share</button>
+          <button class="wbtn ghost" id="again">Play again</button>
+        </div>
+        <div class="fb" id="fb">
+          <p class="fbQ">How did that feel?</p>
+          <div class="fbFaces" role="radiogroup" aria-label="Rate the game">
+            <button data-r="1" aria-label="Not fun">😕</button><button data-r="2" aria-label="Meh">😐</button><button data-r="3" aria-label="Okay">🙂</button><button data-r="4" aria-label="Fun">😊</button><button data-r="5" aria-label="Loved it">🤩</button>
+          </div>
+          <div class="fbMore">
+            <textarea id="fbText" maxlength="500" rows="2" placeholder="Anything to add or fix? (optional)"></textarea>
+            <button class="fbSend" id="fbSend">Send</button>
+          </div>
+          <p class="fbNote">Anonymous · no name or email</p>
+          <p class="fbThanks">Thank you! 💛 Mira and Kabir read every one.</p>
+        </div>
       </div>
       <div class="modes" id="modes">
         <h3>Pick your challenge</h3>
@@ -310,6 +373,28 @@
 </main>
 
 <script>
+/* ---------- analytics (Mixpanel) ----------
+   Paste the project token from Mixpanel › Project Settings › Access Keys. Empty = no tracking. */
+const MP_TOKEN = '';
+const analytics = (() => {
+  const q = []; let mp = null; const ready = !!MP_TOKEN && !/[?&]notrack/.test(location.search);
+  if (ready){
+    const sc = document.createElement('script'); sc.async = true;
+    sc.src = 'https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js';
+    sc.onload = () => {
+      try {
+        window.mixpanel.init(MP_TOKEN, { track_pageview: false, persistence: 'localStorage', ip: true, batch_requests: true });
+        mp = window.mixpanel;
+        mp.register({ app: 'Aqua Rings', touch: matchMedia('(pointer:coarse)').matches, embedded: window.top !== window.self });
+        q.splice(0).forEach(([e, p, o]) => mp.track(e, p, o));
+      } catch(_){ }
+    };
+    document.head.appendChild(sc);
+  }
+  return {
+    track(e, p, o){ if (!ready) return; try { mp ? mp.track(e, p, o) : q.push([e, p, o]); } catch(_){ } },
+  };
+})();
 (() => {
 const $ = id => document.getElementById(id);
 const rnd = (a, b) => a + Math.random() * (b - a);
@@ -784,8 +869,8 @@ let R = 19;   // ring radius: bigger rings (with bigger holes) on easier modes, 
 // Medium: a little help (about five minutes). Hard: the real toy, no help.
 const MODES = {
   easy:   { label: 'Easy',   n: 6,  ringR: 25, simple: true, flat: true, hole: 5, aim: 0.5, funnel: 0, funnelR: 0, funnelH: 0, lock: true,  pegHold: 2.2, target: 60,  blurb: '6 big rings · about a minute', title: 'Nailed it!' },
-  medium: { label: 'Medium', n: 10, ringR: 21, flat: true, hole: 1, aim: 0.3, funnel: 0,  funnelR: 0,  funnelH: 0, lock: false, pegHold: 1.8, target: 300, blurb: '10 rings · about 5 minutes', title: 'Brilliant!' },
-  hard:   { label: 'Hard',   n: 12, ringR: 19, hole: 0, aim: 0.22, funnel: 0,  funnelR: 0,  funnelH: 0, lock: false, pegHold: 1,   target: 600, blurb: '12 rings · the real toy, no help', title: 'LEGENDARY!' },
+  medium: { label: 'Medium', n: 10, ringR: 21, flat: true, hole: 0, aim: 0.3, funnel: 0,  funnelR: 0,  funnelH: 0, lock: false, pegHold: 1.8, target: 300, blurb: '10 rings · about 5 minutes', title: 'Brilliant!' },
+  hard:   { label: 'Hard',   n: 12, ringR: 19, hole: -6, aim: 0.22, funnel: 0,  funnelR: 0,  funnelH: 0, lock: false, pegHold: 1,   target: 600, blurb: '12 rings · the real toy, no help', title: 'LEGENDARY!' },
 };
 const store = { get(k){ try { return localStorage.getItem(k); } catch(_){ return null; } }, set(k, v){ try { localStorage.setItem(k, v); } catch(_){ } } };
 let mode = (location.hash || '').slice(1);
@@ -813,7 +898,13 @@ function shade(hex, k){
   return `rgb(${f(n >> 16)},${f((n >> 8) & 255)},${f(n & 255)})`;
 }
 
+let tracked = 0;
+function trackAbandon(reason){
+  if (started && !won) analytics.track('Game Abandoned', { mode, reason, rings: tracked, of: N, seconds: Math.round(elapsed) }, reason === 'left' ? { transport: 'sendBeacon', send_immediately: true } : undefined);
+}
+addEventListener('pagehide', () => trackAbandon('left'));
 function resetGame(){
+  trackAbandon('reset');
   N = MODE.n; R = MODE.ringR;
   rings = [];
   for (let i = 0; i < N; i++){
@@ -1005,8 +1096,10 @@ function step(dt){
       r.vy += (gy * MODE.pegHold + jy * 0.7 + ay - gy + churnFlow(r.x, r.y)[1] * 0.45) * dt;   // a storm can lift rings off a peg
       r.vy *= Math.exp(-DRAG * 1.2 * dt);
       r.y += r.vy * dt;
-      r.ox *= Math.exp(-4 * dt);
-      r.x = P.x + r.ox + Math.sin(T * 2 + r.seed) * 0.5;
+      // the ring stays where it landed around the rod (no snapping to the centre), drifting only a little
+      const slack = R * HOLE - ROD_R;
+      r.ox = clamp(r.ox * Math.exp(-0.4 * dt), -slack, slack);
+      r.x = P.x + r.ox + Math.sin(T * 2 + r.seed) * 0.4;
       r.tilt -= Math.PI * Math.round(r.tilt / Math.PI);
       const target = 0.12 * (r.tilt < 0 ? -1 : 1);
       r.tilt += (target - r.tilt) * Math.min(1, 5 * dt); r.tv = 0;
@@ -1325,17 +1418,74 @@ const kid = (() => {
   let antic = null, anticP = null, anticT = -99, lastNear = -99, lastLost = -99, lastStuck = -99;
   let px = 0, py = 0, hd = 0, focus = null, focusT = 0;
   const pick = arr => { let s; do { s = arr[Math.floor(Math.random() * arr.length)]; } while (arr.length > 1 && s === lastLine); return s; };
-  function mood(m, dur){ for (const e of [el, bun]){ MOODS.forEach(x => e.classList.remove(x)); if (m) e.classList.add(m); } moodT = dur || 0; }
+  const FACE_FOR = {
+    cheer: ['cheer', 'clap', 'cheer', 'wink'], laugh: ['giggle', 'clap'], upset: ['giggle'], impatient: ['wave', 'giggle'],
+    wow: ['wow'], lean: ['wow'], sleepy: ['yawn'], happy: ['wave', 'wink', 'calm'],
+  };
+  const face = (e, f) => { e.dataset.face = f; };
+  function mood(m, dur){
+    for (const e of [el, bun]){
+      MOODS.forEach(x => e.classList.remove(x)); if (m) e.classList.add(m);
+      const opts = FACE_FOR[m]; face(e, opts ? opts[Math.floor(Math.random() * opts.length)] : 'calm');
+    }
+    moodT = dur || 0;
+  }
+  // when nothing is happening they don't freeze: they wink, giggle, wave, gasp, then settle back
+  const idle = { m: { t: rnd(3, 6), back: 0 }, b: { t: rnd(4, 7), back: 0 } };
+  const IDLE_FACES = ['wink', 'giggle', 'wave', 'wow', 'calm', 'clap'];
+  let partyT = 0;
+  function idleFaces(dt){
+    if (won && el.classList.contains('party')){              // celebrating: keep switching happy faces
+      partyT -= dt;
+      if (partyT <= 0){ partyT = 0.9; for (const e of [el, bun]) face(e, ['cheer', 'clap', 'wink', 'giggle'][Math.floor(Math.random() * 4)]); }
+      return;
+    }
+    for (const [k, e] of [['m', el], ['b', bun]]){
+      const s0 = idle[k];
+      if (s0.back > 0){ s0.back -= dt; if (s0.back <= 0 && moodT <= 0 && !won) face(e, 'calm'); continue; }
+      s0.t -= dt;
+      if (s0.t <= 0){
+        s0.t = rnd(3.5, 7.5);
+        if (moodT > 0 || won) continue;
+        face(e, IDLE_FACES[Math.floor(Math.random() * IDLE_FACES.length)]); s0.back = rnd(1.2, 2.2);
+      }
+    }
+  }
+  // tap (or hover on a laptop) and they talk to you
+  const POKE = {
+    m: ["Hehe, that tickles!", "Focus on the rings, silly!", "Psst… try a little tilt!", "I'm Mira! Kabir is my little cousin 😄", "You're doing great!", "Boop! 👆", "Tap softly for small puffs!", "Kabir keeps stealing my snacks 🙄"],
+    b: ["Hi hi hi! 👋", "Can I press the button?", "Hehe! Again!", "I'm Kabir! I'm six! ✋", "Poke me again!", "I like the purple ring!", "Mira is the best cousin!", "Look, a shooting star! ✨"],
+  };
+  let lastPoke = { m: -99, b: -99 };
+  function poke(k, e){
+    if (T - lastPoke[k] < 1.2) return;
+    lastPoke[k] = T;
+    e.classList.remove('poke'); void e.offsetWidth; e.classList.add('poke');
+    if (moodT <= 0 && !won){ face(e, Math.random() < 0.5 ? 'wave' : 'giggle'); idle[k].back = 1.8; }
+    say(POKE[k][Math.floor(Math.random() * POKE[k].length)], true, k);
+    analytics.track('Character Tapped', { who: k === 'm' ? 'Mira' : 'Kabir' });
+    A.kid(Math.random() < 0.5 ? 'laugh' : 'yay');
+  }
+  for (const [k, e] of [['m', el], ['b', bun]]){
+    e.addEventListener('click', ev => { ev.stopPropagation(); A.init(); poke(k, e); });
+    e.addEventListener('pointerenter', ev => { if (ev.pointerType === 'mouse') poke(k, e); });
+  }
   // who: 'm' = Mira, 'b' = little Kabir. The bubble floats above whoever is talking.
   function say(text, force, who){
     if (!force && T - lastSay < 1.6) return false;
     lastSay = T; lastLine = text;
     const sp = who === 'b' ? bun : el, row = el.parentElement;
     bub.textContent = text; bub.classList.remove('show'); void bub.offsetWidth;
-    const cx = sp.offsetLeft + sp.offsetWidth * (who === 'b' ? 0.5 : 0.5), half = Math.min(bub.offsetWidth, row.offsetWidth * 0.8) / 2;
-    const left = clamp(cx, half + 4, row.offsetWidth - half - 4);
-    bub.style.left = left + 'px';
-    bub.style.setProperty('--tail', clamp(50 + (cx - left) / (half * 2) * 100, 14, 86) + '%');
+    const side = innerWidth >= 900 && innerWidth >= innerHeight;   // laptops: talk from the side, not above
+    bub.classList.toggle('side', side); bub.classList.toggle('fromLeft', side && who === 'b');
+    if (side){
+      bub.style.left = (who === 'b' ? sp.offsetLeft - bub.offsetWidth - 10 : sp.offsetLeft + sp.offsetWidth + 10) + 'px';
+    } else {
+      const cx = sp.offsetLeft + sp.offsetWidth * 0.5, half = Math.min(bub.offsetWidth, row.offsetWidth * 0.8) / 2;
+      const left = clamp(cx, half + 4, row.offsetWidth - half - 4);
+      bub.style.left = left + 'px';
+      bub.style.setProperty('--tail', clamp(50 + (cx - left) / (half * 2) * 100, 14, 86) + '%');
+    }
     bub.classList.add('show');
     bubbleT = 2.2 + text.length * 0.035;
     return true;
@@ -1408,6 +1558,7 @@ const kid = (() => {
     },
     update(dt){
       if (moodT > 0){ moodT -= dt; if (moodT <= 0) mood(null); }
+      idleFaces(dt);
       if (bubbleT > 0){ bubbleT -= dt; if (bubbleT <= 0) bub.classList.remove('show'); }
       if (winT >= 0){
         winT += dt;
@@ -1491,7 +1642,9 @@ function renderModes(){
   }
 }
 function openModes(){ renderModes(); $('modes').classList.add('show'); }
+analytics.track('Game Opened', { mode_saved: store.get('ar-mode') || null, referrer: document.referrer ? new URL(document.referrer).hostname : 'direct', returning: !!(store.get('ar-best-easy') || store.get('ar-best-medium') || store.get('ar-best-hard')) });
 function selectMode(k){
+  analytics.track('Mode Selected', { mode: k, from: mode });
   mode = k; MODE = MODES[k]; N = MODE.n;
   store.set('ar-mode', k);
   try { if (location.hash !== '#' + k) location.hash = k; } catch(_){ }
@@ -1510,6 +1663,7 @@ function celebrate(){
   winStars = starsFor(t);
   const prev = bestFor(mode);
   winNewBest = prev == null || t < prev;
+  analytics.track('Game Won', { mode, seconds: Math.round(t), stars: winStars, new_best: winNewBest, first_win: prev == null, pumps: pressCount, near_misses: nearCount });
   if (winNewBest) store.set('ar-best-' + mode, t.toFixed(2));
   slowT = 0.9;                                        // the last ring settles in slow motion
   // every landed ring lights up in turn, bottom to top
@@ -1526,7 +1680,11 @@ function celebrate(){
   $('winStats').textContent = `${pressCount} pumps · ${nearCount} near misses`;
   [...$('winStars').children].forEach((el, i) => el.classList.toggle('lit', i < winStars));
   const order2 = Object.keys(MODES), next = order2[order2.indexOf(mode) + 1];
+  resetFeedback();
   $('nextMode').style.display = next ? '' : 'none';
+  // next mode is the main action; after Hard, sharing is
+  $('shareBtn').className = 'wbtn ' + (next ? 'secondary' : 'primary');
+  $('again').className = 'wbtn ' + (next ? 'ghost' : 'secondary');
   if (next) $('nextMode').textContent = `Try ${MODES[next].label} →`;
   $('nextMode').dataset.next = next || '';
   winTimer = 1.8;
@@ -1588,59 +1746,89 @@ function kidImage(id){
   });
 }
 async function makeShareCard(){
-  try { await document.fonts.ready; } catch(_){ }
-  const W = 1080, H = 1350, c = document.createElement('canvas'); c.width = W; c.height = H;
-  const x = c.getContext('2d');
-  let g2 = x.createLinearGradient(0, 0, 0, H); g2.addColorStop(0, '#040824'); g2.addColorStop(0.6, '#0b1a48'); g2.addColorStop(1, '#16306a');
+  // A poster, not a screenshot: one clear hero (this win), then a tidy scoreboard of all three levels.
+  try { await Promise.all([document.fonts.load('700 100px Fredoka'), document.fonts.load('600 40px Fredoka'), document.fonts.load('100px VT323'), document.fonts.ready]); } catch(_){ }
+  const W = 1080, H = 1350, M = 72, c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d'); x.textAlign = 'center'; x.textBaseline = 'alphabetic';
+  // night sky
+  let g2 = x.createLinearGradient(0, 0, 0, H); g2.addColorStop(0, '#040a24'); g2.addColorStop(0.55, '#0a1640'); g2.addColorStop(1, '#13275c');
   x.fillStyle = g2; x.fillRect(0, 0, W, H);
-  for (let i = 0; i < 40; i++){ const gx = rnd(0, W), gy = H * 0.3 + (gx - W / 2) * -0.5 + rnd(-60, 60), gr = rnd(60, 160);
-    const rg = x.createRadialGradient(gx, gy, 0, gx, gy, gr); rg.addColorStop(0, 'rgba(170,185,255,.05)'); rg.addColorStop(1, 'rgba(170,185,255,0)'); x.fillStyle = rg; x.fillRect(gx - gr, gy - gr, gr * 2, gr * 2); }
-  for (let i = 0; i < 380; i++){ x.fillStyle = `rgba(255,255,255,${rnd(0.2, 0.9)})`; const r0 = Math.random() < 0.08 ? rnd(1.6, 2.6) : rnd(0.5, 1.4); x.beginPath(); x.arc(rnd(0, W), rnd(0, H), r0, 0, 7); x.fill(); }
-  // pine silhouettes in the corners
-  x.fillStyle = '#020611';
-  for (const [bx, lean, h] of [[-40, 0.25, 820], [90, 0.18, 640], [W + 40, -0.25, 820], [W - 90, -0.18, 640]]){
+  let rg = x.createRadialGradient(W / 2, 330, 0, W / 2, 330, 420); rg.addColorStop(0, 'rgba(255,190,90,.22)'); rg.addColorStop(1, 'rgba(255,190,90,0)');
+  x.fillStyle = rg; x.fillRect(0, 0, W, H);
+  for (let i = 0; i < 260; i++){ x.fillStyle = `rgba(255,255,255,${rnd(0.12, 0.7)})`; x.beginPath(); x.arc(rnd(0, W), rnd(0, H), Math.random() < 0.07 ? rnd(1.6, 2.4) : rnd(0.5, 1.3), 0, 7); x.fill(); }
+  // quiet pine silhouettes framing the bottom corners
+  x.fillStyle = 'rgba(2,6,17,.85)';
+  for (const [bx, lean, h] of [[-30, 0.22, 560], [60, 0.14, 420], [W + 30, -0.22, 560], [W - 60, -0.14, 420]]){
     x.save(); x.translate(bx, H + 20); x.rotate(lean); x.beginPath(); x.moveTo(-h * 0.17, 0);
     for (let i = 0; i <= 12; i++){ const t = i / 12, y = -h * (0.06 + 0.92 * t), w = h * 0.17 * Math.pow(1 - t, 0.9); x.lineTo(-w, y); x.lineTo(-w * 0.45, y - h * 0.035); }
     x.lineTo(0, -h); for (let i = 12; i >= 0; i--){ const t = i / 12, y = -h * (0.06 + 0.92 * t), w = h * 0.17 * Math.pow(1 - t, 0.9); x.lineTo(w * 0.45, y - h * 0.035); x.lineTo(w, y); }
     x.closePath(); x.fill(); x.restore();
   }
-  x.textAlign = 'center';
-  x.fillStyle = 'rgba(220,230,255,.75)'; x.font = '600 34px Fredoka, sans-serif'; x.fillText('A Q U A   R I N G S', W / 2, 110);
-  x.fillStyle = '#fff6cf'; x.font = '700 92px Fredoka, sans-serif'; x.shadowColor = 'rgba(255,220,120,.6)'; x.shadowBlur = 30;
-  x.fillText(`All ${N} rings in!`, W / 2, 225); x.shadowBlur = 0;
-  x.font = '700 120px Fredoka, sans-serif';
-  for (let i = 0; i < 3; i++){ x.fillStyle = i < winStars ? '#ffd23f' : 'rgba(255,255,255,.18)'; x.fillText('★', W / 2 + (i - 1) * 130, 365); }
-  x.fillStyle = '#cfe9ff'; x.font = '600 50px Fredoka, sans-serif'; x.fillText(`${fmtTime(elapsed)}  ·  ${MODE.label} mode`, W / 2, 452);
-  // the toy with every ring on its peg
-  const tw = 330, th = 390, tx = (W - tw) / 2, ty = 680;
-  x.fillStyle = '#f7931e'; x.beginPath(); x.roundRect(tx - 45, ty - 40, tw + 90, th + 150, [60, 60, 95, 95]); x.fill();
-  const wg = x.createLinearGradient(0, ty, 0, ty + th); wg.addColorStop(0, '#2fb6d3'); wg.addColorStop(1, '#063250');
-  x.fillStyle = wg; x.beginPath(); x.roundRect(tx, ty, tw, th, 30); x.fill();
-  for (let i = 0; i < 70; i++){ x.fillStyle = `rgba(${['255,220,130', '235,248,255', '255,160,215', '160,250,255'][i % 4]},${rnd(0.4, 0.9)})`; x.fillRect(tx + rnd(10, tw - 10), ty + rnd(30, th - 10), 3, 2); }
-  const pegs = [[tx + tw * 0.32, ty + th * 0.4, '#ff5a4e'], [tx + tw * 0.69, ty + th * 0.55, '#7ee36b']];
-  for (const [px, py, col] of pegs){ x.fillStyle = col; x.fillRect(px - 5, py, 10, ty + th - py - 12); x.beginPath(); x.arc(px, py, 7, 0, 7); x.fill(); }
-  const onPeg = [[], []]; rings.forEach((r, i) => onPeg[r.peg >= 0 ? r.peg : i % 2].push(r));
-  onPeg.forEach((list, k) => list.forEach((r, i) => {
-    const [px] = pegs[k], ry = ty + th - 22 - i * 13;
-    x.strokeStyle = r.c; x.lineWidth = 9; x.beginPath(); x.ellipse(px, ry, 36, 9, 0, 0, Math.PI * 2); x.stroke();
-    x.strokeStyle = 'rgba(255,255,255,.5)'; x.lineWidth = 3; x.beginPath(); x.ellipse(px, ry - 3, 32, 6, 0, Math.PI * 0.15, Math.PI * 0.65); x.stroke();
-  }));
-  x.fillStyle = '#ffd400'; for (const bx of [tx + 40, tx + tw - 40]){ x.beginPath(); x.arc(bx, ty + th + 58, 34, 0, 7); x.fill(); }
+  const star = (cx, cy, r, fill) => { x.fillStyle = fill; x.beginPath(); for (let i = 0; i < 10; i++){ const a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r * 0.45 : r; x.lineTo(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr); } x.closePath(); x.fill(); };
+  const stars = (cx, cy, r, n, gap) => { for (let i = 0; i < 3; i++) star(cx + (i - 1) * gap, cy, r, i < n ? '#ffd23f' : 'rgba(255,255,255,.16)'); };
+  // 1 · wordmark
+  x.fillStyle = 'rgba(220,232,255,.75)'; x.font = '600 30px Fredoka, sans-serif';
+  x.fillText('A  Q  U  A    R  I  N  G  S', W / 2, M + 28);
+  // 2 · the cousins, cheering
   const ki = await kidImage('kid'), bi = await kidImage('bun');
-  if (bi){ const h = 175, w = h * bi.width / bi.height; x.drawImage(bi, W / 2 - 40 - w, ty - h + 22, w, h); }
-  if (ki){ const h = 170, w = h * ki.width / ki.height; x.drawImage(ki, W / 2 - 30, ty - h + 22, w, h); }
-  x.fillStyle = '#fff'; x.font = '700 54px Fredoka, sans-serif'; x.fillText('Can you beat it?', W / 2, H - 105);
-  x.fillStyle = 'rgba(207,233,255,.85)'; x.font = '500 34px Fredoka, sans-serif'; x.fillText('rupam870.github.io/water-ring-toss', W / 2, H - 52);
+  if (bi){ const h = 250, w = h * bi.width / bi.height; x.drawImage(bi, W / 2 + 10 - w, 140, w, h); }
+  if (ki){ const h = 270, w = h * ki.width / ki.height; x.drawImage(ki, W / 2 - 10, 120, w, h); }
+  // 3 · headline, stars, the time
+  x.shadowColor = 'rgba(255,215,120,.55)'; x.shadowBlur = 28;
+  x.fillStyle = '#fff6cf'; x.font = '700 100px Fredoka, sans-serif'; x.fillText(MODE.title, W / 2, 500);
+  x.shadowBlur = 0;
+  x.fillStyle = 'rgba(207,224,255,.85)'; x.font = '600 36px Fredoka, sans-serif'; x.fillText(`All ${N} rings · ${MODE.label} mode`, W / 2, 552);
+  stars(W / 2, 616, 30, winStars, 76);
+  x.shadowColor = 'rgba(160,255,130,.6)'; x.shadowBlur = 30;
+  x.fillStyle = '#b6ff9e'; x.font = '190px VT323, monospace'; x.fillText(fmtTime(elapsed), W / 2, 790);
+  x.shadowBlur = 0;
+  // 4 · scoreboard: all three levels on one grid
+  const by = 868;
+  x.strokeStyle = 'rgba(255,255,255,.14)'; x.lineWidth = 2;
+  x.beginPath(); x.moveTo(M, by); x.lineTo(W / 2 - 150, by); x.moveTo(W / 2 + 150, by); x.lineTo(W - M, by); x.stroke();
+  x.fillStyle = 'rgba(207,224,255,.7)'; x.font = '600 26px Fredoka, sans-serif'; x.fillText('M Y   B E S T   T I M E S', W / 2, by + 9);
+  const gap = 24, tw = (W - M * 2 - gap * 2) / 3, th = 236, ty = by + 40;
+  Object.entries(MODES).forEach(([k, m], i) => {
+    const tx = M + i * (tw + gap), cur = k === mode, best = bestFor(k);
+    x.beginPath(); x.roundRect(tx, ty, tw, th, 28);
+    x.fillStyle = cur ? 'rgba(255,210,90,.13)' : 'rgba(255,255,255,.055)'; x.fill();
+    x.lineWidth = cur ? 3 : 1.5; x.strokeStyle = cur ? '#ffd23f' : 'rgba(255,255,255,.14)'; x.stroke();
+    const cx = tx + tw / 2;
+    x.fillStyle = cur ? '#ffe9a8' : '#ffffff'; x.font = '700 36px Fredoka, sans-serif'; x.fillText(m.label, cx, ty + 56);
+    x.fillStyle = 'rgba(207,224,255,.55)'; x.font = '500 22px Fredoka, sans-serif'; x.fillText(`${m.n} rings`, cx, ty + 86);
+    if (best != null){
+      x.fillStyle = '#b6ff9e'; x.font = '92px VT323, monospace'; x.fillText(fmtTime(best), cx, ty + 168);
+      const sn = best <= m.target ? 3 : best <= m.target * 2 ? 2 : 1;
+      stars(cx, ty + 204, 13, sn, 34);
+    } else {
+      x.fillStyle = 'rgba(255,255,255,.28)'; x.font = '92px VT323, monospace'; x.fillText('--:--', cx, ty + 168);
+      x.fillStyle = 'rgba(207,224,255,.45)'; x.font = '500 22px Fredoka, sans-serif'; x.fillText('not yet', cx, ty + 208);
+    }
+    if (cur && winNewBest){
+      x.font = '700 20px Fredoka, sans-serif'; const lw = x.measureText('NEW BEST').width + 28;
+      x.fillStyle = '#ffd23f'; x.beginPath(); x.roundRect(cx - lw / 2, ty - 16, lw, 32, 16); x.fill();
+      x.fillStyle = '#5a2800'; x.fillText('NEW BEST', cx, ty + 7);
+    }
+  });
+  // 5 · call to action
+  x.fillStyle = '#ffffff'; x.font = '700 46px Fredoka, sans-serif'; x.fillText('Can you beat my times?', W / 2, 1222);
+  const url = 'rupam870.github.io/water-ring-toss'; x.font = '500 28px Fredoka, sans-serif';
+  const uw = x.measureText(url).width + 56;
+  x.beginPath(); x.roundRect(W / 2 - uw / 2, 1248, uw, 52, 26); x.fillStyle = 'rgba(255,255,255,.08)'; x.fill();
+  x.strokeStyle = 'rgba(255,255,255,.22)'; x.lineWidth = 1.5; x.stroke();
+  x.fillStyle = 'rgba(220,235,255,.92)'; x.fillText(url, W / 2, 1283);
   return await new Promise(res => c.toBlob(res, 'image/png'));
 }
 const GAME_URL = 'https://rupam870.github.io/water-ring-toss/';
 async function shareWin(){
-  const text = `I got all ${N} rings onto the pegs in ${fmtTime(elapsed)} on ${MODE.label} ${'⭐'.repeat(winStars)} in Aqua Rings 🌌 Can you beat me?`;
+  analytics.track('Share Clicked', { mode, seconds: Math.round(elapsed) });
+  const bests = Object.entries(MODES).map(([k, m]) => `${m.label} ${bestFor(k) != null ? fmtTime(bestFor(k)) : '–'}`).join(' · ');
+  const text = `I got all ${N} rings onto the pegs in ${fmtTime(elapsed)} on ${MODE.label} ${'⭐'.repeat(winStars)} in Aqua Rings 🌌\nMy best times: ${bests}\nCan you beat me?`;
   const url = GAME_URL + '#' + mode;
-  $('shareBtn').textContent = 'MAKING CARD…';
+  $('shareBtn').textContent = 'Making card…';
   let file = null;
   try { const blob = await makeShareCard(); if (blob) file = new File([blob], `aqua-rings-${mode}.png`, { type: 'image/png' }); } catch(_){ }
-  $('shareBtn').textContent = 'SHARE';
+  $('shareBtn').textContent = 'Share';
   try {
     if (file && navigator.canShare && navigator.canShare({ files: [file] })){ await navigator.share({ files: [file], text: text + '\n' + url }); return; }
     if (navigator.share){ await navigator.share({ title: 'Aqua Rings', text, url }); return; }
@@ -1660,7 +1848,7 @@ function press(i){
   btns[i].classList.add('down');
   bump = Math.max(bump, 0.25 * (1 - jets[i].sq));   // you feel the thump through the plastic
   $('hint').classList.add('gone');
-  if (!started && !won){ started = true; startTime = performance.now(); }
+  if (!started && !won){ started = true; startTime = performance.now(); tracked = 0; analytics.track('Game Started', { mode }); }
   kid.press();
   sfx.press(i);
 }
@@ -1710,7 +1898,7 @@ addEventListener('resize', placePivot); placePivot();
 try { if (window.top !== window.self && typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') $('tiltBtn').style.display = 'none'; } catch(_){ }
 stage.addEventListener('pointerdown', e => {
   A.init();
-  if (e.target.closest('button')) return;
+  if (e.target.closest('button') || e.target.closest('.pal')) return;
   const cr = consoleEl.getBoundingClientRect();
   const cx = cr.left + cr.width / 2, cy = cr.top + cr.height / 2;
   drag = { id: e.pointerId, cx, cy, last: Math.atan2(e.clientY - cy, e.clientX - cx), px: e.clientX, acc: 0, start: tiltTarget };
@@ -1784,6 +1972,7 @@ async function enableSensor(silent){
 function setSensor(on){
   sensorOn = on;
   $('tiltBtn').setAttribute('aria-pressed', on);
+  if (on) analytics.track('Tilt Enabled');
   $('tiltBtn').textContent = on ? 'Phone tilt: on' : 'Use phone tilt';
   if (on) $('tiltBtn').classList.remove('nudge');
   if (!on){ removeEventListener('deviceorientation', onOri); removeEventListener('devicemotion', onMotion); shake.x = shake.y = 0; tiltTarget = restTilt(); }
@@ -1816,6 +2005,27 @@ $('soundBtn').addEventListener('click', () => {
 $('reset').addEventListener('click', resetGame);
 $('again').addEventListener('click', resetGame);
 $('shareBtn').addEventListener('click', () => { A.init(); shareWin(); });
+// ---------- anonymous feedback after a win ----------
+let fbRating = 0;
+const FB_LABEL = ['', 'Not fun', 'Meh', 'Okay', 'Fun', 'Loved it'];
+document.querySelectorAll('.fbFaces button').forEach(b => b.addEventListener('click', () => {
+  fbRating = +b.dataset.r;
+  document.querySelectorAll('.fbFaces button').forEach(x => x.classList.toggle('on', x === b));
+  $('fb').classList.add('rated');
+  analytics.track('Feedback Rating', { mode, rating: fbRating, label: FB_LABEL[fbRating] });
+}));
+$('fbSend').addEventListener('click', () => {
+  const text = $('fbText').value.trim().slice(0, 500);
+  analytics.track('Feedback Submitted', { mode, rating: fbRating, label: FB_LABEL[fbRating], comment: text || null, has_comment: !!text, seconds: Math.round(elapsed), stars: winStars });
+  $('fb').classList.add('sent');
+  store.set('ar-fb-' + mode, '1');
+});
+function resetFeedback(){
+  fbRating = 0; $('fbText').value = '';
+  document.querySelectorAll('.fbFaces button').forEach(x => x.classList.remove('on'));
+  $('fb').classList.remove('rated', 'sent');
+  $('fb').style.display = store.get('ar-fb-' + mode) ? 'none' : '';   // ask once per level
+}
 $('nextMode').addEventListener('click', () => { const n = $('nextMode').dataset.next; if (n) selectMode(n); });
 $('modeBtn').addEventListener('click', () => { A.init(); openModes(); });
 $('modeBtn').textContent = 'Mode: ' + MODE.label;
@@ -1829,6 +2039,7 @@ function frame(now){
   if (slowT > 0) slowT -= dt;
   for (let i = 0; i < sub; i++) step(pdt / sub);
   if (started && !won) elapsed = (now - startTime) / 1000;
+  if (started && !won){ const sc = score(); if (sc > tracked){ tracked = sc; analytics.track('Ring Landed', { mode, rings: sc, of: N, seconds: Math.round(elapsed) }); } }
   if (!won && score() === N) celebrate();
   if (winTimer > 0){ winTimer -= dt; if (winTimer <= 0){ $('win').classList.add('show'); for (let i = 0; i < winStars; i++) setTimeout(() => A.star(i), 450 + i * 300); } }
   updateHUD();
