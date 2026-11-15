@@ -13,7 +13,7 @@
   body{font-family:Fredoka,system-ui,sans-serif;color:#fff}
   #sky{position:fixed;inset:0;display:block}
   .stage{position:relative;height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
-    --kh:clamp(74px,11svh,118px);--cw:min(92vw, calc((100svh - 84px - var(--kh)) / 2.05), 430px)}
+    --kh:clamp(70px,10svh,112px);--cw:min(92vw, calc((100svh - 124px - var(--kh)) / 2.05), 430px)}
 
   /* ---------- the toy ---------- */
   .console{
@@ -97,7 +97,7 @@
   .win .wbest{font-size:3.6cqw;opacity:.8}
   .win .wbest.new{color:#ffd23f;opacity:1;font-weight:700}
   .win .wstats{font-size:3.3cqw;opacity:.6}
-  .wbtns{display:flex;gap:2.5cqw;margin-top:2cqw}
+  .wbtns{display:flex;gap:5cqw;margin-top:2.5cqw}
   .pill.share{background:linear-gradient(#9ff1ff,#4cc9f0);color:#063250;box-shadow:inset 0 1px 0 #e6fdff,0 .8cqw 0 #1d7fa3,0 1.2cqw 1.6cqw rgba(0,0,0,.25)}
   .linkBtn{background:none;border:none;color:#ffe39a;font:600 3.8cqw Fredoka,sans-serif;cursor:pointer;margin-top:1cqw;text-decoration:underline;text-underline-offset:3px}
   .modes{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3cqw;padding:5cqw;
@@ -112,7 +112,7 @@
   .modeBtn .mBlurb{font-size:3.4cqw;opacity:.8}
   .modeBtn .mBest{font-size:3.2cqw;color:#b6ff9e}
 
-  .bottom{position:relative;display:flex;align-items:center;justify-content:space-between;height:30cqw;padding:0 3cqw;margin-top:2cqw}
+  .bottom{position:relative;display:flex;align-items:center;justify-content:space-between;height:30cqw;padding:0;margin:2cqw -6cqw 0}
   .pump{
     position:relative;width:24cqw;height:24cqw;border-radius:50%;border:none;cursor:pointer;
     background:radial-gradient(circle at 50% 50%,#9a4a05 58%,#6f3300 70%,transparent 71%);
@@ -127,12 +127,12 @@
   .pump.down::before{box-shadow:0 .3cqw 0 #a06a00,0 .6cqw 1cqw rgba(0,0,0,.4)}
   .pump span{position:absolute;inset:0;display:grid;place-items:center;font:700 5cqw Fredoka,sans-serif;color:rgba(130,85,0,.55);pointer-events:none;transition:transform .06s}
   .pump span{transform:translateY(calc(var(--sq,0) * 1.5cqw))}
-  .grille{width:22cqw;height:12cqw;border-radius:3cqw;
+  .grille{width:18cqw;height:10cqw;border-radius:3cqw;
     background:radial-gradient(circle,#7a3600 0 34%,transparent 40%) 0 0/3cqw 3cqw, linear-gradient(#e2780f,#d26a08);
     box-shadow:inset 0 .6cqw 1cqw rgba(0,0,0,.35),0 1px 0 rgba(255,255,255,.35)}
   .console.grabbing{cursor:grabbing}
   .stage{cursor:grab}
-  .controls{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 12px;padding:0 12px;max-width:640px}
+  .controls{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 16px;padding:0 12px;max-width:640px}
   .chip{font:500 13px Fredoka,sans-serif;color:#e8eeff;background:rgba(120,140,220,.16);border:1px solid rgba(180,195,255,.28);
     padding:6px 12px;border-radius:99px;cursor:pointer;backdrop-filter:blur(4px)}
   .chip:hover{background:rgba(140,160,240,.26)}
@@ -143,18 +143,43 @@
   .toast{position:fixed;left:50%;bottom:18px;transform:translate(-50%,20px);opacity:0;transition:.35s;pointer-events:none;
     font:500 14px Fredoka,sans-serif;color:#fff;background:rgba(10,18,50,.85);border:1px solid rgba(180,195,255,.3);padding:9px 16px;border-radius:12px;max-width:90vw;text-align:center}
   .toast.show{opacity:1;transform:translate(-50%,0)}
-  /* ---------- Pip, the little astronaut (leaning over the top of the toy) ---------- */
-  .rig{display:flex;flex-direction:column;align-items:center;gap:12px;will-change:transform}
-  .buddy{width:var(--cw);height:var(--kh);display:flex;align-items:center;justify-content:center;gap:6px;
+  /* ---------- Momo the red panda & Bun the bunny (leaning over the top of the toy) ---------- */
+  .rig{display:flex;flex-direction:column;align-items:center;gap:12px;will-change:transform;margin-top:40px}
+  .buddy{width:var(--cw);height:var(--kh);display:flex;align-items:flex-end;justify-content:center;gap:0;
     position:relative;z-index:2;pointer-events:none;margin-bottom:calc(-12px - var(--kh) * 0.1)}
-  .kid{height:var(--kh);width:calc(var(--kh) * 1.43);flex:none;margin-left:22%;
+  .kid{height:var(--kh);width:calc(var(--kh) * 1.43);flex:none;
+  }
+  .kid.bun{height:calc(var(--kh) * .9);width:calc(var(--kh) * .9 * 1.143);margin-right:-4%;z-index:1;
+  }
+  .kid{
     filter:drop-shadow(0 6px 10px rgba(0,0,0,.35)) drop-shadow(0 0 22px rgba(255,160,70,.18))}
   .kid svg{display:block;width:100%;height:100%;overflow:visible}
   .kid svg *{transform-box:view-box}
   .kid #kidAll{transform-origin:100px 140px;animation:breathe 3.4s ease-in-out infinite}
-  .kid #bulbGlow{animation:bulb 1.8s ease-in-out infinite}
-  .kid.cheer #bulbGlow,.kid.party #bulbGlow{animation-duration:.35s}
-  @keyframes bulb{50%{opacity:.25}}
+  .kid #tail{transform-origin:150px 134px;animation:wag 2.4s ease-in-out infinite}
+  .kid.cheer #tail,.kid.party #tail{animation-duration:.4s}
+  .kid.upset #tail{animation:none;transform:rotate(14deg)}
+  @keyframes wag{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(7deg)}}
+  .bun .bAll{transform-origin:80px 140px;animation:breathe 3s ease-in-out .5s infinite}
+  .bun.hop .bAll{animation:hop .5s cubic-bezier(.3,.7,.4,1) .12s}
+  .bun.party .bAll{animation:hop .55s cubic-bezier(.3,.7,.4,1) .2s infinite}
+  .bun .earL{transform-origin:64px 62px;transition:transform .3s}
+  .bun .earR{transform-origin:96px 62px;transition:transform .3s}
+  .bun.cheer .earL,.bun.party .earL{animation:flapL .22s ease-in-out infinite alternate}
+  .bun.cheer .earR,.bun.party .earR{animation:flapR .22s ease-in-out infinite alternate}
+  @keyframes flapL{from{transform:rotate(-4deg)}to{transform:rotate(-22deg)}}
+  @keyframes flapR{from{transform:rotate(4deg)}to{transform:rotate(22deg)}}
+  .bun.upset .earL,.bun.sleepy .earL{transform:rotate(-58deg)}
+  .bun.upset .earR,.bun.sleepy .earR{transform:rotate(58deg)}
+  .bun.wow .earL,.bun.lean .earL{transform:rotate(6deg)}
+  .bun.wow .earR,.bun.lean .earR{transform:rotate(-6deg)}
+  .bun .bLids ellipse{transform-box:fill-box;transform-origin:50% 0;transform:scaleY(0);transition:transform .07s}
+  .bun.blink .bLids ellipse{transform:scaleY(1)}
+  .bun.sleepy .bLids ellipse{transform:scaleY(.55)}
+  .bun .bLook{transform-origin:80px 128px;transition:transform .35s}
+  .bun.lean .bLook{transform:translateY(6px) scale(1.06)}
+  .bun.cheer .bPawL,.bun.impatient .bPawL{animation:drum .17s ease-in-out infinite alternate}
+  .bun.cheer .bPawR,.bun.impatient .bPawR{animation:drum .17s ease-in-out infinite alternate-reverse}
   @keyframes breathe{50%{transform:translateY(1.5px)}}
   .kid.hop #kidAll{animation:hop .5s cubic-bezier(.3,.7,.4,1)}
   .kid.party #kidAll{animation:hop .55s cubic-bezier(.3,.7,.4,1) infinite}
@@ -198,11 +223,11 @@
   .kid.impatient #handR{animation-delay:.21s}
   .kid.cheer .eyeArc,.kid.laugh .eyeArc{display:inline}
   .kid.cheer .eyeOpen,.kid.laugh .eyeOpen{display:none}
-  .bubble{position:absolute;right:calc(50% - 11% + var(--kh) * 0.6);top:50%;margin-top:-1.3em;max-width:50%;padding:8px 13px;border-radius:15px;background:#fffdf3;color:#2b1d45;
-    font:600 15px/1.25 Fredoka,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.35);opacity:0;transform:translateX(8px) scale(.7);white-space:normal;
-    transform-origin:100% 50%;transition:opacity .18s,transform .28s cubic-bezier(.3,1.6,.5,1)}
-  .bubble::after{content:"";position:absolute;right:-8px;top:50%;margin-top:-8px;border:8px solid transparent;border-left-color:#fffdf3;border-right:0}
-  .bubble.show{opacity:1;transform:none}
+  .bubble{position:absolute;bottom:calc(100% - 4px);left:50%;max-width:min(260px,80%);white-space:normal;z-index:3;padding:8px 13px;border-radius:15px;background:#fffdf3;color:#2b1d45;
+    font:600 15px/1.25 Fredoka,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.35);opacity:0;transform:translate(-50%,8px) scale(.7);white-space:normal;
+    transform-origin:50% 100%;transition:opacity .18s,transform .28s cubic-bezier(.3,1.6,.5,1),left .2s}
+  .bubble::after{content:"";position:absolute;left:var(--tail,50%);bottom:-8px;margin-left:-8px;border:8px solid transparent;border-top-color:#fffdf3;border-bottom:0}
+  .bubble.show{opacity:1;transform:translate(-50%,0)}
   .lcd.pop{animation:lcdPop .55s ease-out}
   @keyframes lcdPop{25%{transform:scale(1.16);filter:brightness(1.7)}100%{transform:none}}
   @media (max-width:600px){.caption{display:none}.bubble{font-size:13px;padding:6px 10px}}
@@ -215,77 +240,85 @@
   <div class="rig" id="rig">
   <div class="buddy" aria-hidden="true">
     <div class="bubble" id="bubble"></div>
+    <div class="kid bun" id="bun">
+      <svg viewBox="0 0 160 140">
+        <defs>
+          <radialGradient id="bFur" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#f6eee8"/><stop offset="1" stop-color="#dcd0c8"/></radialGradient>
+          <linearGradient id="bGlow" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="#ffb066" stop-opacity="0"/><stop offset="1" stop-color="#ffb066" stop-opacity=".35"/></linearGradient>
+        </defs>
+        <g class="bAll">
+          <path d="M28 146 C 32 120, 56 112, 80 112 C 104 112, 128 120, 132 146 Z" fill="#b9a7f5"/>
+          <path d="M60 118 Q80 126 100 118" stroke="#9784e0" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <g class="bLook">
+            <g class="earL"><ellipse cx="62" cy="34" rx="12" ry="32" fill="url(#bFur)" transform="rotate(-10 62 34)"/><ellipse cx="62" cy="36" rx="6" ry="24" fill="#ffc1d0" transform="rotate(-10 62 36)"/></g>
+            <g class="earR"><ellipse cx="100" cy="34" rx="12" ry="32" fill="url(#bFur)" transform="rotate(12 100 34)"/><ellipse cx="100" cy="36" rx="6" ry="24" fill="#ffc1d0" transform="rotate(12 100 36)"/></g>
+            <ellipse cx="80" cy="90" rx="42" ry="38" fill="url(#bFur)"/>
+            <ellipse cx="80" cy="90" rx="42" ry="38" fill="url(#bGlow)"/>
+            <g class="eyeOpen">
+              <g id="bPupL"><ellipse cx="66" cy="92" rx="5.6" ry="7" fill="#231a2e"/><circle cx="68" cy="89.3" r="2.3" fill="#fff"/></g>
+              <g id="bPupR"><ellipse cx="94" cy="92" rx="5.6" ry="7" fill="#231a2e"/><circle cx="96" cy="89.3" r="2.3" fill="#fff"/></g>
+              <g class="bLids"><ellipse cx="66" cy="91" rx="7.5" ry="9" fill="#f3ebe5"/><ellipse cx="94" cy="91" rx="7.5" ry="9" fill="#f3ebe5"/></g>
+            </g>
+            <g class="eyeArc" stroke="#231a2e" stroke-width="3" fill="none" stroke-linecap="round"><path d="M60 94 Q66 87 72 94"/><path d="M88 94 Q94 87 100 94"/></g>
+            <ellipse cx="54" cy="104" rx="8" ry="5" fill="#ff9db4" opacity=".55"/><ellipse cx="106" cy="104" rx="8" ry="5" fill="#ff9db4" opacity=".55"/>
+            <path d="M76 100 Q80 98 84 100 Q82 104 80 104 Q78 104 76 100 Z" fill="#ff8fa8"/>
+            <path class="m m-neutral" d="M74 108 Q77 111 80 108 Q83 111 86 108" stroke="#7a4a5a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <g class="m m-happy"><path d="M73 107 Q80 119 87 107 Z" fill="#6b2a3a"/><path d="M76 113 Q80 116 84 113 Q80 111 76 113 Z" fill="#ff9db4"/></g>
+            <g class="m m-laugh"><path d="M71 106 Q80 124 89 106 Q80 109 71 106 Z" fill="#6b2a3a"/></g>
+            <ellipse class="m m-wow" cx="80" cy="111" rx="4" ry="5" fill="#6b2a3a"/>
+            <path class="m m-sleepy" d="M76 110 L84 110" stroke="#7a4a5a" stroke-width="2.2" stroke-linecap="round"/>
+            <path class="m m-sad" d="M74 113 Q80 107 86 113" stroke="#7a4a5a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+          </g>
+          <g class="bPawL"><ellipse cx="50" cy="133" rx="12" ry="9" fill="#fbf6f2"/><circle cx="50" cy="134" r="3" fill="#ffc1d0"/></g>
+          <g class="bPawR"><ellipse cx="110" cy="133" rx="12" ry="9" fill="#fbf6f2"/><circle cx="110" cy="134" r="3" fill="#ffc1d0"/></g>
+        </g>
+      </svg>
+    </div>
     <div class="kid" id="kid">
       <svg viewBox="0 0 200 140">
         <defs>
-          <radialGradient id="kSkin" cx=".42" cy=".38" r=".72">
-            <stop offset="0" stop-color="#ffd9bd"/><stop offset=".7" stop-color="#f2b894"/><stop offset="1" stop-color="#df9c77"/>
-          </radialGradient>
-          <radialGradient id="kHelm" cx=".35" cy=".28" r=".85">
-            <stop offset="0" stop-color="#ffffff"/><stop offset=".65" stop-color="#e9edf7"/><stop offset="1" stop-color="#b9c3da"/>
-          </radialGradient>
-          <linearGradient id="kSuit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6f8fd"/><stop offset="1" stop-color="#c3cce0"/></linearGradient>
-          <radialGradient id="kGlass" cx=".3" cy=".25" r=".9">
-            <stop offset="0" stop-color="#bfe6ff" stop-opacity=".22"/><stop offset=".7" stop-color="#6aa8ff" stop-opacity=".1"/><stop offset="1" stop-color="#1c3a8a" stop-opacity=".35"/>
-          </radialGradient>
-          <linearGradient id="kGlow" x1="0" y1="0" x2="0" y2="1">
-            <stop offset=".55" stop-color="#ffa64d" stop-opacity="0"/><stop offset="1" stop-color="#ffa64d" stop-opacity=".45"/>
-          </linearGradient>
-          <radialGradient id="kCheek"><stop offset="0" stop-color="#ff7d8f" stop-opacity=".65"/><stop offset="1" stop-color="#ff7d8f" stop-opacity="0"/></radialGradient>
-          <radialGradient id="kBulb"><stop offset="0" stop-color="#fffbe0"/><stop offset=".45" stop-color="#ffd23f"/><stop offset="1" stop-color="#ffb300" stop-opacity="0"/></radialGradient>
-          <clipPath id="kVisor"><ellipse cx="100" cy="88" rx="41" ry="36"/></clipPath>
+          <radialGradient id="kFur" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#f39a5c"/><stop offset=".65" stop-color="#e06f35"/><stop offset="1" stop-color="#b9501f"/></radialGradient>
+          <linearGradient id="kBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c95a26"/><stop offset="1" stop-color="#5a2414"/></linearGradient>
+          <linearGradient id="kGlow" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="#ffb066" stop-opacity="0"/><stop offset="1" stop-color="#ffb066" stop-opacity=".4"/></linearGradient>
+          <radialGradient id="kCheek"><stop offset="0" stop-color="#ff7d8f" stop-opacity=".6"/><stop offset="1" stop-color="#ff7d8f" stop-opacity="0"/></radialGradient>
         </defs>
         <g id="kidAll">
-          <!-- suit -->
-          <path d="M30 146 C 34 116, 66 106, 100 106 C 134 106, 166 116, 170 146 Z" fill="url(#kSuit)"/>
-          <path d="M70 118 Q100 110 130 118" stroke="#9fb0d0" stroke-width="3" fill="none" stroke-linecap="round"/>
-          <rect x="118" y="122" width="22" height="13" rx="3" fill="#4cc9f0"/><circle cx="124" cy="128.5" r="2.4" fill="#ff5a4e"/><circle cx="132" cy="128.5" r="2.4" fill="#ffd23f"/>
-          <circle cx="76" cy="128" r="6" fill="#ff8c42"/><path d="M73 128 l3 -3 3 3 -3 3z" fill="#fff"/>
+          <!-- striped tail, curling up behind the shoulder -->
+          <g id="tail"><path d="M150 138 C 182 124, 194 96, 182 72 C 176 62, 164 64, 168 74 C 178 94, 170 116, 146 128 Z" fill="#d9662f"/>
+            <path d="M176 80 C 172 86, 174 92, 179 96 M181 100 C 175 104, 173 110, 176 116 M170 118 C 164 120, 160 124, 160 130" stroke="#7a2e14" stroke-width="6" fill="none" stroke-linecap="round"/></g>
+          <path d="M34 146 C 38 116, 68 108, 100 108 C 132 108, 162 116, 166 146 Z" fill="url(#kBody)"/>
           <g id="headLook"><g id="head">
-            <!-- antenna with a blinking light -->
-            <path d="M100 30 L100 12" stroke="#b9c3da" stroke-width="3" stroke-linecap="round"/>
-            <circle id="bulbGlow" cx="100" cy="10" r="11" fill="url(#kBulb)"/>
-            <circle cx="100" cy="10" r="4.2" fill="#ffe26a"/>
-            <!-- ear pods -->
-            <rect x="34" y="72" width="16" height="26" rx="8" fill="#d6dcea"/><circle cx="42" cy="85" r="3.4" fill="#ff8c42"/>
-            <rect x="150" y="72" width="16" height="26" rx="8" fill="#c7cfe1"/><circle cx="158" cy="85" r="3.4" fill="#ff8c42"/>
-            <!-- helmet -->
-            <circle cx="100" cy="82" r="56" fill="url(#kHelm)"/>
-            <!-- face seen through the visor -->
-            <ellipse cx="100" cy="88" rx="41" ry="36" fill="#14214f"/>
-            <g clip-path="url(#kVisor)">
-              <circle cx="100" cy="94" r="38" fill="url(#kSkin)"/>
-              <circle cx="100" cy="94" r="38" fill="url(#kGlow)"/>
-              <path d="M70 64 C 78 52, 96 48, 106 54 C 112 50, 124 54, 128 62 C 118 60, 112 64, 104 62 C 98 68, 84 66, 76 70 Z" fill="#3b2418"/>
-              <g id="brows" stroke="#3b2418" stroke-width="3" stroke-linecap="round" fill="none">
-                <path id="browL" d="M73 76 Q80 72.5 87 75.5"/><path id="browR" d="M113 75.5 Q120 72.5 127 76"/>
-              </g>
-              <g class="eyeOpen">
-                <g id="pupL"><ellipse cx="80" cy="89" rx="7.6" ry="9.6" fill="#1d1430"/><circle cx="82.6" cy="85.4" r="3.1" fill="#fff"/><circle cx="77.6" cy="93" r="1.4" fill="#fff" opacity=".8"/></g>
-                <g id="pupR"><ellipse cx="120" cy="89" rx="7.6" ry="9.6" fill="#1d1430"/><circle cx="122.6" cy="85.4" r="3.1" fill="#fff"/><circle cx="117.6" cy="93" r="1.4" fill="#fff" opacity=".8"/></g>
-                <g id="lids"><ellipse cx="80" cy="88" rx="10" ry="12" fill="#f4c19f"/><ellipse cx="120" cy="88" rx="10" ry="12" fill="#f4c19f"/></g>
-              </g>
-              <g class="eyeArc" stroke="#1d1430" stroke-width="3.6" fill="none" stroke-linecap="round">
-                <path d="M72 91 Q80 82 88 91"/><path d="M112 91 Q120 82 128 91"/>
-              </g>
-              <ellipse cx="67" cy="102" rx="10" ry="7" fill="url(#kCheek)"/><ellipse cx="133" cy="102" rx="10" ry="7" fill="url(#kCheek)"/>
-              <ellipse cx="100" cy="99" rx="2.6" ry="1.8" fill="#d0866a"/>
-              <path class="m m-neutral" d="M93 107 Q100 112.5 107 107" stroke="#6b2a22" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-              <g class="m m-happy"><path d="M90 105 Q100 122 110 105 Z" fill="#6b2318"/><path d="M94 113.5 Q100 118.5 106 113.5 Q100 110.5 94 113.5 Z" fill="#ff8f8f"/></g>
-              <g class="m m-laugh"><path d="M86 103 Q100 128 114 103 Q100 107 86 103 Z" fill="#6b2318"/><path d="M93 116 Q100 123 107 116 Q100 112 93 116 Z" fill="#ff8f8f"/><path d="M90 104.5 Q100 108 110 104.5" stroke="#fff" stroke-width="3" fill="none"/></g>
-              <ellipse class="m m-wow" cx="100" cy="110" rx="5" ry="6.5" fill="#6b2318"/>
-              <path class="m m-sleepy" d="M95 109 L105 109" stroke="#6b2a22" stroke-width="2.8" stroke-linecap="round"/>
-              <path class="m m-sad" d="M92 112 Q100 104.5 108 112" stroke="#6b2a22" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+            <!-- ears -->
+            <circle cx="56" cy="46" r="17" fill="#c95a26"/><circle cx="56" cy="47" r="10" fill="#fff1dd"/><circle cx="57" cy="49" r="5.5" fill="#6b2a18"/>
+            <circle cx="144" cy="46" r="17" fill="#c95a26"/><circle cx="144" cy="47" r="10" fill="#fff1dd"/><circle cx="143" cy="49" r="5.5" fill="#6b2a18"/>
+            <!-- head -->
+            <ellipse cx="100" cy="84" rx="56" ry="48" fill="url(#kFur)"/>
+            <ellipse cx="100" cy="84" rx="56" ry="48" fill="url(#kGlow)"/>
+            <!-- white mask: cheeks, muzzle -->
+            <ellipse cx="66" cy="102" rx="17" ry="14" fill="#fff6ec"/><ellipse cx="134" cy="102" rx="17" ry="14" fill="#fff6ec"/>
+            <ellipse cx="100" cy="106" rx="24" ry="17" fill="#fff6ec"/>
+            <!-- tear marks -->
+            <path d="M79 98 C 77 104, 74 110, 70 116 M121 98 C 123 104, 126 110, 130 116" stroke="#8a3a1a" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"/>
+            <!-- white brow spots (they move with the mood) -->
+            <g id="brows"><ellipse id="browL" cx="80" cy="73" rx="7.5" ry="5" fill="#fff6ec"/><ellipse id="browR" cx="120" cy="73" rx="7.5" ry="5" fill="#fff6ec"/></g>
+            <g class="eyeOpen">
+              <g id="pupL"><ellipse cx="80" cy="89" rx="7.6" ry="9.2" fill="#1d1210"/><circle cx="82.6" cy="85.4" r="3.1" fill="#fff"/><circle cx="77.6" cy="92.6" r="1.4" fill="#fff" opacity=".8"/></g>
+              <g id="pupR"><ellipse cx="120" cy="89" rx="7.6" ry="9.2" fill="#1d1210"/><circle cx="122.6" cy="85.4" r="3.1" fill="#fff"/><circle cx="117.6" cy="92.6" r="1.4" fill="#fff" opacity=".8"/></g>
+              <g id="lids"><ellipse cx="80" cy="88" rx="10" ry="12" fill="#e57a40"/><ellipse cx="120" cy="88" rx="10" ry="12" fill="#e57a40"/></g>
             </g>
-            <!-- glass over the face: tint + reflections -->
-            <ellipse cx="100" cy="88" rx="41" ry="36" fill="url(#kGlass)"/>
-            <path d="M68 70 C 74 60, 86 55, 98 54" stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none" opacity=".55"/>
-            <circle cx="132" cy="70" r="3" fill="#fff" opacity=".5"/>
-            <ellipse cx="100" cy="88" rx="41" ry="36" fill="none" stroke="#9fb0d0" stroke-width="3"/>
+            <g class="eyeArc" stroke="#1d1210" stroke-width="3.6" fill="none" stroke-linecap="round"><path d="M72 91 Q80 82 88 91"/><path d="M112 91 Q120 82 128 91"/></g>
+            <ellipse cx="62" cy="106" rx="8" ry="5" fill="url(#kCheek)"/><ellipse cx="138" cy="106" rx="8" ry="5" fill="url(#kCheek)"/>
+            <path d="M94 97 Q100 94 106 97 Q104 103 100 104 Q96 103 94 97 Z" fill="#2a1612"/>
+            <path class="m m-neutral" d="M93 108 Q96.5 112 100 108 Q103.5 112 107 108" stroke="#5a2a1a" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+            <g class="m m-happy"><path d="M91 106 Q100 122 109 106 Z" fill="#6b2318"/><path d="M95 114 Q100 118.5 105 114 Q100 111 95 114 Z" fill="#ff8f8f"/></g>
+            <g class="m m-laugh"><path d="M87 104 Q100 128 113 104 Q100 108 87 104 Z" fill="#6b2318"/><path d="M93 116 Q100 123 107 116 Q100 112 93 116 Z" fill="#ff8f8f"/></g>
+            <ellipse class="m m-wow" cx="100" cy="112" rx="5" ry="6.5" fill="#6b2318"/>
+            <path class="m m-sleepy" d="M95 110 L105 110" stroke="#5a2a1a" stroke-width="2.6" stroke-linecap="round"/>
+            <path class="m m-sad" d="M92 114 Q100 106.5 108 114" stroke="#5a2a1a" stroke-width="2.6" fill="none" stroke-linecap="round"/>
           </g></g>
-          <!-- gloves resting on the toy -->
-          <g id="handL"><ellipse cx="54" cy="132" rx="14" ry="11" fill="#f6f8fd"/><ellipse cx="54" cy="136" rx="14" ry="6" fill="#d6dcea"/><path d="M45 128 q4 -6 9 -2" stroke="#b9c3da" stroke-width="2" fill="none" stroke-linecap="round"/></g>
-          <g id="handR"><g id="handRIn"><ellipse cx="146" cy="132" rx="14" ry="11" fill="#f6f8fd"/><ellipse cx="146" cy="136" rx="14" ry="6" fill="#d6dcea"/><path d="M146 126 q5 -6 9 -1" stroke="#b9c3da" stroke-width="2" fill="none" stroke-linecap="round"/></g></g>
+          <!-- dark paws resting on the toy -->
+          <g id="handL"><ellipse cx="54" cy="132" rx="14" ry="11" fill="#3a1d14"/><circle cx="54" cy="134" r="4" fill="#ffb3b3" opacity=".8"/><circle cx="47" cy="128" r="2.2" fill="#ffb3b3" opacity=".8"/><circle cx="54" cy="125.5" r="2.2" fill="#ffb3b3" opacity=".8"/><circle cx="61" cy="128" r="2.2" fill="#ffb3b3" opacity=".8"/></g>
+          <g id="handR"><g id="handRIn"><ellipse cx="146" cy="132" rx="14" ry="11" fill="#3a1d14"/><circle cx="146" cy="134" r="4" fill="#ffb3b3" opacity=".8"/><circle cx="139" cy="128" r="2.2" fill="#ffb3b3" opacity=".8"/><circle cx="146" cy="125.5" r="2.2" fill="#ffb3b3" opacity=".8"/><circle cx="153" cy="128" r="2.2" fill="#ffb3b3" opacity=".8"/></g></g>
         </g>
       </svg>
     </div>
@@ -493,7 +526,7 @@ const A = (() => {
   }
   function star(i){ if (!ok()) return; const f = [1046.5, 1318.51, 1567.98][i] || 1567.98; bell(f, ctx.currentTime, 0.08, bus(0.6)); }
   function reset(){ if (!ok()) return; noise(bb, ctx.currentTime, 'lowpass', 700, 150, 0.6, 0.05, 0.16, 1.1, bus(0.5)); }
-  // Pip: soft, quiet voice-ish sounds
+  // Momo & Bun: soft, quiet voice-ish sounds
   function kid(kind){
     if (!ok('kid', 0.4)) return;
     const t = ctx.currentTime, b = bus(0.4, 0.7);
@@ -801,13 +834,14 @@ if (glOK){
 /* =====================================================================
    GAME  (logical tank is 300 × 520)
    ===================================================================== */
-const LW = 300, LH = 520, SURF = 34, FLOOR = 506, R = 19;
+const LW = 300, LH = 520, SURF = 34, FLOOR = 506;
+let R = 19;   // ring radius: bigger rings (with bigger holes) on easier modes, like the chunkier toddler versions of the toy
 // Easy: fewer rings, wider holes, the pegs gently guide rings in, nothing gets knocked off (about a minute).
 // Medium: a little help (about five minutes). Hard: the real toy, no help.
 const MODES = {
-  easy:   { label: 'Easy',   n: 6,  simple: true, hole: 9, funnel: 16, funnelR: 72, funnelH: 2.6, lock: true,  pegHold: 2.2, target: 60,  blurb: '6 rings · wider holes · about a minute', title: 'Nailed it!' },
-  medium: { label: 'Medium', n: 10, hole: 2, funnel: 4,  funnelR: 30, funnelH: 1.4, lock: false, pegHold: 1.8, target: 300, blurb: '10 rings · a little help · about 5 minutes', title: 'Brilliant!' },
-  hard:   { label: 'Hard',   n: 12, hole: 0, funnel: 0,  funnelR: 0,  funnelH: 0, lock: false, pegHold: 1,   target: 600, blurb: '12 rings · the real toy, no help', title: 'LEGENDARY!' },
+  easy:   { label: 'Easy',   n: 6,  ringR: 25, simple: true, hole: 5, aim: 0.5, funnel: 0, funnelR: 0, funnelH: 0, lock: true,  pegHold: 2.2, target: 60,  blurb: '6 big rings · about a minute', title: 'Nailed it!' },
+  medium: { label: 'Medium', n: 10, ringR: 21, hole: 1, aim: 0.3, funnel: 0,  funnelR: 0,  funnelH: 0, lock: false, pegHold: 1.8, target: 300, blurb: '10 rings · about 5 minutes', title: 'Brilliant!' },
+  hard:   { label: 'Hard',   n: 12, ringR: 19, hole: 0, aim: 0.22, funnel: 0,  funnelR: 0,  funnelH: 0, lock: false, pegHold: 1,   target: 600, blurb: '12 rings · the real toy, no help', title: 'LEGENDARY!' },
 };
 const store = { get(k){ try { return localStorage.getItem(k); } catch(_){ return null; } }, set(k, v){ try { localStorage.setItem(k, v); } catch(_){ } } };
 let mode = (location.hash || '').slice(1);
@@ -836,7 +870,7 @@ function shade(hex, k){
 }
 
 function resetGame(){
-  N = MODE.n;
+  N = MODE.n; R = MODE.ringR;
   rings = [];
   for (let i = 0; i < N; i++){
     const c = COLORS[i % COLORS.length];
@@ -955,7 +989,7 @@ function fluidStep(dt){
       const k = ni + di + nj * NX; if (ftype[k]) continue;
       const w = [0.3, 0.7, 1, 0.7, 0.3][di + 2];
       fsrc[k] += 0.5 * vin * w;
-      if (vin > 0){ fv[k] = Math.min(fv[k], -vin * w); fu[k] = (jn === 0 ? 1 : -1) * vin * w * 0.22; }
+      if (vin > 0){ fv[k] = Math.min(fv[k], -vin * w); fu[k] = (jn === 0 ? 1 : -1) * vin * w * MODE.aim; }
     }
   }
   // turning the toy: the water's inertia makes it lag behind (Euler force)
@@ -1047,7 +1081,7 @@ const ROD_R = 2.5, HOLE = 0.86;
 function holeHalf(r){
   const across = R * HOLE * Math.abs(Math.cos(r.rot));            // tipped sideways: the hole looks narrower
   const depth = Math.abs(Math.cos(r.tilt));                        // facing you edge-on: almost no room front-to-back
-  return depth < 0.25 ? 0 : Math.max(0, across - ROD_R + MODE.hole);
+  return depth < 0.25 ? 0 : Math.min(R * 0.97 * Math.abs(Math.cos(r.rot)), Math.max(0, across - ROD_R + MODE.hole));
 }
 function ringDrag(r, vrx, vry){
   const ct = Math.abs(Math.cos(r.tilt));
@@ -1463,10 +1497,12 @@ function drawConfetti(dt){
 }
 
 const kid = (() => {
-  // Pip, a little astronaut who fell from the stars, sits with you like a sibling would: thrilled when rings
+  // Momo (a red panda) and Bun (a bunny) sit with you like siblings would: thrilled when rings
   // go in, gutted when they fall out, leaning in when one is about to land, teasing when it gets boring,
   // and always angling for a turn.
   const el = $('kid'), svg = el.querySelector('svg'), bub = $('bubble');
+  const bun = $('bun'), bsvg = bun.querySelector('svg'), bPupL = $('bPupL'), bPupR = $('bPupR');
+  let bpx = 0, bpy = 0, bNextBlink = 3.1;
   const pupL = $('pupL'), pupR = $('pupR'), look = $('headLook');
   const MOODS = ['happy', 'laugh', 'wow', 'cheer', 'sleepy', 'upset', 'impatient', 'lean'];
   let moodT = 0, bubbleT = 0, lastSay = -99, nextBlink = 2, lastLine = '';
@@ -1475,29 +1511,43 @@ const kid = (() => {
   let antic = null, anticP = null, anticT = -99, lastNear = -99, lastLost = -99, lastStuck = -99;
   let px = 0, py = 0, hd = 0, focus = null, focusT = 0;
   const pick = arr => { let s; do { s = arr[Math.floor(Math.random() * arr.length)]; } while (arr.length > 1 && s === lastLine); return s; };
-  function mood(m, dur){ MOODS.forEach(x => el.classList.remove(x)); if (m) el.classList.add(m); moodT = dur || 0; }
-  function say(text, force){
+  function mood(m, dur){ for (const e of [el, bun]){ MOODS.forEach(x => e.classList.remove(x)); if (m) e.classList.add(m); } moodT = dur || 0; }
+  // who: 'm' = Momo (red panda), 'b' = Bun (bunny). The bubble floats above whoever is talking.
+  function say(text, force, who){
     if (!force && T - lastSay < 1.6) return false;
     lastSay = T; lastLine = text;
-    bub.textContent = text; bub.classList.remove('show'); void bub.offsetWidth; bub.classList.add('show');
+    const sp = who === 'b' ? bun : el, row = el.parentElement;
+    bub.textContent = text; bub.classList.remove('show'); void bub.offsetWidth;
+    const cx = sp.offsetLeft + sp.offsetWidth * (who === 'b' ? 0.5 : 0.5), half = Math.min(bub.offsetWidth, row.offsetWidth * 0.8) / 2;
+    const left = clamp(cx, half + 4, row.offsetWidth - half - 4);
+    bub.style.left = left + 'px';
+    bub.style.setProperty('--tail', clamp(50 + (cx - left) / (half * 2) * 100, 14, 86) + '%');
+    bub.classList.add('show');
     bubbleT = 2.2 + text.length * 0.035;
     return true;
   }
-  function hop(){ el.classList.remove('hop'); void el.offsetWidth; el.classList.add('hop'); }
+  function hop(){ for (const e of [el, bun]){ e.classList.remove('hop'); void e.offsetWidth; e.classList.add('hop'); } }
+  // Bun (the bunny) chips in now and then with short, squeaky reactions
+  const B = {
+    catch: ['Yay yay yay!', 'Eeee! 🐰', 'Hop hop hooray!', 'Again! Again!'],
+    lost: ['Nooo 😭', 'Bun is sad…', 'Waaah!'],
+    antic: ['Ooooh…', 'Go go go!'],
+    turn: ['Then Bun! Then Bun!', 'Bun wants a turn too 🥺'],
+  };
   const L = {
-    catch: ['Yesss!!', 'Woohoo!', 'Out of this world!', 'Stellar!', 'Did you see that?!', 'Arre wah!', 'Bullseye!', 'One small ring for you…'],
-    lost: ['NOOO! It was IN!', 'Whyyy 😭', 'Houston, we have a problem!', "Don't press so hard!", 'Nooo, not that one!'],
+    catch: ['Yesss!!', 'Woohoo!', 'Did you see that?!', 'Arre wah!', 'Bullseye!', 'Pawsome! 🐾', 'That was so clean!', 'Ek aur! Ek aur!'],
+    lost: ['NOOO! It was IN!', 'Whyyy 😭', 'Arre, it fell off!', "Don't press so hard!", 'Nooo, not that one!'],
     near: ['Arre! So close!', 'Almost!!', 'It hit the top 😩', 'Ufff, next time!'],
     antic: ['Ooh ooh ooh…', 'Go go go…', "It's coming… it's coming…", 'Yes yes yes…'],
     miss: ['Awww 😩', 'Nooo, so close!', 'Ugh! Missed!'],
     mash: ['Slowly! Slowly!', "Not so hard, you'll break it!", 'Gently! Gently!'],
-    taunt: ['Even I can do it faster 😛', 'Slow coach!', "Should I try? I'm better.", 'The rings are winning 😂', 'Rings are this way, hello!', 'On my planet we finish this in 10 seconds 😜'],
-    idle: ['Are you sleeping? 😴', 'Hellooo? Earth to you!', "If you're not playing, give it to me!"],
+    taunt: ['Even I can do it faster 😛', 'Slow coach!', "Should I try? I'm better.", 'The rings are winning 😂', 'Rings are this way, hello!', 'Even my tail could do it faster 😜'],
+    idle: ['Are you sleeping? 😴', 'Hellooo?', "If you're not playing, give it to me!"],
     stuck: ['Tilt it! Tilt it!', 'Turn it sideways, na!'],
     reset: ['Again?! Okay fine…', 'This time all twelve!', 'Then my turn, promise?'],
   };
   // waiting for his turn gets louder the longer you play
-  const TURN = [[45, 'Can I play after this?'], [95, 'Meri baari kab aayegi?'], [150, 'Okay one more minute, then MY turn!'], [215, 'I came all the way from space for this… 🥺'], [290, "I'm telling the Moon 😤"]];
+  const TURN = [[45, 'Can I play after this?', 'm'], [80, 'Then Bun! Then Bun!', 'b'], [120, 'Meri baari kab aayegi?', 'm'], [175, 'Okay one more minute, then MY turn!', 'm'], [235, 'Bun wants a turn too 🥺', 'b'], [300, "We're telling Mummy 😤", 'm']];
 
   return {
     action(){ lastAction = T; idleSaid = false; if (el.classList.contains('sleepy')) mood(null); },
@@ -1515,13 +1565,13 @@ const kid = (() => {
       else if (s === Math.floor(N / 2)) line = 'Halfway there!';
       else if (c >= 2) line = c === 2 ? 'Two in a row?! Pro!' : 'Unstoppable!!';
       else line = pick(L.catch);
-      if (s < N) say(line, true);
+      if (s < N){ if (Math.random() < 0.35 && s !== 1 && s !== N - 1) say(pick(B.catch), true, 'b'); else say(line, true); }
       mood('cheer', 1.6); hop(); A.kid('yay');
     },
     // a ring that was already in got knocked back out
     lost(){
       if (T - lastLost < 2.5) return;
-      lastLost = T; say(pick(L.lost), true); mood('upset', 2.2); A.kid('aww');
+      lastLost = T; if (Math.random() < 0.3) say(pick(B.lost), true, 'b'); else say(pick(L.lost), true); mood('upset', 2.2); A.kid('aww');
     },
     slip(counted){ if (counted) this.lost(); else if (T - lastNear > 3){ lastNear = T; say(pick(L.near)); mood('upset', 1.2); A.kid('aww'); } },
     nearMiss(P){
@@ -1530,15 +1580,15 @@ const kid = (() => {
       say(pick(L.near)); mood('upset', 1.3); A.kid('aww');
     },
     win(){
-      winT = 0; mood('cheer', 99); el.classList.add('party'); A.kid('yay');
+      winT = 0; mood('cheer', 99); el.classList.add('party'); bun.classList.add('party'); A.kid('yay');
       say(mode === 'hard' ? 'HARD MODE?! You are a LEGEND!!! 🏆' : mode === 'medium' ? 'YOU DID IT!!! Superstar! 🌟' : 'YOU DID IT!!! 🎉', true);
     },
     hello(m){
-      const lines = { easy: "Hi, I'm Pip! I fell from the stars to watch you play 🌟", medium: 'Medium! Ten rings… you got this!', hard: 'Hard mode?! Twelve rings, no help. Gulp. 😬' };
+      const lines = { easy: "Hi! I'm Momo 🐾 and this is Bun 🐰 Can we watch?", medium: 'Medium! Ten rings… you got this!', hard: 'Hard mode?! Twelve rings, no help. Gulp. 😬' };
       say(lines[m] || lines.easy, true); mood('happy', 2.5); hop();
     },
     reset(){
-      el.classList.remove('party'); winT = -1; mood('happy', 1.5); this.action();
+      el.classList.remove('party'); bun.classList.remove('party'); winT = -1; mood('happy', 1.5); this.action();
       roundOn = false; turnStage = 0; nervousSaid = false; antic = null;
       if (T > 1) say(pick(L.reset), true);
     },
@@ -1547,7 +1597,8 @@ const kid = (() => {
       if (bubbleT > 0){ bubbleT -= dt; if (bubbleT <= 0) bub.classList.remove('show'); }
       if (winT >= 0){
         winT += dt;
-        if (winT > 4.5 && winT - dt <= 4.5){ say('Share it! Then… MY turn? 🙌', true); el.classList.remove('party'); mood('impatient', 99); }
+        if (winT > 4.5 && winT - dt <= 4.5){ say('Share it! Then… MY turn? 🙌', true); el.classList.remove('party'); bun.classList.remove('party'); mood('impatient', 99); }
+        if (winT > 6.5 && winT - dt <= 6.5) say('Then Bun! 🐰', true, 'b');
       }
       nextBlink -= dt;
       if (nextBlink <= 0){ el.classList.add('blink'); setTimeout(() => el.classList.remove('blink'), 130); nextBlink = rnd(2.2, 5.5); }
@@ -1561,7 +1612,7 @@ const kid = (() => {
               const h = P.top - r.y;
               if (h > 8 && h < 85 && Math.abs(r.x - P.x) < R * 0.65 && T - anticT > 5){
                 antic = r; anticP = P; anticT = T; focus = P; focusT = 1.8;
-                say(pick(L.antic), true); mood('lean', 2.5); A.kid('ooh');
+                if (Math.random() < 0.3) say(pick(B.antic), true, 'b'); else say(pick(L.antic), true); mood('lean', 2.5); A.kid('ooh');
               }
             }
           }
@@ -1583,7 +1634,7 @@ const kid = (() => {
         if (!idleSaid && T - lastAction > 14 && T > 6){ idleSaid = true; say(pick(L.idle)); mood('sleepy', 4); }
         // and he's always waiting for his turn
         if (roundOn && turnStage < TURN.length && T - roundStart > TURN[turnStage][0] && T - lastSay > 4 && moodT <= 0){
-          say(TURN[turnStage][1]); mood('impatient', 3.2); turnStage++;
+          say(TURN[turnStage][1], false, TURN[turnStage][2]); mood('impatient', 3.2); turnStage++;
         }
       }
 
@@ -1604,6 +1655,13 @@ const kid = (() => {
       pupR.setAttribute('transform', `translate(${px.toFixed(2)} ${py.toFixed(2)})`);
       hd += (clamp(dx / d * 7, -8, 8) - hd) * k;
       look.style.transform = `rotate(${hd.toFixed(2)}deg)`;
+      bNextBlink -= dt;
+      if (bNextBlink <= 0){ bun.classList.add('blink'); setTimeout(() => bun.classList.remove('blink'), 130); bNextBlink = rnd(2, 5); }
+      const br = bsvg.getBoundingClientRect(), bex = br.left + br.width * 80 / 160, bey = br.top + br.height * 92 / 140;
+      const bdx = tx - bex, bdy = ty - bey, bd = Math.hypot(bdx, bdy) || 1;
+      bpx += (bdx / bd * 2.4 - bpx) * k; bpy += (bdy / bd * 2 - bpy) * k;
+      bPupL.setAttribute('transform', `translate(${bpx.toFixed(2)} ${bpy.toFixed(2)})`);
+      bPupR.setAttribute('transform', `translate(${bpx.toFixed(2)} ${bpy.toFixed(2)})`);
     },
   };
 })();
@@ -1714,12 +1772,12 @@ function drawFireworks(){
 }
 
 // ---------- share card ----------
-function kidImage(){
+function kidImage(id){
   return new Promise(res => {
-    const src = $('kid').querySelector('svg').cloneNode(true);
-    src.setAttribute('xmlns', 'http://www.w3.org/2000/svg'); src.setAttribute('width', '400'); src.setAttribute('height', '280');
+    const src = $(id || 'kid').querySelector('svg').cloneNode(true);
+    src.setAttribute('xmlns', 'http://www.w3.org/2000/svg'); const vb = src.getAttribute('viewBox').split(' ').map(Number); src.setAttribute('width', vb[2] * 2); src.setAttribute('height', vb[3] * 2);
     src.querySelectorAll('.m:not(.m-happy), .eyeOpen').forEach(n => n.remove());   // a big happy face
-    src.querySelectorAll('[transform]').forEach(n => { if (n.id === 'pupL' || n.id === 'pupR') n.removeAttribute('transform'); });
+    src.querySelectorAll('#pupL,#pupR,#bPupL,#bPupR').forEach(n => n.removeAttribute('transform'));
     const img = new Image();
     img.onload = () => res(img); img.onerror = () => res(null);
     img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(src));
@@ -1764,7 +1822,9 @@ async function makeShareCard(){
     x.strokeStyle = 'rgba(255,255,255,.5)'; x.lineWidth = 3; x.beginPath(); x.ellipse(px, ry - 3, 32, 6, 0, Math.PI * 0.15, Math.PI * 0.65); x.stroke();
   }));
   x.fillStyle = '#ffd400'; for (const bx of [tx + 40, tx + tw - 40]){ x.beginPath(); x.arc(bx, ty + th + 58, 34, 0, 7); x.fill(); }
-  const ki = await kidImage(); if (ki) x.drawImage(ki, W / 2 - 125, ty - 205, 250, 175);
+  const ki = await kidImage('kid'), bi = await kidImage('bun');
+  if (bi) x.drawImage(bi, W / 2 - 205, ty - 150, 160, 140);
+  if (ki) x.drawImage(ki, W / 2 - 60, ty - 175, 230, 161);
   x.fillStyle = '#fff'; x.font = '700 54px Fredoka, sans-serif'; x.fillText('Can you beat it?', W / 2, H - 105);
   x.fillStyle = 'rgba(207,233,255,.85)'; x.font = '500 34px Fredoka, sans-serif'; x.fillText('rupam870.github.io/water-ring-toss', W / 2, H - 52);
   return await new Promise(res => c.toBlob(res, 'image/png'));
@@ -1839,7 +1899,7 @@ addEventListener('blur', () => { release(0); release(1); tiltKeys.l = tiltKeys.r
 
 // grab the toy anywhere (except the buttons) and drag sideways to tilt it
 const stage = document.querySelector('.stage'), consoleEl = document.querySelector('.console'), rig = $('rig');
-// rotate the toy (and Pip leaning on it) around the toy's own centre
+// rotate the toy (and Momo & Bun leaning on it) around the toy's own centre
 function placePivot(){ const off = consoleEl.offsetTop + consoleEl.offsetHeight / 2; rig.style.transformOrigin = `50% ${off}px`; }
 addEventListener('resize', placePivot); placePivot();
 // iPhone blocks motion sensors inside embedded frames, so don't offer it there
