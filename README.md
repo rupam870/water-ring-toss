@@ -2,7 +2,7 @@
 
 A browser remake of the childhood handheld water ring toss toy. You're lying out under a starry sky with trees on both sides, and two cousins, Mira and little Kabir, lean over the toy, cheering every ring that lands, giggling at every one that bounces off, and asking for a turn. Their pictures were made with Atlabs.
 
-**Play:** https://rupam870.github.io/water-ring-toss/
+**Play:** https://rupam.work/water-ring-toss/
 
 ## How to play
 

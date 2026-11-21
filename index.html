@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>Water Ring Toss — under the stars</title>
+<meta property="og:url" content="https://rupam.work/water-ring-toss/">
+<link rel="canonical" href="https://rupam.work/water-ring-toss/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=VT323&display=swap" rel="stylesheet">
@@ -304,6 +306,18 @@
   @keyframes lcdPop{25%{transform:scale(1.16);filter:brightness(1.7)}100%{transform:none}}
   @media (max-width:600px){.caption{display:none}.bubble{font-size:13px;padding:6px 10px}}
   .caption b{color:rgba(240,245,255,.85);font-weight:600}
+</style>
+<style>
+.rw-by{position:fixed;left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:2147483000;font:500 12px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;color:#fff}
+.rw-by summary{list-style:none;cursor:pointer;padding:7px 11px;border-radius:999px;background:rgba(18,18,22,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:.7;transition:opacity .2s;user-select:none}
+.rw-by summary::-webkit-details-marker{display:none}
+.rw-by summary:hover,.rw-by[open] summary{opacity:1}
+.rw-by div{position:absolute;left:0;bottom:calc(100% + 6px);min-width:170px;padding:6px;border-radius:12px;background:rgba(18,18,22,.86);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.rw-by a{display:block;padding:7px 9px;border-radius:8px;color:#fff;text-decoration:none;white-space:nowrap}
+.rw-by a:hover{background:rgba(255,255,255,.12)}
+.rw-by a.rw-home{opacity:.75}
+.rw-foot{max-width:720px;margin:40px auto 0;padding:24px 16px calc(32px + env(safe-area-inset-bottom,0px));font-size:13px;line-height:1.6;color:inherit;opacity:.7;text-align:center}
+.rw-foot a{color:inherit;text-decoration:underline;text-underline-offset:3px;margin:0 6px;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -1812,14 +1826,14 @@ async function makeShareCard(){
   });
   // 5 · call to action
   x.fillStyle = '#ffffff'; x.font = '700 46px Fredoka, sans-serif'; x.fillText('Can you beat my times?', W / 2, 1222);
-  const url = 'rupam870.github.io/water-ring-toss'; x.font = '500 28px Fredoka, sans-serif';
+  const url = 'rupam.work/water-ring-toss'; x.font = '500 28px Fredoka, sans-serif';
   const uw = x.measureText(url).width + 56;
   x.beginPath(); x.roundRect(W / 2 - uw / 2, 1248, uw, 52, 26); x.fillStyle = 'rgba(255,255,255,.08)'; x.fill();
   x.strokeStyle = 'rgba(255,255,255,.22)'; x.lineWidth = 1.5; x.stroke();
   x.fillStyle = 'rgba(220,235,255,.92)'; x.fillText(url, W / 2, 1283);
   return await new Promise(res => c.toBlob(res, 'image/png'));
 }
-const GAME_URL = 'https://rupam870.github.io/water-ring-toss/';
+const GAME_URL = 'https://rupam.work/water-ring-toss/';
 async function shareWin(){
   analytics.track('Share Clicked', { mode, seconds: Math.round(elapsed) });
   const bests = Object.entries(MODES).map(([k, m]) => `${m.label} ${bestFor(k) != null ? fmtTime(bestFor(k)) : '–'}`).join(' · ');
@@ -2060,5 +2074,6 @@ openModes();
 requestAnimationFrame(frame);
 })();
 </script>
+<details class="rw-by"><summary>by Rupam</summary><div><a href="https://rupam.work/gym/">Home Gym Diorama</a><a href="https://rupam.work/protein-pan/">Protein Pan</a><a href="https://rupam.work/corner-florist/">The Corner Florist</a><a class="rw-home" href="https://rupam.work/">Rupam's portfolio ↗</a></div></details>
 </body>
 </html>
